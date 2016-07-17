@@ -17,10 +17,10 @@ coverage
 .grunt
 
 # Bower libraries
-app/lib/*
+app/lib/**
 
 # Gulp files
-app/build/*
+app/build
 
 # node-waf configuration
 .lock-wscript
