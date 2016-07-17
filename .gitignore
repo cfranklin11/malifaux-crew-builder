@@ -20,7 +20,7 @@ coverage
 app/lib/*
 
 # Gulp files
-app/dist/*
+app/build/*
 
 # node-waf configuration
 .lock-wscript

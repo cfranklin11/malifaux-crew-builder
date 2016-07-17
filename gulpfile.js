@@ -1,6 +1,6 @@
 'use strict';
 
-var gulp, browserify, reactify, sourcemaps, source, buffer, watchify, babelify;
+var gulp, browserify, sourcemaps, source, buffer, watchify, babelify, browserSync, nodemon;
 
 gulp = require("gulp");
 browserify = require("browserify");
@@ -9,8 +9,19 @@ source = require('vinyl-source-stream');
 buffer = require('vinyl-buffer');
 watchify = require('watchify');
 babelify = require('babelify');
+browserSync = require('browser-sync');
+nodemon = require('gulp-nodemon');
 
-function compile(watch) {
+gulp.task('styles', function() {
+  return gulp.src(["app/index.html","app/lib/bootstrap-css/css/bootstrap.min.css","app/style.css"])
+    .pipe(gulp.dest("app/build"));
+});
+
+gulp.task('watch-styles', function() {
+  return gulp.watch(['app/*.html', 'app/*.css'], ['styles', 'reload']);
+});
+
+gulp.task('watch', function() {
   var bundler = watchify(browserify({
     entries: ['./app/main.jsx'],
     debug: true,
@@ -27,28 +38,48 @@ function compile(watch) {
       .pipe(gulp.dest('./app/build/'));
   }
 
-  function bundleStyles() {
-    return gulp.src(["app/index.html","app/lib/bootstrap-css/css/bootstrap.min.css","app/style.css"])
-      .pipe(gulp.dest("app/dist"));
-  }
-
-  if (watch) {
-    bundler.on('update', function() {
-      console.log('-> bundling...');
-      rebundle();
-      bundleStyles();
-    });
-  }
+  bundler.on('update', function() {
+    console.log('-> bundling...');
+    rebundle();
+  });
 
   rebundle();
-  bundleStyles();
-}
+});
 
-function watch() {
-  return compile(true);
-}
+gulp.task('browser-sync', ['nodemon'], function() {
+  browserSync({
+    proxy: "localhost:3000",  // local node app address
+    port: 5000,  // use *different* port than above
+    notify: true
+  });
+});
 
-gulp.task('build', function() { return compile(); });
-gulp.task('watch', function() { return watch(); });
+gulp.task('nodemon', function (cb) {
+  var called = false;
+  return nodemon({
+    script: './server/bin/www',
+    ignore: [
+      'gulpfile.js',
+      'node_modules/'
+    ]
+  })
+  .on('start', function () {
+    if (!called) {
+      called = true;
+      cb();
+    }
+  })
+  .on('restart', function () {
+    setTimeout(function () {
+      browserSync.reload({ stream: false });
+    }, 1000);
+  });
+});
 
-gulp.task('default', ['watch']);
+gulp.task('reload', function() {
+  setTimeout(function () {
+    browserSync.reload({ stream: false });
+  }, 1000);
+});
+
+gulp.task('default', ['styles', 'watch-styles', 'watch', 'browser-sync']);
