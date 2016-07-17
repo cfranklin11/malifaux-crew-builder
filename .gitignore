@@ -17,7 +17,7 @@ coverage
 .grunt
 
 # Bower libraries
-app/lib/**
+app/lib
 
 # Gulp files
 app/build
