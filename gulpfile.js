@@ -1,7 +1,7 @@
 'use strict';
 
 var gulp, browserify, sourcemaps, source, buffer, watchify, babelify,
-  browserSync, nodemon, babel, Cache, cache;
+  browserSync, nodemon, babel, Cache, cache, reactify;
 
 gulp = require('gulp');
 browserify = require('browserify');
@@ -10,6 +10,7 @@ source = require('vinyl-source-stream');
 buffer = require('vinyl-buffer');
 watchify = require('watchify');
 babelify = require('babelify');
+reactify = require('reactify');
 browserSync = require('browser-sync');
 nodemon = require('gulp-nodemon');
 babel = require('gulp-babel');
@@ -18,21 +19,22 @@ Cache = require('gulp-file-cache');
 cache = new Cache();
 
 gulp.task('styles', function() {
-  return gulp.src(['app/index.html',
-      'app/lib/bootstrap-css/css/bootstrap.min.css','app/style.css'])
+  return gulp.src(['app/src/index.html',
+      'app/lib/bootstrap-css/css/bootstrap.min.css','app/src/style.css'])
     .pipe(gulp.dest('app/build'));
 });
 
 gulp.task('watch-styles', function() {
-  return gulp.watch(['app/*.html', 'app/*.css'], ['styles', 'reload']);
+  return gulp.watch(['app/src/*.html', 'app/src/*.css'], ['styles', 'reload']);
 });
 
 gulp.task('watch', function() {
   var bundler = watchify(browserify({
-    entries: ['./app/main.jsx'],
-    debug: true,
-    transform: babelify.configure({presets: ['es2015', 'react']})
-  }));
+      entries: ['./app/src/main.jsx'],
+      debug: true
+    })
+    .transform(babelify, {presets: ['es2015', 'react']})
+  );
 
   function rebundle() {
     bundler.bundle()
@@ -81,11 +83,11 @@ gulp.task('nodemon', function (cb) {
 });
 
 gulp.task('babel', function() {
-  var stream = gulp.src('./server/src/**') // your ES2015 code
+  var stream = gulp.src('./server/src/**/*.js') // your ES2015 code
     .pipe(sourcemaps.init())
-    .pipe(cache.filter()) // remember files
+    // .pipe(cache.filter()) // remember files
     .pipe(babel({presets: ['es2015']})) // compile new ones
-    .pipe(cache.cache()) // cache them
+    // .pipe(cache.cache()) // cache them
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('./server/build')); // write them
 

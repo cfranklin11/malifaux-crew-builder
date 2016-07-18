@@ -27,6 +27,7 @@
     "morgan": "~1.6.1",
     "react": "^15.2.1",
     "react-dom": "^15.2.1",
+    "reactify": "^1.1.1",
     "serve-favicon": "~2.3.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
