@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./server/bin/www"
+    "start": "nodemon ./server/build/bin/www"
   },
   "dependencies": {
     "babel-cli": "^6.10.1",
@@ -17,8 +17,11 @@
     "debug": "~2.2.0",
     "ejs": "~2.3.3",
     "express": "^4.13.4",
+    "google-spreadsheet": "^2.0.3",
     "guid": "0.0.12",
     "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-file-cache": "0.0.1",
     "gulp-nodemon": "^2.1.0",
     "gulp-sourcemaps": "^1.6.0",
     "morgan": "~1.6.1",

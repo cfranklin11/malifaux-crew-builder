@@ -1,9 +1,10 @@
 'use strict';
 
-var gulp, browserify, sourcemaps, source, buffer, watchify, babelify, browserSync, nodemon;
+var gulp, browserify, sourcemaps, source, buffer, watchify, babelify,
+  browserSync, nodemon, babel, Cache, cache;
 
-gulp = require("gulp");
-browserify = require("browserify");
+gulp = require('gulp');
+browserify = require('browserify');
 sourcemaps = require('gulp-sourcemaps');
 source = require('vinyl-source-stream');
 buffer = require('vinyl-buffer');
@@ -11,10 +12,15 @@ watchify = require('watchify');
 babelify = require('babelify');
 browserSync = require('browser-sync');
 nodemon = require('gulp-nodemon');
+babel = require('gulp-babel');
+Cache = require('gulp-file-cache');
+
+cache = new Cache();
 
 gulp.task('styles', function() {
-  return gulp.src(["app/index.html","app/lib/bootstrap-css/css/bootstrap.min.css","app/style.css"])
-    .pipe(gulp.dest("app/build"));
+  return gulp.src(['app/index.html',
+      'app/lib/bootstrap-css/css/bootstrap.min.css','app/style.css'])
+    .pipe(gulp.dest('app/build'));
 });
 
 gulp.task('watch-styles', function() {
@@ -30,7 +36,7 @@ gulp.task('watch', function() {
 
   function rebundle() {
     bundler.bundle()
-      .on('error', function(err) { console.error(err); this.emit('end'); })
+      .on('error', function(err) {console.error(err); this.emit('end');})
       .pipe(source('main.jsx'))
       .pipe(buffer())
       .pipe(sourcemaps.init({ loadMaps: true }))
@@ -46,9 +52,9 @@ gulp.task('watch', function() {
   rebundle();
 });
 
-gulp.task('browser-sync', ['nodemon'], function() {
+gulp.task('browser-sync', ['babel', 'nodemon'], function() {
   browserSync({
-    proxy: "localhost:3000",  // local node app address
+    proxy: 'localhost:3000',  // local node app address
     port: 5000,  // use *different* port than above
     notify: true
   });
@@ -56,12 +62,14 @@ gulp.task('browser-sync', ['nodemon'], function() {
 
 gulp.task('nodemon', function (cb) {
   var called = false;
+
   return nodemon({
-    script: './server/bin/www',
+    script: './server/build/bin/www',
     ignore: [
       'gulpfile.js',
       'node_modules/'
-    ]
+    ],
+    watch: './server/src'
   })
   .on('start', function () {
     if (!called) {
@@ -69,11 +77,19 @@ gulp.task('nodemon', function (cb) {
       cb();
     }
   })
-  .on('restart', function () {
-    setTimeout(function () {
-      browserSync.reload({ stream: false });
-    }, 1000);
-  });
+  .on('restart', ['babel', 'reload']);
+});
+
+gulp.task('babel', function() {
+  var stream = gulp.src('./server/src/**') // your ES2015 code
+    .pipe(sourcemaps.init())
+    .pipe(cache.filter()) // remember files
+    .pipe(babel({presets: ['es2015']})) // compile new ones
+    .pipe(cache.cache()) // cache them
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest('./server/build')); // write them
+
+  return stream; // important for gulp-nodemon to wait for completion
 });
 
 gulp.task('reload', function() {
