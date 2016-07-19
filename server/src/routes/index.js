@@ -1,9 +1,12 @@
-var express = require('express');
-var router = express.Router();
+import {Router} from 'express';
+import sheetsHelper from '../middleware/google-sheets-helper';
+let router = Router();
 
-/* GET home page. */
-router.get('/', function(req, res) {
-  res.sendFile('index.html', {root: __dirname + '../../../../app/build'});
+router.get('/', (req, res) => {
+  res.sendFile('index.html', {root: `${__dirname}/../../../app/build`});
+});
+router.get('/test', sheetsHelper.getSpreadsheet, (req, res) => {
+  res.sendFile('index.html', {root: `${__dirname}/../../../app/build`});
 });
 
-module.exports = router;
+export default router;

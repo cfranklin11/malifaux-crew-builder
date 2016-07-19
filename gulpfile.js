@@ -62,32 +62,26 @@ gulp.task('browser-sync', ['babel', 'nodemon'], function() {
   });
 });
 
-gulp.task('nodemon', function (cb) {
-  var called = false;
-
-  return nodemon({
+gulp.task('nodemon', ['babel'], function () {
+  var stream = nodemon({
     script: './server/build/bin/www',
     ignore: [
       'gulpfile.js',
       'node_modules/'
     ],
-    watch: './server/src'
-  })
-  .on('start', function () {
-    if (!called) {
-      called = true;
-      cb();
-    }
-  })
-  .on('restart', ['babel', 'reload']);
+    watch: './server/src',
+    tasks: ['babel', 'reload']
+  });
+
+  return stream;
 });
 
 gulp.task('babel', function() {
   var stream = gulp.src('./server/src/**/*.js') // your ES2015 code
     .pipe(sourcemaps.init())
-    // .pipe(cache.filter()) // remember files
+    .pipe(cache.filter()) // remember files
     .pipe(babel({presets: ['es2015']})) // compile new ones
-    // .pipe(cache.cache()) // cache them
+    .pipe(cache.cache()) // cache them
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('./server/build')); // write them
 
