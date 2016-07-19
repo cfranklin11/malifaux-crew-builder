@@ -1,7 +1,7 @@
 'use strict';
 
 var gulp, browserify, sourcemaps, source, buffer, watchify, babelify,
-  browserSync, nodemon, babel, Cache, cache, concat;
+  browserSync, nodemon, babel, Cache, cache;
 
 gulp = require('gulp');
 browserify = require('browserify');
@@ -14,7 +14,6 @@ browserSync = require('browser-sync');
 nodemon = require('gulp-nodemon');
 babel = require('gulp-babel');
 Cache = require('gulp-file-cache');
-concat = require('gulp-concat');
 
 cache = new Cache();
 
@@ -36,7 +35,7 @@ gulp.task('watch-html', function() {
 
 gulp.task('watch-js', function() {
   var bundler = watchify(browserify({
-      entries: ['./app/src/**/*.js'],
+      entries: ['./app/src/main.js'],
       debug: true
     })
     .transform(babelify, {presets: ['es2015', 'react']})
@@ -45,7 +44,7 @@ gulp.task('watch-js', function() {
   function rebundle() {
     bundler.bundle()
       .on('error', function(err) {console.error(err); this.emit('end');})
-      .pipe(source(concat('all.js')))
+      .pipe(source('main.js'))
       .pipe(buffer())
       .pipe(sourcemaps.init({ loadMaps: true }))
       .pipe(sourcemaps.write('./'))
