@@ -1,7 +1,7 @@
 'use strict';
 
 var gulp, browserify, sourcemaps, source, buffer, watchify, babelify,
-  browserSync, nodemon, babel, Cache, cache, reactify;
+  browserSync, nodemon, babel, Cache, cache, concat;
 
 gulp = require('gulp');
 browserify = require('browserify');
@@ -10,27 +10,33 @@ source = require('vinyl-source-stream');
 buffer = require('vinyl-buffer');
 watchify = require('watchify');
 babelify = require('babelify');
-reactify = require('reactify');
 browserSync = require('browser-sync');
 nodemon = require('gulp-nodemon');
 babel = require('gulp-babel');
 Cache = require('gulp-file-cache');
+concat = require('gulp-concat');
 
 cache = new Cache();
 
-gulp.task('styles', function() {
-  return gulp.src(['app/src/index.html',
-      'app/lib/bootstrap-css/css/bootstrap.min.css','app/src/style.css'])
-    .pipe(gulp.dest('app/build'));
+gulp.task('styles', ['watch-styles'], function() {
+  return gulp.src(['app/lib/bootstrap-css/css/bootstrap.min.css','app/src/style.css'])
+    .pipe(gulp.dest('app/build/bundle'));
 });
-
 gulp.task('watch-styles', function() {
-  return gulp.watch(['app/src/*.html', 'app/src/*.css'], ['styles', 'reload']);
+  return gulp.watch(['app/src/*.css'], ['styles', 'reload']);
 });
 
-gulp.task('watch', function() {
+gulp.task('html', ['watch-html'], function() {
+  return gulp.src(['app/src/index.html'])
+    .pipe(gulp.dest('app/build/bundle'));
+});
+gulp.task('watch-html', function() {
+  return gulp.watch(['app/src/index.html'], ['html', 'reload']);
+});
+
+gulp.task('watch-js', function() {
   var bundler = watchify(browserify({
-      entries: ['./app/src/main.jsx'],
+      entries: ['./app/src/**/*.js'],
       debug: true
     })
     .transform(babelify, {presets: ['es2015', 'react']})
@@ -39,11 +45,11 @@ gulp.task('watch', function() {
   function rebundle() {
     bundler.bundle()
       .on('error', function(err) {console.error(err); this.emit('end');})
-      .pipe(source('main.jsx'))
+      .pipe(source(concat('all.js')))
       .pipe(buffer())
       .pipe(sourcemaps.init({ loadMaps: true }))
       .pipe(sourcemaps.write('./'))
-      .pipe(gulp.dest('./app/build/'));
+      .pipe(gulp.dest('./app/build/bundle.js'));
   }
 
   bundler.on('update', function() {
@@ -54,7 +60,7 @@ gulp.task('watch', function() {
   rebundle();
 });
 
-gulp.task('browser-sync', ['babel', 'nodemon'], function() {
+gulp.task('browser-sync', ['nodemon'], function() {
   browserSync({
     proxy: 'localhost:3000',  // local node app address
     port: 5000,  // use *different* port than above
@@ -62,7 +68,7 @@ gulp.task('browser-sync', ['babel', 'nodemon'], function() {
   });
 });
 
-gulp.task('nodemon', ['babel'], function () {
+gulp.task('nodemon', function () {
   var stream = nodemon({
     script: './server/build/bin/www',
     ignore: [
@@ -70,13 +76,13 @@ gulp.task('nodemon', ['babel'], function () {
       'node_modules/'
     ],
     watch: './server/src',
-    tasks: ['babel', 'reload']
+    tasks: ['server-babel', 'reload']
   });
 
   return stream;
 });
 
-gulp.task('babel', function() {
+gulp.task('server-babel', function() {
   var stream = gulp.src('./server/src/**/*.js') // your ES2015 code
     .pipe(sourcemaps.init())
     .pipe(cache.filter()) // remember files
@@ -94,4 +100,4 @@ gulp.task('reload', function() {
   }, 1000);
 });
 
-gulp.task('default', ['styles', 'watch-styles', 'watch', 'browser-sync']);
+gulp.task('default', ['styles', 'watch-styles', 'html', 'watch-html', 'watch-js', 'browser-sync']);
