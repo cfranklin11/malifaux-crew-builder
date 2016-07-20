@@ -2,10 +2,8 @@ import GoogleSpreadsheet from 'google-spreadsheet';
 import auth from '../config/auth.js';
 
 let sheetsHelper = {
-
   // Start by getting the sheet by ID
   getSpreadsheet: (req, res, next) => {
-
     // First option is to use ID entered into the form, then any environment
     // variables
     let doc = new GoogleSpreadsheet(auth.doc_id);
@@ -14,16 +12,16 @@ let sheetsHelper = {
 
   // Get auth credentials to make changes to sheet
   setAuth: (req, res, next, doc) => {
-    let client_email = auth.client_email;
-    let private_key = auth.private_key;
+    let clientEmail = auth.client_email;
+    let privateKey = auth.private_key;
 
     // Credentials obtained via environment variables imported to auth.js
     let credsJson = {
-      client_email,
-      private_key
+      clientEmail,
+      privateKey
     };
 
-    doc.useServiceAccountAuth(credsJson, (err) => {
+    doc.useServiceAccountAuth(credsJson, err => {
       if (err) {
         console.log(err);
         return res.send(err);
@@ -36,7 +34,6 @@ let sheetsHelper = {
   // Get correct sheet, depending on whether your reading or writing
   getWorksheets: (req, res, next, doc) => {
     doc.getInfo((err, spreadsheet) => {
-
       if (!spreadsheet) {
         return res.status(400).send('The Google Sheets ID was invalid.');
       }
@@ -62,7 +59,7 @@ let sheetsHelper = {
 
         // Rows array has a lot of extra data, so filter to get
         // only URL and status code
-        let characterRows = rows.map((item) => {
+        let characterRows = rows.map(item => {
           let {name, faction, station, characteristics, limit, sscost,
             sscache} = item;
           return {name, faction, station, characteristics, limit, sscost,
@@ -89,7 +86,7 @@ let sheetsHelper = {
 
         // Rows array has a lot of extra data, so filter to get
         // only URL and status code
-        let upgradeRows = rows.map((item) => {
+        let upgradeRows = rows.map(item => {
           let {name, faction, cost, limit, namerestrictions,
             characteristicrestrictions1, characteristicrestrictions2,
             islimited} = item;
@@ -104,7 +101,7 @@ let sheetsHelper = {
 
         next();
     });
-  },
+  }
 };
 
 export default sheetsHelper;

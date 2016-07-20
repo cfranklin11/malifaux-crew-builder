@@ -1,13 +1,8 @@
 import * as types from '../constants/ActionTypes';
 
-export function addTodo(name) {
-  return [
-    {
-      type: types.ADD_TODO,
-      name
-    },
-    {
-      type: types.REORDER_ADD
-    }
-  ];
+export function updateSSLimit(ssLimit) {
+  return {
+      type: types.UPDATE_SS_LIMIT,
+      ssLimit
+  }
 };

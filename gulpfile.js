@@ -35,7 +35,7 @@ gulp.task('watch-html', function() {
 
 gulp.task('watch-js', function() {
   var bundler = watchify(browserify({
-      entries: ['./app/src/main.js'],
+      entries: ['./app/src/index.js'],
       debug: true
     })
     .transform(babelify, {presets: ['es2015', 'react']})
@@ -44,11 +44,11 @@ gulp.task('watch-js', function() {
   function rebundle() {
     bundler.bundle()
       .on('error', function(err) {console.error(err); this.emit('end');})
-      .pipe(source('main.js'))
+      .pipe(source('index.js'))
       .pipe(buffer())
       .pipe(sourcemaps.init({ loadMaps: true }))
       .pipe(sourcemaps.write('./'))
-      .pipe(gulp.dest('./app/build/bundle.js'));
+      .pipe(gulp.dest('./app/build'));
   }
 
   bundler.on('update', function() {
