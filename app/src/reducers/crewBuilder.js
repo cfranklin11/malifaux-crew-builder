@@ -5,7 +5,6 @@ const initialState = {
 };
 
 export default function crewBuilder(state = initialState, action) {
-
   console.log(state);
 
   switch (action.type) {
@@ -14,6 +13,11 @@ export default function crewBuilder(state = initialState, action) {
       return {
         ...state,
         ssLimit: action.ssLimit
+      };
+
+    default:
+      return {
+        ...state
       };
   }
 }

@@ -1,16 +1,14 @@
-import React, { Component } from 'react';
-import { combineReducers, applyMiddleware } from 'redux';
-import { Provider } from 'react-redux';
-import multi from 'redux-multi';
+import React, {Component} from 'react';
+import {combineReducers} from 'redux';
+import {Provider} from 'react-redux';
 
-import { createStore, renderDevTools } from '../store_enhancers/devTools';
+import {createStore, renderDevTools} from '../stores/configureStore';
 
 import CrewBuilder from './CrewBuilder';
 import * as reducers from '../reducers/crewBuilder';
 
 const reducer = combineReducers(reducers);
-const createStoreWithMiddleware = applyMiddleware(multi)(createStore);
-const store = createStoreWithMiddleware(reducer);
+const store = createStore(reducer);
 
 export default class App extends Component {
   render() {

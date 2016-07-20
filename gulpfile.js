@@ -1,24 +1,22 @@
 'use strict';
 
-var gulp, browserify, sourcemaps, source, buffer, watchify, babelify,
-  browserSync, nodemon, babel, Cache, cache;
+var gulp = require('gulp');
+var browserify = require('browserify');
+var sourcemaps = require('gulp-sourcemaps');
+var source = require('vinyl-source-stream');
+var buffer = require('vinyl-buffer');
+var watchify = require('watchify');
+var babelify = require('babelify');
+var browserSync = require('browser-sync');
+var nodemon = require('gulp-nodemon');
+var babel = require('gulp-babel');
+var Cache = require('gulp-file-cache');
 
-gulp = require('gulp');
-browserify = require('browserify');
-sourcemaps = require('gulp-sourcemaps');
-source = require('vinyl-source-stream');
-buffer = require('vinyl-buffer');
-watchify = require('watchify');
-babelify = require('babelify');
-browserSync = require('browser-sync');
-nodemon = require('gulp-nodemon');
-babel = require('gulp-babel');
-Cache = require('gulp-file-cache');
-
-cache = new Cache();
+var cache = new Cache();
 
 gulp.task('styles', ['watch-styles'], function() {
-  return gulp.src(['app/lib/bootstrap-css/css/bootstrap.min.css','app/src/style.css'])
+  return gulp.src(['app/lib/bootstrap-css/css/bootstrap.min.css',
+    'app/src/style.css'])
     .pipe(gulp.dest('app/build/bundle'));
 });
 gulp.task('watch-styles', function() {
@@ -35,18 +33,21 @@ gulp.task('watch-html', function() {
 
 gulp.task('watch-js', function() {
   var bundler = watchify(browserify({
-      entries: ['./app/src/index.js'],
-      debug: true
-    })
+    entries: ['./app/src/index.js'],
+    debug: true
+  })
     .transform(babelify, {presets: ['es2015', 'react']})
   );
 
   function rebundle() {
     bundler.bundle()
-      .on('error', function(err) {console.error(err); this.emit('end');})
+      .on('error', function(err) {
+        console.error(err);
+        this.emit('end');
+      })
       .pipe(source('index.js'))
       .pipe(buffer())
-      .pipe(sourcemaps.init({ loadMaps: true }))
+      .pipe(sourcemaps.init({loadMaps: true}))
       .pipe(sourcemaps.write('./'))
       .pipe(gulp.dest('./app/build'));
   }
@@ -67,7 +68,7 @@ gulp.task('browser-sync', ['nodemon'], function() {
   });
 });
 
-gulp.task('nodemon', function () {
+gulp.task('nodemon', function() {
   var stream = nodemon({
     script: './server/build/bin/www',
     ignore: [
@@ -94,9 +95,10 @@ gulp.task('server-babel', function() {
 });
 
 gulp.task('reload', function() {
-  setTimeout(function () {
-    browserSync.reload({ stream: false });
+  setTimeout(function() {
+    browserSync.reload({stream: false});
   }, 1000);
 });
 
-gulp.task('default', ['styles', 'watch-styles', 'html', 'watch-html', 'watch-js', 'browser-sync']);
+gulp.task('default', ['styles', 'watch-styles', 'html', 'watch-html',
+  'watch-js', 'browser-sync']);

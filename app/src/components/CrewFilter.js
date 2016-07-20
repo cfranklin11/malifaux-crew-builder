@@ -1,10 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 
-export default class ssLimitInput extends Component {
-  static propTypes = {
-    editSSLimit: PropTypes.func.isRequired
-  }
-
+export default class SSLimitInput extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -14,8 +10,11 @@ export default class ssLimitInput extends Component {
 
   render() {
     return (
-      <label for="ss-limit-input">Soulstone Limit</label>
-      <input type="number" id="ss-limit-input" name="ss-limit" value={this.state.value}>
+      <div>
+        <label htmlFor="ss-limit-input">Soulstone Limit</label>
+        <input type="number" id="ss-limit-input" name="ss-limit"
+          value={this.state.value} />
+      </div>
     );
   }
 
@@ -31,3 +30,8 @@ export default class ssLimitInput extends Component {
   }
 
 }
+
+SSLimitInput.propTypes = {
+  value: PropTypes.number,
+  updateSSLimit: PropTypes.func.isRequired
+};
