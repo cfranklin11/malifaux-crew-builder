@@ -17,7 +17,7 @@ var cache = new Cache();
 gulp.task('styles', ['watch-styles'], function() {
   return gulp.src(['app/lib/bootstrap-css/css/bootstrap.min.css',
     'app/src/style.css'])
-    .pipe(gulp.dest('app/build/bundle'));
+    .pipe(gulp.dest('app/build'));
 });
 gulp.task('watch-styles', function() {
   return gulp.watch(['app/src/*.css'], ['styles', 'reload']);
@@ -25,7 +25,7 @@ gulp.task('watch-styles', function() {
 
 gulp.task('html', ['watch-html'], function() {
   return gulp.src(['app/src/index.html'])
-    .pipe(gulp.dest('app/build/bundle'));
+    .pipe(gulp.dest('app/build'));
 });
 gulp.task('watch-html', function() {
   return gulp.watch(['app/src/index.html'], ['html', 'reload']);
@@ -36,7 +36,7 @@ gulp.task('watch-js', function() {
     entries: ['./app/src/index.js'],
     debug: true
   })
-    .transform(babelify, {presets: ['es2015', 'react']})
+    .transform(babelify, {presets: ['es2016', 'es2015', 'stage-2', 'react']})
   );
 
   function rebundle() {

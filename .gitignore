@@ -38,4 +38,8 @@ node_modules
 # Debug log from npm
 npm-debug.log
 
+# Variables
 env.json
+
+#ESLint Config
+.eslintrc.json

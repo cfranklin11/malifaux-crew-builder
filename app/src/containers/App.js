@@ -1,24 +1,17 @@
 import React, {Component} from 'react';
-import {combineReducers} from 'redux';
 import {Provider} from 'react-redux';
-
-import {createStore, renderDevTools} from '../stores/configureStore';
-
+import configureStore from '../stores/configureStore';
 import CrewBuilder from './CrewBuilder';
-import * as reducers from '../reducers/crewBuilder';
 
-const reducer = combineReducers(reducers);
-const store = createStore(reducer);
+const store = configureStore();
 
 export default class App extends Component {
   render() {
     return (
       <div>
         <Provider store={store}>
-          {() => <CrewBuilder /> }
+          <CrewBuilder />
         </Provider>
-
-        {renderDevTools(store)}
       </div>
     );
   }
