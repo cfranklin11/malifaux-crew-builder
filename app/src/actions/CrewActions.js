@@ -6,3 +6,10 @@ export function updateSSLimit(ssLimit) {
     ssLimit
   };
 }
+
+export function updateFaction(faction) {
+  return {
+    type: types.UPDATE_FACTION,
+    faction
+  };
+}

@@ -1,1 +1,2 @@
 export const UPDATE_SS_LIMIT = 'UPDATE_SS_LIMIT';
+export const UPDATE_FACTION = 'UPDATE_FACTION';

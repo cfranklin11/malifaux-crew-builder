@@ -13,10 +13,12 @@ export default class CrewFilter extends Component {
       <div>
         <label htmlFor="ss-limit-input">Soulstone Limit</label>
         <input type="number" id="ss-limit-input" name="ss-limit"
-          value={this.state.value} onChange={this.handleChange.bind(this)}
+          value={this.state.value} onChange={this.handleLimitChange.bind(this)}
         onKeyDown={this.handleSubmit.bind(this)}/>
+
         <label htmlFor="faction-select">Faction</label>
-        <select id="faction-select">
+        <select id="faction-select"
+          onChange={this.handleFactionChange.bind(this)}>
           <option value="guild">The Guild</option>
           <option value="resurrectionists">Resurrectionists</option>
           <option value="neverborn">Neverborn</option>
@@ -29,14 +31,19 @@ export default class CrewFilter extends Component {
     );
   }
 
-  handleChange(e) {
+  handleLimitChange(e) {
     this.setState({value: e.target.value});
+  }
+
+  handleFactionChange(e) {
+    const faction = e.target.value;
+    this.props.actions.updateFaction(faction);
   }
 
   handleSubmit(e) {
     const value = Math.ceil(e.target.value);
     if (e.which === 13) {
-      this.props.updateSSLimit(value);
+      this.props.actions.updateSSLimit(value);
     }
   }
 
@@ -44,5 +51,5 @@ export default class CrewFilter extends Component {
 
 CrewFilter.propTypes = {
   value: PropTypes.number,
-  updateSSLimit: PropTypes.func.isRequired
+  actions: PropTypes.object.isRequired
 };

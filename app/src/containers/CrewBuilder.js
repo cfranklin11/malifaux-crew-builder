@@ -13,7 +13,7 @@ export default class CrewBuilder extends Component {
     return (
       <div>
         <h1>Malifaux Crew Builder</h1>
-        <CrewFilter updateSSLimit={actions.updateSSLimit} />
+        <CrewFilter actions={actions} />
         <SSDisplay ssLimit={ssLimit} ssCostSum={ssCostSum} ssCache={ssCache} />
       </div>
     );
