@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 
-export default class SSLimitInput extends Component {
+export default class CrewFilter extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -13,7 +13,18 @@ export default class SSLimitInput extends Component {
       <div>
         <label htmlFor="ss-limit-input">Soulstone Limit</label>
         <input type="number" id="ss-limit-input" name="ss-limit"
-          value={this.state.value} />
+          value={this.state.value} onChange={this.handleChange.bind(this)}
+        onKeyDown={this.handleSubmit.bind(this)}/>
+        <label htmlFor="faction-select">Faction</label>
+        <select id="faction-select">
+          <option value="guild">The Guild</option>
+          <option value="resurrectionists">Resurrectionists</option>
+          <option value="neverborn">Neverborn</option>
+          <option value="arcanists">Arcanists</option>
+          <option value="outcasts">Outcasts</option>
+          <option value="ten-thunders">Ten Thunders</option>
+          <option value="gremlins">Gremlins</option>
+        </select>
       </div>
     );
   }
@@ -31,7 +42,7 @@ export default class SSLimitInput extends Component {
 
 }
 
-SSLimitInput.propTypes = {
+CrewFilter.propTypes = {
   value: PropTypes.number,
   updateSSLimit: PropTypes.func.isRequired
 };

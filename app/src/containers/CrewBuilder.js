@@ -3,17 +3,18 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 
 import * as CrewActions from '../actions/CrewActions';
-import CrewFilter from '../components/CrewFilter';
+import {CrewFilter, SSDisplay} from '../components';
 
 export default class CrewBuilder extends Component {
 
   render() {
-    const {actions} = this.props;
+    const {ssLimit, ssCostSum, ssCache, actions} = this.props;
 
     return (
       <div>
         <h1>Malifaux Crew Builder</h1>
         <CrewFilter updateSSLimit={actions.updateSSLimit} />
+        <SSDisplay ssLimit={ssLimit} ssCostSum={ssCostSum} ssCache={ssCache} />
       </div>
     );
   }
@@ -21,12 +22,16 @@ export default class CrewBuilder extends Component {
 
 CrewBuilder.propTypes = {
   ssLimit: PropTypes.number.isRequired,
+  ssCostSum: PropTypes.number.isRequired,
+  ssCache: PropTypes.number.isRequired,
   actions: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
   return {
-    ssLimit: state.ssLimit
+    ssLimit: state.ssLimit,
+    ssCostSum: state.ssCostSum,
+    ssCache: state.ssCache
   };
 }
 

@@ -1,7 +1,9 @@
 import * as types from '../constants/ActionTypes';
 
 const initialState = {
-  ssLimit: 0
+  ssLimit: 0,
+  ssCache: 0,
+  ssCostSum: 0
 };
 
 export default function crewBuilder(state = initialState, action) {
