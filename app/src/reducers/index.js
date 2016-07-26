@@ -2,10 +2,12 @@ import {combineReducers} from 'redux';
 import * as types from '../constants/ActionTypes';
 
 const initialState = {
-  ssLimit: 0,
-  ssCache: 0,
-  ssCostSum: 0,
-  faction: 'guild',
+  soulstones: {
+    ssLimit: 0,
+    ssCache: 0,
+    ssCostSum: 0
+  },
+  selectedFaction: 'guild',
   charactersByFaction: {
     guild: {
       isFetching: true,
@@ -15,8 +17,7 @@ const initialState = {
   }
 };
 
-function crewBuilder(state = initialState, action) {
-  console.log(state);
+function soulstones(state = initialState.soulstones, action) {
   switch (action.type) {
 
     case types.UPDATE_SS_LIMIT:
@@ -50,7 +51,8 @@ function charactersByFaction(state = {}, action) {
     case types.REQUEST_CHARS:
       return {
         ...state,
-        [action.faction]: characters(state[action.faction], action)
+        [action.faction]:
+          characters(state[action.faction], action)
       };
 
     default:
@@ -86,7 +88,7 @@ function characters(state = {
 
 const rootReducer = combineReducers({
   charactersByFaction,
-  crewBuilder,
+  soulstones,
   selectedFaction
 });
 

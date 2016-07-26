@@ -6,25 +6,28 @@ let sheetsHelper = {
   getSpreadsheet: (req, res, next) => {
     // First option is to use ID entered into the form, then any environment
     // variables
-    let doc = new GoogleSpreadsheet(auth.doc_id);
+    console.log(auth.docID);
+
+    let doc = new GoogleSpreadsheet(auth.docID);
     sheetsHelper.setAuth(req, res, next, doc);
   },
 
   // Get auth credentials to make changes to sheet
   setAuth: (req, res, next, doc) => {
-    let clientEmail = auth.client_email;
-    let privateKey = auth.private_key;
+    let {client_email, private_key} = auth;
 
     // Credentials obtained via environment variables imported to auth.js
     let credsJson = {
-      clientEmail,
-      privateKey
+      client_email,
+      private_key
     };
+
+    console.log(credsJson);
 
     doc.useServiceAccountAuth(credsJson, err => {
       if (err) {
-        console.log(err);
-        return res.send(err);
+        console.log('creds error ' + err);
+        return res.send(err.toString());
       }
 
       sheetsHelper.getWorksheets(req, res, next, doc);
@@ -40,8 +43,10 @@ let sheetsHelper = {
 
       if (err) {
         console.log(err);
-        return res.status(400).send(err);
+        return res.status(400).send(err.toString);
       }
+
+      console.log(spreadsheet);
 
       sheetsHelper.getCharacters(req, res, next, spreadsheet);
     });

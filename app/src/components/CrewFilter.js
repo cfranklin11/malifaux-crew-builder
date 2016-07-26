@@ -1,17 +1,16 @@
 import React, {Component, PropTypes} from 'react';
-import {CharacterFilter, CharacterSelect} from '../components';
 
 export default class CrewFilter extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: 0
+      value: 0,
+      faction: this.props.selectedFaction
     };
     this.actions = this.props.actions;
     this.handleLimitChange = this.handleLimitChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleFactionChange = this.handleFactionChange.bind(this);
-    this.hanldeLeaderChange = this.handleLeaderChange.bind(this);
   }
 
   handleLimitChange(e) {
@@ -56,10 +55,6 @@ export default class CrewFilter extends Component {
           <option value="ten-thunders">Ten Thunders</option>
           <option value="gremlins">Gremlins</option>
         </select>
-
-        <CharacterSelect />
-        <CharacterFilter />
-        <CharacterSelect />
       </div>
     );
   }
@@ -67,7 +62,6 @@ export default class CrewFilter extends Component {
 
 CrewFilter.propTypes = {
   value: PropTypes.number,
-  faction: PropTypes.string.isRequired,
-  actions: PropTypes.object.isRequired,
-  dispatch: PropTypes.func.isRequired
+  selectedFaction: PropTypes.string.isRequired,
+  actions: PropTypes.object.isRequired
 };

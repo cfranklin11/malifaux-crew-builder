@@ -8,23 +8,24 @@ import {CrewFilter, SSDisplay} from '../components';
 export default class CrewBuilder extends Component {
 
   componentDidMount() {
-    const {faction, actions} = this.props;
-    actions.fetchCharactersIfNeeded(faction);
+    const {selectedFaction, actions} = this.props;
+    actions.fetchCharactersIfNeeded(selectedFaction);
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.faction !== this.props.faction) {
+    if (nextProps.selectedFaction !== this.props.selectedFaction) {
       const {actions, faction} = nextProps;
       actions.fetchPostsIfNeeded(faction);
     }
   }
 
   render() {
-    const {ssLimit, ssCostSum, ssCache, actions} = this.props;
+    const {ssLimit, ssCostSum, ssCache} = this.props.soulstones;
+    const {actions, selectedFaction} = this.props;
     return (
       <div>
         <h1>Malifaux Crew Builder</h1>
-        <CrewFilter actions={actions} />
+        <CrewFilter actions={actions} selectedFaction={selectedFaction} />
         <SSDisplay ssLimit={ssLimit} ssCostSum={ssCostSum} ssCache={ssCache} />
       </div>
     );
@@ -32,22 +33,21 @@ export default class CrewBuilder extends Component {
 }
 
 CrewBuilder.propTypes = {
-  ssLimit: PropTypes.number.isRequired,
-  ssCostSum: PropTypes.number.isRequired,
-  ssCache: PropTypes.number.isRequired,
-  faction: PropTypes.string.isRequired,
+  soulstones: PropTypes.object.isRequired,
+  selectedFaction: PropTypes.string.isRequired,
   leaders: PropTypes.array.isRequired,
   characters: PropTypes.array.isRequired,
+  isFetching: PropTypes.bool.isRequired,
   actions: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
-  const {ssLimit, ssCostSum, ssCache, faction, charactersByFaction} = state;
+  const {soulstones, selectedFaction, charactersByFaction} = state;
   const {
     isFetching,
     leaders,
     characters
-  } = charactersByFaction[faction] ||
+  } = charactersByFaction[selectedFaction] ||
   {
     isFetching: true,
     leaders: [],
@@ -55,10 +55,8 @@ function mapStateToProps(state) {
   };
 
   return {
-    ssLimit,
-    ssCostSum,
-    ssCache,
-    faction,
+    soulstones,
+    selectedFaction,
     isFetching,
     leaders,
     characters
