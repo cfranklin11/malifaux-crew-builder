@@ -22,10 +22,12 @@ function requestCharacters(faction) {
   };
 }
 
-function receiveCharacters(characters) {
+function receiveCharacters(faction, json) {
   return {
     type: types.RECEIVE_CHARS,
-    characters
+    leaders: json.leaders,
+    characters: json.characters,
+    faction
   };
 }
 
@@ -35,7 +37,10 @@ function fetchCharacters(faction) {
 
     return fetch(`/api/${faction}/characters`)
       .then(response => response.json())
-      .then(json => dispatch(receiveCharacters(faction, json)));
+      .then(json => {
+        console.log(json);
+        dispatch(receiveCharacters(faction, json));
+      });
   };
 }
 

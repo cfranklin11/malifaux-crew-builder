@@ -59,19 +59,33 @@ let sheetsHelper = {
 
         // Rows array has a lot of extra data, so filter to get
         // only URL and status code
-        let characterRows = rows.map(item => {
+        let characterRows = rows.map(character => {
           let {name, faction, station, characteristics, limit, sscost,
-            sscache} = item;
+            sscache} = character;
           return {name, faction, station, characteristics, limit, sscost,
             sscache};
         });
 
-        console.log(characterRows);
+        let factionRows = characterRows.filter(row => {
+          return req.faction === row.faction;
+        });
 
-        req.characters = characterRows;
+        req.data.leaders = factionRows.filter(row => {
+          const leaderRegExp = /master|henchman/i;
+          return leaderRegExp.test(row.station);
+        });
 
-        sheetsHelper.getUpgrades(req, res, next, spreadsheet);
-    });
+        req.data.characters = factionRows.filter(row => {
+          const masterRegExp = /master/i;
+          return !masterRegExp.test(row.station);
+        });
+
+        console.log(factionRows);
+        next();
+
+        // sheetsHelper.getUpgrades(req, res, next, spreadsheet);
+      }
+    );
   },
 
   getUpgrades: (req, res, next, spreadsheet) => {
@@ -100,7 +114,8 @@ let sheetsHelper = {
         req.upgrades = upgradeRows;
 
         next();
-    });
+      }
+    );
   }
 };
 
