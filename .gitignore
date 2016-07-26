@@ -21,6 +21,7 @@ app/lib
 
 # Gulp files
 app/build
+.gulp-cache
 
 # Babel files
 server/build

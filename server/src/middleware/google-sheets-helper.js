@@ -1,3 +1,5 @@
+/* eslint camelcase: ["error", {properties: "never"}]*/
+
 import GoogleSpreadsheet from 'google-spreadsheet';
 import auth from '../config/auth.js';
 
@@ -6,8 +8,6 @@ let sheetsHelper = {
   getSpreadsheet: (req, res, next) => {
     // First option is to use ID entered into the form, then any environment
     // variables
-    console.log(auth.docID);
-
     let doc = new GoogleSpreadsheet(auth.docID);
     sheetsHelper.setAuth(req, res, next, doc);
   },
@@ -21,8 +21,6 @@ let sheetsHelper = {
       client_email,
       private_key
     };
-
-    console.log(credsJson);
 
     doc.useServiceAccountAuth(credsJson, err => {
       if (err) {
@@ -45,8 +43,6 @@ let sheetsHelper = {
         console.log(err);
         return res.status(400).send(err.toString);
       }
-
-      console.log(spreadsheet);
 
       sheetsHelper.getCharacters(req, res, next, spreadsheet);
     });
@@ -72,8 +68,10 @@ let sheetsHelper = {
         });
 
         let factionRows = characterRows.filter(row => {
-          return req.faction === row.faction;
+          return req.faction.toLowerCase() === row.faction.toLowerCase();
         });
+
+        req.data = {};
 
         req.data.leaders = factionRows.filter(row => {
           const leaderRegExp = /master|henchman/i;
@@ -85,7 +83,6 @@ let sheetsHelper = {
           return !masterRegExp.test(row.station);
         });
 
-        console.log(factionRows);
         next();
 
         // sheetsHelper.getUpgrades(req, res, next, spreadsheet);
