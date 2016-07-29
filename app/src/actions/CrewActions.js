@@ -8,6 +8,20 @@ export function updateSSLimit(ssLimit) {
   };
 }
 
+export function addLeader(leader) {
+  return {
+    type: types.ADD_LEADER,
+    leader
+  };
+}
+
+export function addFollower(follower) {
+  return {
+    type: types.ADD_FOLLOWER,
+    follower
+  };
+}
+
 export function selectFaction(faction) {
   return {
     type: types.SELECT_FACTION,
@@ -26,7 +40,7 @@ function receiveCharacters(faction, json) {
   return {
     type: types.RECEIVE_CHARS,
     leaders: json.leaders,
-    characters: json.characters,
+    followers: json.followers,
     faction
   };
 }

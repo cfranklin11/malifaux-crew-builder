@@ -8,11 +8,15 @@ const initialState = {
     ssCostSum: 0
   },
   selectedFaction: 'guild',
+  crew: {
+    leader: {},
+    followers: []
+  },
   charactersByFaction: {
     guild: {
       isFetching: true,
       leaders: [],
-      characters: []
+      followers: []
     }
   }
 };
@@ -31,11 +35,37 @@ function soulstones(state = initialState.soulstones, action) {
   }
 }
 
-function selectedFaction(state = 'guild', action) {
+function selectedFaction(state = initialState.selectedFaction, action) {
   switch (action.type) {
 
     case types.SELECT_FACTION:
       return action.faction;
+
+    default:
+      return state;
+  }
+}
+
+function crew(state = initialState.crew, action) {
+  switch (action.type) {
+
+    case types.ADD_LEADER:
+      return {
+        ...state,
+        crew: {
+          leader: action.leader,
+          followers: state.followers
+        }
+      };
+
+    case types.ADD_FOLLOWER:
+      return {
+        ...state,
+        crew: {
+          leader: state.leader,
+          followers: [...state.followers, action.follower]
+        }
+      };
 
     default:
       return state;
@@ -63,7 +93,7 @@ function charactersByFaction(state = {}, action) {
 function characters(state = {
   isFetching: false,
   leaders: [],
-  characters: []
+  followers: []
 }, action) {
   switch (action.type) {
 
@@ -78,7 +108,7 @@ function characters(state = {
         ...state,
         isFetching: false,
         leaders: action.leaders,
-        characters: action.characters
+        followers: action.followers
       };
 
     default:
@@ -89,7 +119,8 @@ function characters(state = {
 const rootReducer = combineReducers({
   charactersByFaction,
   soulstones,
-  selectedFaction
+  selectedFaction,
+  crew
 });
 
 export default rootReducer;

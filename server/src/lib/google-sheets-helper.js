@@ -78,7 +78,7 @@ let sheetsHelper = {
           return leaderRegExp.test(row.station);
         });
 
-        req.data.characters = factionRows.filter(row => {
+        req.data.followers = factionRows.filter(row => {
           const masterRegExp = /master/i;
           return !masterRegExp.test(row.station);
         });

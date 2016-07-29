@@ -2,3 +2,5 @@ export const UPDATE_SS_LIMIT = 'UPDATE_SS_LIMIT';
 export const SELECT_FACTION = 'SELECT_FACTION';
 export const REQUEST_CHARS = 'REQUEST_CHARS';
 export const RECEIVE_CHARS = 'RECEIVE_CHARS';
+export const ADD_LEADER = 'ADD_LEADER';
+export const ADD_FOLLOWER = 'ADD_FOLLOWER';
