@@ -5,7 +5,8 @@ const initialState = {
   soulstones: {
     ssLimit: 0,
     ssCache: 0,
-    ssCostSum: 0
+    ssCostSum: 0,
+    test: [1, 2, 3, 4, 5]
   },
   selectedFaction: 'guild',
   crew: {
@@ -76,8 +77,6 @@ function charactersByFaction(state = {}, action) {
   switch (action.type) {
 
     case types.RECEIVE_CHARS:
-      return state;
-
     case types.REQUEST_CHARS:
       return {
         ...state,

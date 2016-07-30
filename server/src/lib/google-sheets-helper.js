@@ -60,11 +60,27 @@ let sheetsHelper = {
 
         // Rows array has a lot of extra data, so filter to get
         // only URL and status code
-        let characterRows = rows.map(character => {
-          let {name, faction, station, characteristics, limit, sscost,
-            sscache} = character;
-          return {name, faction, station, characteristics, limit, sscost,
-            sscache};
+        let characterRows = rows.map((character, index) => {
+          let {
+            name,
+            faction,
+            station,
+            characteristics,
+            limit,
+            sscost,
+            sscache
+          } = character;
+
+          return {
+            name,
+            faction,
+            station,
+            characteristics,
+            limit,
+            sscost,
+            sscache,
+            id: index
+          };
         });
 
         let factionRows = characterRows.filter(row => {

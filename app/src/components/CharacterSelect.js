@@ -1,11 +1,14 @@
 import React, {Component, PropTypes} from 'react';
+import {CharacterOption} from '../components';
 
 export default class CharacterSelect extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       character: this.props.characters[0]
     };
+
     this.actions = this.props.actions;
     this.characters = this.props.characters;
     this.role = this.props.role;
@@ -33,13 +36,15 @@ export default class CharacterSelect extends Component {
           id="character-select"
           onChange={this.handleChange}
         >
-          {
-            this.characters.forEach(char => {
-              return (
-                <option value={char.name}>{char.name}</option>
-              );
-            })
-          }
+          {this.characters.map((character, index) => {
+            console.log(character);
+            return (
+              <option
+                key={index}
+                value={character.name}
+              >{character.name}</option>
+            );
+          })}
         </select>
 
         <label htmlFor="character-button">Add to Crew</label>
@@ -50,8 +55,7 @@ export default class CharacterSelect extends Component {
 }
 
 CharacterSelect.propTypes = {
-  character: PropTypes.string.isRequired,
   characters: PropTypes.array.isRequired,
   role: PropTypes.string.isRequired,
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
 };

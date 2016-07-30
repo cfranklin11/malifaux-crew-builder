@@ -15,13 +15,14 @@ export default class CrewBuilder extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.selectedFaction !== this.props.selectedFaction) {
       const {actions, faction} = nextProps;
-      actions.fetchPostsIfNeeded(faction);
+      actions.fetchCharactersIfNeeded(faction);
     }
   }
 
   render() {
     const {ssLimit, ssCostSum, ssCache} = this.props.soulstones;
     const {actions, selectedFaction, leaders, followers} = this.props;
+    console.log(this.props);
     return (
       <div>
         <h1>Malifaux Crew Builder</h1>
@@ -47,7 +48,8 @@ CrewBuilder.propTypes = {
   leaders: PropTypes.array.isRequired,
   followers: PropTypes.array.isRequired,
   isFetching: PropTypes.bool.isRequired,
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
+  test: PropTypes.array
 };
 
 function mapStateToProps(state) {

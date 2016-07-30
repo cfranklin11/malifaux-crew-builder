@@ -79,5 +79,5 @@ CrewFilter.propTypes = {
   selectedFaction: PropTypes.string.isRequired,
   leaders: PropTypes.array.isRequired,
   followers: PropTypes.array.isRequired,
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
 };

@@ -52,7 +52,6 @@ function fetchCharacters(faction) {
     return fetch(`/api/${faction}/characters`)
       .then(response => response.json())
       .then(json => {
-        console.log(json);
         dispatch(receiveCharacters(faction, json));
       });
   };
