@@ -23,7 +23,7 @@ export default class CrewBuilder extends Component {
     const {ssLimit, ssCostSum, ssCache} = this.props.soulstones;
     const {actions, selectedFaction, leaders, followers, crew} = this.props;
     return (
-      <div>
+      <div className="container">
         <h1>Malifaux Crew Builder</h1>
         <CrewFilter
           actions={actions}

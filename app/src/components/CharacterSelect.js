@@ -27,27 +27,29 @@ export default class CharacterSelect extends Component {
     const {role, characters} = this.props;
     return (
       <div>
-        <label htmlFor="character-select">{role} Select</label>
-        <select
-          id="character-select"
-          onChange={this.handleChange.bind(this)}
-        >
-          {characters.map((character, index) => {
-            return (
-              <option
-                key={index}
-                value={character.name}
-              >
-              {character.name}
-              </option>
-            );
-          })}
-        </select>
+        <div className="form-group">
+          <label htmlFor="character-select">{role} Select</label>
+          <select
+            className="form-control"
+            id="character-select"
+            onChange={this.handleChange.bind(this)}
+          >
+            {characters.map((character, index) => {
+              return (
+                <option
+                  key={index}
+                  value={character.name}
+                >
+                {character.name}
+                </option>
+              );
+            })}
+          </select>
+        </div>
 
-        <label htmlFor="character-button">Add to Crew</label>
         <input
           type="submit"
-          id="character-button"
+          value="Add to Crew"
           onClick={this.handleAdd.bind(this)}
         />
       </div>

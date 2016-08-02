@@ -37,7 +37,6 @@ function soulstones(state = initialState.soulstones, action) {
 }
 
 function selectedFaction(state = initialState.selectedFaction, action) {
-  console.log(action);
   switch (action.type) {
 
     case types.SELECT_FACTION:
@@ -54,19 +53,13 @@ function crew(state = initialState.crew, action) {
     case types.ADD_LEADER:
       return {
         ...state,
-        crew: {
-          leader: action.leader,
-          followers: state.followers
-        }
+        leader: action.leader
       };
 
     case types.ADD_FOLLOWER:
       return {
         ...state,
-        crew: {
-          leader: state.leader,
-          followers: [...state.followers, action.follower]
-        }
+        followers: [...state.followers, action.follower]
       };
 
     default:

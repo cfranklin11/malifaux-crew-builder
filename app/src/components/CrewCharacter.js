@@ -9,11 +9,18 @@ export default class CrewCharacter extends Component {
 
   render() {
     let {character:
-      {count, name, station, limit, characteristics, sscost, sscache}} =
-      this.props;
-    const nameId = name.replace(/\s/g, '-').toLowerCase();
+      {
+        count = '-',
+        name = '-',
+        station = 'Leader',
+        limit = '-',
+        characteristics = '-',
+        sscost = '-',
+        sscache = '-'
+      }
+    } = this.props;
+    const nameId = name ? name.replace(/\s/g, '-').toLowerCase() : '';
     return (
-      <div>
         <tr>
           <td>{count}</td>
           <td>{name}</td>
@@ -25,6 +32,7 @@ export default class CrewCharacter extends Component {
           <td>
             <button
               type="submit"
+              className="btn btn-default"
               id={nameId}
               onClick={this.handleRemove.bind(this)}
             >
@@ -33,7 +41,6 @@ export default class CrewCharacter extends Component {
             </button>
           </td>
         </tr>
-      </div>
     );
   }
 }

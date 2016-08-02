@@ -6,30 +6,35 @@ export default class CrewList extends Component {
     const {actions, crew: {leader, followers}} = this.props;
     return (
       <div>
-        <table>
-          <th>
-            <td>Name</td>
-            <td>Station</td>
-            <td>Limit</td>
-            <td>Characteristics</td>
-            <td>Cost</td>
-            <td>Cache</td>
-          </th>
-          <CrewCharacter
-            actions={actions}
-            role="leader"
-            character={leader}
-          />
-          {followers.map((follower, index) => {
-            return (
-              <CrewCharacter
-                key={index}
-                actions={actions}
-                role="follower"
-                character={follower}
-              />
-            );
-          })}
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Count</th>
+              <th>Name</th>
+              <th>Station</th>
+              <th>Limit</th>
+              <th>Characteristics</th>
+              <th>Cost</th>
+              <th>Cache</th>
+            </tr>
+          </thead>
+          <tbody>
+            <CrewCharacter
+              actions={actions}
+              role="leader"
+              character={leader}
+            />
+            {followers.map((follower, index) => {
+              return (
+                <CrewCharacter
+                  key={index}
+                  actions={actions}
+                  role="follower"
+                  character={follower}
+                />
+              );
+            })}
+          </tbody>
         </table>
       </div>
     );
