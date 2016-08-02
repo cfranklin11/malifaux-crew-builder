@@ -1,5 +1,5 @@
 import {Router} from 'express';
-import sheetsHelper from '../middleware/google-sheets-helper';
+import sheetsHelper from '../lib/google-sheets-helper';
 let router = Router();
 
 router.param('faction', (req, res, next, faction) => {

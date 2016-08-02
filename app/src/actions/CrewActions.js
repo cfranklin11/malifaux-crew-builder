@@ -8,44 +8,57 @@ export function updateSSLimit(ssLimit) {
   };
 }
 
-export function selectFaction(faction) {
+export function addLeader(leader) {
+  return {
+    type: types.ADD_LEADER,
+    leader
+  };
+}
+
+export function addFollower(follower) {
+  return {
+    type: types.ADD_FOLLOWER,
+    follower
+  };
+}
+
+export function selectFaction(selectedFaction) {
   return {
     type: types.SELECT_FACTION,
-    faction
+    selectedFaction
   };
 }
 
-function requestCharacters(faction) {
+function requestCharacters(selectedFaction) {
   return {
     type: types.REQUEST_CHARS,
-    faction
+    selectedFaction
   };
 }
 
-function receiveCharacters(faction, json) {
+function receiveCharacters(selectedFaction, json) {
   return {
     type: types.RECEIVE_CHARS,
     leaders: json.leaders,
-    characters: json.characters,
-    faction
+    followers: json.followers,
+    selectedFaction
   };
 }
 
-function fetchCharacters(faction) {
+function fetchCharacters(selectedFaction) {
   return dispatch => {
-    dispatch(requestCharacters(faction));
+    dispatch(requestCharacters(selectedFaction));
 
-    return fetch(`/api/${faction}/characters`)
+    return fetch(`/api/${selectedFaction}/characters`)
       .then(response => response.json())
       .then(json => {
-        console.log(json);
-        dispatch(receiveCharacters(faction, json));
+        dispatch(receiveCharacters(selectedFaction, json));
       });
   };
 }
 
-function shouldFetchCharacters(state, faction) {
-  const characters = state.charactersByFaction[faction];
+function shouldFetchCharacters(state, selectedFaction) {
+  const characters = state.charactersByFaction[selectedFaction];
   if (!characters) {
     return true;
   }
@@ -55,10 +68,10 @@ function shouldFetchCharacters(state, faction) {
   return true;
 }
 
-export function fetchCharactersIfNeeded(faction) {
+export function fetchCharactersIfNeeded(selectedFaction) {
   return (dispatch, getState) => {
-    if (shouldFetchCharacters(getState(), faction)) {
-      return dispatch(fetchCharacters(faction));
+    if (shouldFetchCharacters(getState(), selectedFaction)) {
+      return dispatch(fetchCharacters(selectedFaction));
     }
   };
 }
