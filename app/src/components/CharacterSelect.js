@@ -8,12 +8,6 @@ export default class CharacterSelect extends Component {
     this.state = {
       character: this.props.characters[0]
     };
-
-    this.actions = this.props.actions;
-    this.characters = this.props.characters;
-    this.role = this.props.role;
-    this.handleChange = this.handleChange.bind(this);
-    this.handleAdd = this.handleAdd.bind(this);
   }
 
   handleChange(e) {
@@ -21,23 +15,25 @@ export default class CharacterSelect extends Component {
   }
 
   handleAdd(e) {
+    const {actions} = this.props;
+    const {character} = this.state;
     if (this.role === 'leader') {
-      this.actions.addLeader(this.state.character);
+      actions.addLeader(character);
     } else {
-      this.actions.addFollower(this.state.character);
+      actions.addFollower(character);
     }
   }
 
   render() {
+    const {role, characters} = this.props;
     return (
       <div>
-        <label htmlFor="character-select">{this.role} Select</label>
+        <label htmlFor="character-select">{role} Select</label>
         <select
           id="character-select"
-          onChange={this.handleChange}
+          onChange={this.handleChange.bind(this)}
         >
-          {this.characters.map((character, index) => {
-            console.log(character);
+          {characters.map((character, index) => {
             return (
               <option
                 key={index}
@@ -48,7 +44,7 @@ export default class CharacterSelect extends Component {
         </select>
 
         <label htmlFor="character-button">Add to Crew</label>
-        <input type="submit" onClick={this.handleAdd} />
+        <input type="submit" onClick={this.handleAdd.bind(this)} />
       </div>
     );
   }
@@ -57,5 +53,5 @@ export default class CharacterSelect extends Component {
 CharacterSelect.propTypes = {
   characters: PropTypes.array.isRequired,
   role: PropTypes.string.isRequired,
-  actions: PropTypes.object.isRequired,
+  actions: PropTypes.object.isRequired
 };

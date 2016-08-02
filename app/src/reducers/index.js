@@ -37,10 +37,11 @@ function soulstones(state = initialState.soulstones, action) {
 }
 
 function selectedFaction(state = initialState.selectedFaction, action) {
+  console.log(action);
   switch (action.type) {
 
     case types.SELECT_FACTION:
-      return action.faction;
+      return action.selectedFaction;
 
     default:
       return state;
@@ -80,8 +81,8 @@ function charactersByFaction(state = {}, action) {
     case types.REQUEST_CHARS:
       return {
         ...state,
-        [action.faction]:
-          characters(state[action.faction], action)
+        [action.selectedFaction]:
+          characters(state[action.selectedFaction], action)
       };
 
     default:

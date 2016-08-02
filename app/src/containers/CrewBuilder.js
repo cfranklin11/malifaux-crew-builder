@@ -14,15 +14,14 @@ export default class CrewBuilder extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.selectedFaction !== this.props.selectedFaction) {
-      const {actions, faction} = nextProps;
-      actions.fetchCharactersIfNeeded(faction);
+      const {actions, selectedFaction} = nextProps;
+      actions.fetchCharactersIfNeeded(selectedFaction);
     }
   }
 
   render() {
     const {ssLimit, ssCostSum, ssCache} = this.props.soulstones;
     const {actions, selectedFaction, leaders, followers} = this.props;
-    console.log(this.props);
     return (
       <div>
         <h1>Malifaux Crew Builder</h1>
