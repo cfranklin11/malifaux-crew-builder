@@ -1,5 +1,4 @@
 import React, {Component, PropTypes} from 'react';
-import {CharacterOption} from '../components';
 
 export default class CharacterSelect extends Component {
   constructor(props) {
@@ -15,9 +14,9 @@ export default class CharacterSelect extends Component {
   }
 
   handleAdd(e) {
-    const {actions} = this.props;
+    const {actions, role} = this.props;
     const {character} = this.state;
-    if (this.role === 'leader') {
+    if (role === 'leader') {
       actions.addLeader(character);
     } else {
       actions.addFollower(character);
@@ -38,13 +37,19 @@ export default class CharacterSelect extends Component {
               <option
                 key={index}
                 value={character.name}
-              >{character.name}</option>
+              >
+              {character.name}
+              </option>
             );
           })}
         </select>
 
         <label htmlFor="character-button">Add to Crew</label>
-        <input type="submit" onClick={this.handleAdd.bind(this)} />
+        <input
+          type="submit"
+          id="character-button"
+          onClick={this.handleAdd.bind(this)}
+        />
       </div>
     );
   }
