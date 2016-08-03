@@ -81,5 +81,7 @@ CharacterSelect.propTypes = {
   characters: PropTypes.array.isRequired,
   role: PropTypes.string.isRequired,
   crew: PropTypes.object,
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
+  isLeaderAdded: PropTypes.bool,
+  character: PropTypes.object
 };
