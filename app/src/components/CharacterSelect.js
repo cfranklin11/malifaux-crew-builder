@@ -33,10 +33,14 @@ export default class CharacterSelect extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    const {role, crew} = nextProps;
+    const isLeaderAdded = role === 'leaders' && crew[0].name || false;
+
     if (!this.state.character) {
       const {characters: [character]} = nextProps;
       this.setState({character});
     }
+    this.setState({isLeaderAdded});
   }
 
   render() {

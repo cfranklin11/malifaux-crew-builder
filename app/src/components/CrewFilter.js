@@ -29,7 +29,8 @@ export default class CrewFilter extends Component {
   }
 
   render() {
-    const {leaders,
+    const {
+      leaders,
       actions,
       followers,
       crew: {
@@ -38,6 +39,7 @@ export default class CrewFilter extends Component {
       }
     } = this.props;
     const {value} = this.state;
+
     return (
       <div className="col-sm-6 col-sm-offset-3">
         <div className="form-group">
