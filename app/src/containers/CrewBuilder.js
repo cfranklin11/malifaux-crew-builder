@@ -3,7 +3,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 
 import * as CrewActions from '../actions/CrewActions';
-import {CrewFilter, SSDisplay} from '../components';
+import {CrewFilter, SSDisplay, CrewList} from '../components';
 
 export default class CrewBuilder extends Component {
 
@@ -21,20 +21,25 @@ export default class CrewBuilder extends Component {
 
   render() {
     const {ssLimit, ssCostSum, ssCache} = this.props.soulstones;
-    const {actions, selectedFaction, leaders, followers} = this.props;
+    const {actions, selectedFaction, leaders, followers, crew} = this.props;
     return (
-      <div>
+      <div className="container">
         <h1>Malifaux Crew Builder</h1>
         <CrewFilter
           actions={actions}
           selectedFaction={selectedFaction}
           leaders={leaders}
           followers={followers}
+          crew={crew}
         />
         <SSDisplay
           ssLimit={ssLimit}
           ssCostSum={ssCostSum}
           ssCache={ssCache}
+        />
+        <CrewList
+          actions={actions}
+          crew={crew}
         />
       </div>
     );
@@ -46,9 +51,9 @@ CrewBuilder.propTypes = {
   selectedFaction: PropTypes.string.isRequired,
   leaders: PropTypes.array.isRequired,
   followers: PropTypes.array.isRequired,
+  crew: PropTypes.object,
   isFetching: PropTypes.bool.isRequired,
-  actions: PropTypes.object.isRequired,
-  test: PropTypes.array
+  actions: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {

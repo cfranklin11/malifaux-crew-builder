@@ -29,44 +29,63 @@ export default class CrewFilter extends Component {
   }
 
   render() {
-    const {leaders, actions, followers} = this.props;
+    const {
+      leaders,
+      actions,
+      followers,
+      crew: {
+        leader,
+        followers: crewFollowers
+      }
+    } = this.props;
     const {value} = this.state;
+
     return (
-      <div>
-        <label htmlFor="ss-limit-input">Soulstone Limit</label>
-        <input
-          type="number"
-          id="ss-limit-input"
-          name="ss-limit"
-          value={value}
-          onChange={this.handleLimitChange.bind(this)}
-          onKeyDown={this.handleSubmit.bind(this)}
-        />
+      <div className="col-sm-6 col-sm-offset-3">
+        <div className="form-group">
+          <label htmlFor="ss-limit-input">Soulstone Limit</label>
+          <input
+            className="form-control"
+            type="number"
+            id="ss-limit-input"
+            name="ss-limit"
+            value={value}
+            onChange={this.handleLimitChange.bind(this)}
+            onKeyDown={this.handleSubmit.bind(this)}
+          />
+        </div>
 
-        <label htmlFor="faction-select">Faction</label>
-        <select
-          id="faction-select"
-          onChange={this.handleFactionChange.bind(this)}
-        >
-          <option value="guild">The Guild</option>
-          <option value="resurrectionists">Resurrectionists</option>
-          <option value="neverborn">Neverborn</option>
-          <option value="arcanists">Arcanists</option>
-          <option value="outcasts">Outcasts</option>
-          <option value="ten-thunders">Ten Thunders</option>
-          <option value="gremlins">Gremlins</option>
-        </select>
+        <div className="form-group">
+          <label htmlFor="faction-select">Faction</label>
+          <select
+            className="form-control"
+            id="faction-select"
+            onChange={this.handleFactionChange.bind(this)}
+          >
+            <option value="guild">The Guild</option>
+            <option value="resurrectionists">Resurrectionists</option>
+            <option value="neverborn">Neverborn</option>
+            <option value="arcanists">Arcanists</option>
+            <option value="outcasts">Outcasts</option>
+            <option value="ten-thunders">Ten Thunders</option>
+            <option value="gremlins">Gremlins</option>
+          </select>
+        </div>
 
-        <CharacterSelect
-          characters={leaders}
-          role="leader"
-          actions={actions}
-        />
-        <CharacterSelect
-          characters={followers}
-          role="followers"
-          actions={actions}
-        />
+        <div>
+          <CharacterSelect
+            characters={leaders}
+            role="leaders"
+            crew={[leader]}
+            actions={actions}
+          />
+          <CharacterSelect
+            characters={followers}
+            role="followers"
+            crew={crewFollowers}
+            actions={actions}
+          />
+        </div>
       </div>
     );
   }
@@ -77,5 +96,6 @@ CrewFilter.propTypes = {
   selectedFaction: PropTypes.string.isRequired,
   leaders: PropTypes.array.isRequired,
   followers: PropTypes.array.isRequired,
+  crew: PropTypes.object,
   actions: PropTypes.object.isRequired
 };

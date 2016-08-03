@@ -1,50 +1,81 @@
 import React, {Component, PropTypes} from 'react';
-import {CharacterOption} from '../components';
 
 export default class CharacterSelect extends Component {
   constructor(props) {
     super(props);
 
+    const {crew, role} = this.props;
+    const isLeaderAdded = role === 'leaders' && crew[0].name || false;
+
     this.state = {
-      character: this.props.characters[0]
+      character: undefined,
+      isLeaderAdded
     };
   }
 
   handleChange(e) {
-    this.setState({character: e.target.value});
+    const characterName = e.target.value;
+    const [character] = this.props.characters.filter(char => {
+      return characterName === char.name;
+    });
+    this.setState({character});
   }
 
   handleAdd(e) {
-    const {actions} = this.props;
+    const {actions, role} = this.props;
     const {character} = this.state;
-    if (this.role === 'leader') {
+    if (role === 'leaders') {
+      this.setState({isLeaderAdded: true});
       actions.addLeader(character);
     } else {
       actions.addFollower(character);
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    const {role, crew} = nextProps;
+    const isLeaderAdded = role === 'leaders' && crew[0].name || false;
+
+    if (!this.state.character) {
+      const {characters: [character]} = nextProps;
+      this.setState({character});
+    }
+    this.setState({isLeaderAdded});
+  }
+
   render() {
     const {role, characters} = this.props;
+    const {isLeaderAdded} = this.state;
+
     return (
       <div>
-        <label htmlFor="character-select">{role} Select</label>
-        <select
-          id="character-select"
-          onChange={this.handleChange.bind(this)}
-        >
-          {characters.map((character, index) => {
-            return (
-              <option
-                key={index}
-                value={character.name}
-              >{character.name}</option>
-            );
-          })}
-        </select>
+        <div className="form-group">
+          <label htmlFor="character-select">{role} Select</label>
+          <select
+            className="form-control"
+            id="character-select"
+            onChange={this.handleChange.bind(this)}
+          >
+            {characters.map((character, index) => {
+              return (
+                <option
+                  key={index}
+                  value={character.name}
+                >
+                {character.name}
+                </option>
+              );
+            })}
+          </select>
+        </div>
 
-        <label htmlFor="character-button">Add to Crew</label>
-        <input type="submit" onClick={this.handleAdd.bind(this)} />
+        <input
+          className="btn btn-default"
+          type="submit"
+          value="Add to Crew"
+          onClick={this.handleAdd.bind(this)}
+          disabled={isLeaderAdded}
+        />
       </div>
     );
   }
@@ -53,5 +84,8 @@ export default class CharacterSelect extends Component {
 CharacterSelect.propTypes = {
   characters: PropTypes.array.isRequired,
   role: PropTypes.string.isRequired,
-  actions: PropTypes.object.isRequired
+  crew: PropTypes.array,
+  actions: PropTypes.object.isRequired,
+  isLeaderAdded: PropTypes.bool,
+  character: PropTypes.object
 };
