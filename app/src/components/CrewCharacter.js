@@ -2,9 +2,13 @@ import React, {Component, PropTypes} from 'react';
 
 export default class CrewCharacter extends Component {
   handleRemove(e) {
-    const {actions} = this.props;
-    const characterToRemove = e.target.id;
-    actions.removeCharacter(characterToRemove);
+    const {role, actions, character: {name: characterToRemove}} = this.props;
+
+    if (role === 'leader') {
+      actions.removeLeader();
+    } else {
+      actions.removeFollower(characterToRemove);
+    }
   }
 
   render() {
@@ -19,7 +23,6 @@ export default class CrewCharacter extends Component {
         sscache = '-'
       }
     } = this.props;
-    const nameId = name ? name.replace(/\s/g, '-').toLowerCase() : '';
     return (
         <tr>
           <td>{count}</td>
@@ -33,7 +36,6 @@ export default class CrewCharacter extends Component {
             <button
               type="submit"
               className="btn btn-default"
-              id={nameId}
               onClick={this.handleRemove.bind(this)}
             >
               <span className="glyphicon glyphicon-remove" aria-hidden="true">
@@ -47,5 +49,6 @@ export default class CrewCharacter extends Component {
 
 CrewCharacter.propTypes = {
   character: PropTypes.object.isRequired,
+  role: PropTypes.string.isRequired,
   actions: PropTypes.object.isRequired
 };

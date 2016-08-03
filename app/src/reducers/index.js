@@ -62,6 +62,20 @@ function crew(state = initialState.crew, action) {
         followers: [...state.followers, action.follower]
       };
 
+    case types.REMOVE_LEADER:
+      return {
+        ...state,
+        leader: {}
+      };
+
+    case types.REMOVE_FOLLOWER:
+      return {
+        ...state,
+        followers: state.followers.filter(follower => {
+          return follower.name !== action.followerName;
+        })
+      };
+
     default:
       return state;
   }

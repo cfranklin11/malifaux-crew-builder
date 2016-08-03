@@ -22,6 +22,19 @@ export function addFollower(follower) {
   };
 }
 
+export function removeLeader() {
+  return {
+    type: types.REMOVE_LEADER
+  };
+}
+
+export function removeFollower(followerName) {
+  return {
+    type: types.REMOVE_FOLLOWER,
+    followerName
+  };
+}
+
 export function selectFaction(selectedFaction) {
   return {
     type: types.SELECT_FACTION,
