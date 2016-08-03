@@ -36,6 +36,7 @@ export default class CrewFilter extends Component {
         <div className="form-group">
           <label htmlFor="ss-limit-input">Soulstone Limit</label>
           <input
+            className="form-control"
             type="number"
             id="ss-limit-input"
             name="ss-limit"
@@ -48,6 +49,7 @@ export default class CrewFilter extends Component {
         <div className="form-group">
           <label htmlFor="faction-select">Faction</label>
           <select
+            className="form-control"
             id="faction-select"
             onChange={this.handleFactionChange.bind(this)}
           >
@@ -64,7 +66,7 @@ export default class CrewFilter extends Component {
         <div>
           <CharacterSelect
             characters={leaders}
-            role="leader"
+            role="leaders"
             actions={actions}
           />
           <CharacterSelect

@@ -16,6 +16,7 @@ export default class CrewList extends Component {
               <th>Characteristics</th>
               <th>Cost</th>
               <th>Cache</th>
+              <th>Remove</th>
             </tr>
           </thead>
           <tbody>

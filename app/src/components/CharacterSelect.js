@@ -5,21 +5,32 @@ export default class CharacterSelect extends Component {
     super(props);
 
     this.state = {
-      character: this.props.characters[0]
+      character: undefined
     };
   }
 
   handleChange(e) {
-    this.setState({character: e.target.value});
+    const characterName = e.target.value;
+    const [character] = this.props.characters.filter(char => {
+      return characterName === char.name;
+    });
+    this.setState({character});
   }
 
   handleAdd(e) {
     const {actions, role} = this.props;
     const {character} = this.state;
-    if (role === 'leader') {
+    if (role === 'leaders') {
       actions.addLeader(character);
     } else {
       actions.addFollower(character);
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!this.state.character) {
+      const {characters: [character]} = nextProps;
+      this.setState({character});
     }
   }
 
@@ -48,6 +59,7 @@ export default class CharacterSelect extends Component {
         </div>
 
         <input
+          className="btn btn-default"
           type="submit"
           value="Add to Crew"
           onClick={this.handleAdd.bind(this)}

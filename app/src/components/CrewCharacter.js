@@ -3,12 +3,12 @@ import React, {Component, PropTypes} from 'react';
 export default class CrewCharacter extends Component {
   handleRemove(e) {
     const {actions} = this.props;
-    let characterToRemove = e.target.id;
+    const characterToRemove = e.target.id;
     actions.removeCharacter(characterToRemove);
   }
 
   render() {
-    let {character:
+    const {character:
       {
         count = '-',
         name = '-',
