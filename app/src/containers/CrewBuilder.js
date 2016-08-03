@@ -30,6 +30,7 @@ export default class CrewBuilder extends Component {
           selectedFaction={selectedFaction}
           leaders={leaders}
           followers={followers}
+          crew={crew}
         />
         <SSDisplay
           ssLimit={ssLimit}

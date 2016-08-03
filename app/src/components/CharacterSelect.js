@@ -4,8 +4,13 @@ export default class CharacterSelect extends Component {
   constructor(props) {
     super(props);
 
+    const {crew, role} = this.props;
+    const isLeaderAdded =
+      role === 'leaders' && crew.name ||
+      role === 'followers';
     this.state = {
-      character: undefined
+      character: undefined,
+      isLeaderAdded
     };
   }
 
@@ -21,6 +26,7 @@ export default class CharacterSelect extends Component {
     const {actions, role} = this.props;
     const {character} = this.state;
     if (role === 'leaders') {
+      this.setState({isLeaderAdded: true});
       actions.addLeader(character);
     } else {
       actions.addFollower(character);
@@ -36,6 +42,7 @@ export default class CharacterSelect extends Component {
 
   render() {
     const {role, characters} = this.props;
+    const {isLeaderAdded} = this.state;
     return (
       <div>
         <div className="form-group">
@@ -63,6 +70,7 @@ export default class CharacterSelect extends Component {
           type="submit"
           value="Add to Crew"
           onClick={this.handleAdd.bind(this)}
+          disabled={isLeaderAdded}
         />
       </div>
     );
@@ -72,5 +80,6 @@ export default class CharacterSelect extends Component {
 CharacterSelect.propTypes = {
   characters: PropTypes.array.isRequired,
   role: PropTypes.string.isRequired,
+  crew: PropTypes.object,
   actions: PropTypes.object.isRequired
 };
