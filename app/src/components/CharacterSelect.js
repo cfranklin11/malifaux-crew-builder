@@ -5,9 +5,8 @@ export default class CharacterSelect extends Component {
     super(props);
 
     const {crew, role} = this.props;
-    const isLeaderAdded =
-      role === 'leaders' && crew.name ||
-      role === 'followers';
+    const isLeaderAdded = role === 'leaders' && crew[0].name || false;
+
     this.state = {
       character: undefined,
       isLeaderAdded
@@ -43,6 +42,7 @@ export default class CharacterSelect extends Component {
   render() {
     const {role, characters} = this.props;
     const {isLeaderAdded} = this.state;
+
     return (
       <div>
         <div className="form-group">
@@ -80,7 +80,7 @@ export default class CharacterSelect extends Component {
 CharacterSelect.propTypes = {
   characters: PropTypes.array.isRequired,
   role: PropTypes.string.isRequired,
-  crew: PropTypes.object,
+  crew: PropTypes.array,
   actions: PropTypes.object.isRequired,
   isLeaderAdded: PropTypes.bool,
   character: PropTypes.object

@@ -29,7 +29,14 @@ export default class CrewFilter extends Component {
   }
 
   render() {
-    const {leaders, actions, followers, crew: {leader, followers}} = this.props;
+    const {leaders,
+      actions,
+      followers,
+      crew: {
+        leader,
+        followers: crewFollowers
+      }
+    } = this.props;
     const {value} = this.state;
     return (
       <div className="col-sm-6 col-sm-offset-3">
@@ -67,13 +74,13 @@ export default class CrewFilter extends Component {
           <CharacterSelect
             characters={leaders}
             role="leaders"
-            crew={leader}
+            crew={[leader]}
             actions={actions}
           />
           <CharacterSelect
             characters={followers}
             role="followers"
-            crew={followers}
+            crew={crewFollowers}
             actions={actions}
           />
         </div>
