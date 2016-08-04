@@ -72,7 +72,8 @@ function fetchCharacters(selectedFaction) {
 
 function shouldFetchCharacters(state, selectedFaction) {
   const {characters} = state.charactersByFaction[selectedFaction];
-  if (!characters.leaders || !characters.followers) {
+  console.log(characters);
+  if (characters.leaders.length === 0 || characters.followers.length === 0) {
     return true;
   }
   if (characters.isFetching) {

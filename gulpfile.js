@@ -60,7 +60,7 @@ gulp.task('watch-js', function() {
   rebundle();
 });
 
-gulp.task('browser-sync', ['nodemon'], function() {
+gulp.task('browser-sync', function() {
   browserSync({
     proxy: 'localhost:3000',  // local node app address
     port: 5000,  // use *different* port than above
@@ -68,7 +68,7 @@ gulp.task('browser-sync', ['nodemon'], function() {
   });
 });
 
-gulp.task('nodemon', function() {
+gulp.task('nodemon', ['server-babel'], function() {
   var stream = nodemon({
     script: './server/build/bin/www',
     ignore: [
@@ -101,4 +101,4 @@ gulp.task('reload', function() {
 });
 
 gulp.task('default', ['styles', 'watch-styles', 'html', 'watch-html',
-  'watch-js', 'browser-sync']);
+  'watch-js', 'browser-sync', 'nodemon']);

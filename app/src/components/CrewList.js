@@ -32,20 +32,38 @@ export default class CrewList extends Component {
             </tr>
           </thead>
           <tbody>
-            <CrewCharacter
-              actions={actions}
-              role="leader"
-              character={leader}
-            />
+            <tr>
+              <th>Leader</th>
+            </tr>
+            {leaders.map((leader, index) => {
+              if (leader.count > 0) {
+                return (
+                  <CrewCharacter
+                    key={index}
+                    actions={actions}
+                    role="follower"
+                    character={leader}
+                  />
+                );
+              }
+              return '';
+            })}
+
+            <tr>
+              <th>Followers</th>
+            </tr>
             {followers.map((follower, index) => {
-              return (
-                <CrewCharacter
-                  key={index}
-                  actions={actions}
-                  role="follower"
-                  character={follower}
-                />
-              );
+              if (follower.count > 0) {
+                return (
+                  <CrewCharacter
+                    key={index}
+                    actions={actions}
+                    role="follower"
+                    character={follower}
+                  />
+                );
+              }
+              return '';
             })}
           </tbody>
         </table>

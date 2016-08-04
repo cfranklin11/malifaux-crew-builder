@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./server/build/bin/www"
+    "start": "nodemon ./server/src/bin/www"
   },
   "dependencies": {
     "babel-polyfill": "^6.9.1",

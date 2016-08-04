@@ -4,7 +4,7 @@ var dataHelper, self;
 var fs = require('fs');
 var parse = require('csv-parse');
 
-var DATA_PATH = '/character-db.csv';
+var DATA_PATH = '../../src/lib/character-db.csv';
 
 dataHelper = self = {
   getData: function(req, res, next) {
