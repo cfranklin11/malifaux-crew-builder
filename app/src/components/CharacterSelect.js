@@ -46,8 +46,8 @@ export default class CharacterSelect extends Component {
 
     // If waiting on data, use character info from nextProps
     if (currentCharacter.name === '') {
-      nextCharacter = nextProps.characters
-        .find(char => charRegExp.test(char.station));
+      nextCharacter =
+        nextProps.characters.find(char => charRegExp.test(char.station));
     // Otherwise, refresh state character from incoming props
     // to update count
     } else {
@@ -56,6 +56,7 @@ export default class CharacterSelect extends Component {
         return currentCharacter.name === char.name;
       });
     }
+
     this.setState({currentCharacter: nextCharacter});
   }
 
@@ -69,8 +70,6 @@ export default class CharacterSelect extends Component {
       currentCharacter.count >= parseFloat(currentCharacter.limit);
     const isDisabled = isLeaderAdded && role === 'leaders' || isLimit;
 
-    console.log(currentCharacter);
-
     return (
       <div>
         <div className="form-group">
@@ -80,11 +79,12 @@ export default class CharacterSelect extends Component {
             id="character-select"
             onChange={this.handleChange.bind(this)}
           >
-            {characters.map((character, index) => {
-              isLimit = parseFloat(character.limit) !== 0 &&
-                character.count >= parseFloat(character.limit);
+            {characters
+              .filter(character => charRegExp.test(character.station))
+              .map((character, index) => {
+                isLimit = parseFloat(character.limit) !== 0 &&
+                  character.count >= parseFloat(character.limit);
 
-              if (charRegExp.test(character.station)) {
                 return (
                   <option
                     key={index}
@@ -94,8 +94,8 @@ export default class CharacterSelect extends Component {
                   {character.name}
                   </option>
                 );
-              }
-            })}
+              })
+            }
           </select>
         </div>
 

@@ -25,8 +25,10 @@ export default class CrewCharacter extends Component {
         sscache
       }
     } = this.props;
+
     return (
         <tr>
+          <td></td>
           <td>{count}</td>
           <td>{name}</td>
           <td>{station}</td>

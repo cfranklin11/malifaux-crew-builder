@@ -10,6 +10,7 @@ export default class CrewList extends Component {
         <table className="table">
           <thead>
             <tr>
+              <th></th>
               <th>Count</th>
               <th>Name</th>
               <th>Station</th>
@@ -23,9 +24,11 @@ export default class CrewList extends Component {
           <tbody>
             <tr>
               <th>Leader</th>
+              <th colSpan="8"></th>
             </tr>
-            {characters.map((character, index) => {
-              if (character.count > 0 && character.isLeader) {
+            {characters
+              .filter(character => character.count > 0 && character.isLeader)
+              .map((character, index) => {
                 return (
                   <CrewCharacter
                     key={index}
@@ -34,14 +37,16 @@ export default class CrewList extends Component {
                     character={character}
                   />
                 );
-              }
-            })}
+              })
+            }
 
             <tr>
               <th>Followers</th>
+              <th colSpan="8"></th>
             </tr>
-            {characters.map((character, index) => {
-              if (character.count > 0 && !character.isLeader) {
+            {characters
+              .filter(character => character.count > 0 && !character.isLeader)
+              .map((character, index) => {
                 return (
                   <CrewCharacter
                     key={index}
@@ -50,8 +55,8 @@ export default class CrewList extends Component {
                     character={character}
                   />
                 );
-              }
-            })}
+              })
+            }
           </tbody>
         </table>
       </div>

@@ -44,6 +44,7 @@ export default class CrewBuilder extends Component {
           ssLimit={ssLimit}
           ssCostSum={ssCostSum}
           ssCache={ssCache}
+          characters={characters}
         />
         <CrewList
           actions={actions}

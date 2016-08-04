@@ -26,6 +26,21 @@ function soulstones(state = initialState.soulstones, action) {
         ssLimit: action.ssLimit
       };
 
+    case types.TOGGLE_LEADER:
+      return {
+        ...state,
+        ssCache: action.toggle === 'add' ?
+          parseFloat(action.character.sscache) : 0
+      };
+
+    case types.TOGGLE_FOLLOWER:
+      return {
+        ...state,
+        ssCostSum: action.toggle === 'add' ?
+          state.ssCostSum + parseFloat(action.character.sscost) :
+          state.ssCostSum - parseFloat(action.character.sscost)
+      };
+
     default:
       return state;
   }
