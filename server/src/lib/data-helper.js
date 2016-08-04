@@ -2,9 +2,11 @@
 
 var dataHelper, self;
 var fs = require('fs');
+var path = require('path');
 var parse = require('csv-parse');
 
-var DATA_PATH = '../../src/lib/character-db.csv';
+var DATA_PATH = '../../src/lib';
+var FILE_NAME = '/character-db.csv';
 
 dataHelper = self = {
   getData: function(req, res, next) {
@@ -56,7 +58,7 @@ dataHelper = self = {
         next();
     });
 
-    fs.createReadStream(__dirname + DATA_PATH).pipe(parser);
+    fs.createReadStream(path.join(__dirname, DATA_PATH) + FILE_NAME).pipe(parser);
   }
 };
 
