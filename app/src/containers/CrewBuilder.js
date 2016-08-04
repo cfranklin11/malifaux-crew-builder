@@ -21,7 +21,9 @@ export default class CrewBuilder extends Component {
 
   render() {
     const {ssLimit, ssCostSum, ssCache} = this.props.soulstones;
-    const {actions, selectedFaction, characters} = this.props;
+    const {actions, selectedFaction} = this.props;
+    const {characters, isLeaderAdded} = this.props;
+
     return (
       <div className="container">
         <h1>Malifaux Crew Builder</h1>
@@ -29,6 +31,7 @@ export default class CrewBuilder extends Component {
           actions={actions}
           selectedFaction={selectedFaction}
           characters={characters}
+          isLeaderAdded={isLeaderAdded}
         />
         <SSDisplay
           ssLimit={ssLimit}
@@ -48,7 +51,7 @@ CrewBuilder.propTypes = {
   soulstones: PropTypes.object.isRequired,
   selectedFaction: PropTypes.string.isRequired,
   characters: PropTypes.object.isRequired,
-  crew: PropTypes.object,
+  isLeaderAdded: PropTypes.bool.isRequired,
   isFetching: PropTypes.bool.isRequired,
   actions: PropTypes.object.isRequired
 };

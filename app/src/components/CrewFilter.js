@@ -4,9 +4,11 @@ import {CharacterSelect} from '../components';
 export default class CrewFilter extends Component {
   constructor(props) {
     super(props);
+
+    const {selectedFaction} = this.props;
     this.state = {
       value: 0,
-      faction: this.props.selectedFaction
+      faction: selectedFaction
     };
   }
 
@@ -29,12 +31,13 @@ export default class CrewFilter extends Component {
   }
 
   render() {
+    console.log(this.props);
     const {
       actions,
+      isLeaderAdded,
       characters: {
         leaders,
-        followers,
-        isLeaderAdded
+        followers
       }
     } = this.props;
     const {value} = this.state;
@@ -73,15 +76,16 @@ export default class CrewFilter extends Component {
 
         <div>
           <CharacterSelect
-            characters={leaders}
+            characterList={leaders}
             role="leaders"
             actions={actions}
             isLeaderAdded={isLeaderAdded}
           />
           <CharacterSelect
-            characters={followers}
+            characterList={followers}
             role="followers"
             actions={actions}
+            isLeaderAdded={isLeaderAdded}
           />
         </div>
       </div>
@@ -93,6 +97,6 @@ CrewFilter.propTypes = {
   value: PropTypes.number,
   selectedFaction: PropTypes.string.isRequired,
   characters: PropTypes.object.isRequired,
-  crew: PropTypes.object,
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
+  isLeaderAdded: PropTypes.bool.isRequired
 };

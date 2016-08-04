@@ -10,9 +10,9 @@ export default class CharacterSelect extends Component {
   }
 
   handleChange(e) {
-    const {characters} = this.props;
+    const {characterList} = this.props;
     const characterName = e.target.value;
-    const character = characters.find(char => {
+    const character = characterList.find(char => {
       return characterName === char.name;
     });
     this.setState({character});
@@ -31,13 +31,13 @@ export default class CharacterSelect extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (!this.state.character) {
-      const {characters: [character]} = nextProps;
+      const {characterList: [character]} = nextProps;
       this.setState({character});
     }
   }
 
   render() {
-    const {role, characters, isLeaderAdded} = this.props;
+    const {role, characterList, isLeaderAdded} = this.props;
     const isDisabled = !isLeaderAdded || role === 'leaders';
 
     return (
@@ -49,7 +49,7 @@ export default class CharacterSelect extends Component {
             id="character-select"
             onChange={this.handleChange.bind(this)}
           >
-            {characters.map((character, index) => {
+            {characterList.map((character, index) => {
               return (
                 <option
                   key={index}
@@ -75,7 +75,7 @@ export default class CharacterSelect extends Component {
 }
 
 CharacterSelect.propTypes = {
-  characters: PropTypes.array.isRequired,
+  characterList: PropTypes.array.isRequired,
   role: PropTypes.string.isRequired,
   actions: PropTypes.object.isRequired,
   character: PropTypes.object,

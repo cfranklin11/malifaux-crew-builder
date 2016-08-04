@@ -88,7 +88,9 @@ function selectedFaction(state = initialState.selectedFaction, action) {
 //   }
 // }
 
-function charactersByFaction(state = {}, action) {
+function charactersByFaction(
+  state = initialState.charactersByFaction,
+  action) {
   switch (action.type) {
 
     case types.RECEIVE_CHARS:
@@ -170,6 +172,7 @@ function charactersByFaction(state = {}, action) {
 
 function characters(state = {
   isFetching: false,
+  isLeaderAdded: false,
   characters: {
     leaders: [],
     followers: []
