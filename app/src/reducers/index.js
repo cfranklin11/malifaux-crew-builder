@@ -10,6 +10,7 @@ const initialState = {
   },
   selectedFaction: 'guild',
   crew: {
+    isLeaderAdded: false,
     leader: {},
     followers: []
   },
@@ -53,18 +54,27 @@ function crew(state = initialState.crew, action) {
     case types.ADD_LEADER:
       return {
         ...state,
-        leader: action.leader
+        isLeaderAdded: true,
+        leader: {...action.leader, count: action.leader.count + 1}
       };
 
     case types.ADD_FOLLOWER:
       return {
         ...state,
-        followers: [...state.followers, action.follower]
+        followers: [
+          ...state.followers.filter(follower => {
+            return follower.name !== action.follower.name;
+          }),
+          {...action.follower,
+            count: action.follower.count + 1
+          }
+        ]
       };
 
     case types.REMOVE_LEADER:
       return {
         ...state,
+        isLeaderAdded: false,
         leader: {}
       };
 

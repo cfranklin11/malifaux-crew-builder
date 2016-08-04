@@ -35,7 +35,8 @@ export default class CrewFilter extends Component {
       followers,
       crew: {
         leader,
-        followers: crewFollowers
+        followers: crewFollowers,
+        isLeaderAdded
       }
     } = this.props;
     const {value} = this.state;
@@ -78,6 +79,7 @@ export default class CrewFilter extends Component {
             role="leaders"
             crew={[leader]}
             actions={actions}
+            isLeaderAdded={isLeaderAdded}
           />
           <CharacterSelect
             characters={followers}

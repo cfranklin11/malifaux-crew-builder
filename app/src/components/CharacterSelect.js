@@ -4,48 +4,46 @@ export default class CharacterSelect extends Component {
   constructor(props) {
     super(props);
 
-    const {crew, role} = this.props;
-    const isLeaderAdded = role === 'leaders' && crew[0].name || false;
-
     this.state = {
-      character: undefined,
-      isLeaderAdded
+      character: undefined
     };
   }
 
   handleChange(e) {
     const characterName = e.target.value;
-    const [character] = this.props.characters.filter(char => {
+    const character = this.props.characters.find(char => {
       return characterName === char.name;
     });
     this.setState({character});
   }
 
   handleAdd(e) {
-    const {actions, role} = this.props;
+    const {actions, role, crew} = this.props;
     const {character} = this.state;
+    const crewCharacter = crew.find(char => {
+      return char.name === character.name;
+    }) || {count: 0};
+    const {count} = crewCharacter;
+    const characterToAdd = {...character, count};
+
     if (role === 'leaders') {
-      this.setState({isLeaderAdded: true});
-      actions.addLeader(character);
+      actions.addLeader(characterToAdd);
     } else {
-      actions.addFollower(character);
+      actions.addFollower(characterToAdd);
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    const {role, crew} = nextProps;
-    const isLeaderAdded = role === 'leaders' && crew[0].name || false;
-
     if (!this.state.character) {
       const {characters: [character]} = nextProps;
       this.setState({character});
     }
-    this.setState({isLeaderAdded});
   }
 
   render() {
-    const {role, characters} = this.props;
-    const {isLeaderAdded} = this.state;
+    const {role, characters, isLeaderAdded} = this.props;
+
+    console.log(this.props);
 
     return (
       <div>
@@ -84,8 +82,8 @@ export default class CharacterSelect extends Component {
 CharacterSelect.propTypes = {
   characters: PropTypes.array.isRequired,
   role: PropTypes.string.isRequired,
-  crew: PropTypes.array,
+  crew: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
-  isLeaderAdded: PropTypes.bool,
-  character: PropTypes.object
+  character: PropTypes.object,
+  isLeaderAdded: PropTypes.bool.isRequired
 };
