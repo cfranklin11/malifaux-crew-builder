@@ -15,6 +15,7 @@ export default class CharacterSelect extends Component {
     const character = characterList.find(char => {
       return characterName === char.name;
     });
+
     this.setState({character});
   }
 
@@ -23,9 +24,9 @@ export default class CharacterSelect extends Component {
     const {character} = this.state;
 
     if (role === 'leaders') {
-      actions.addLeader(character);
+      actions.toggleLeader(character, 'add');
     } else {
-      actions.addFollower(character);
+      actions.toggleFollower(character, 'add');
     }
   }
 
@@ -33,12 +34,20 @@ export default class CharacterSelect extends Component {
     if (!this.state.character) {
       const {characterList: [character]} = nextProps;
       this.setState({character});
+    } else {
+      const {character} = this.state;
+      const {characterList} = nextProps;
+      const nextCharacter = characterList.find(char => {
+        return character.name === char.name;
+      });
+
+      this.setState({character: nextCharacter});
     }
   }
 
   render() {
     const {role, characterList, isLeaderAdded} = this.props;
-    const isDisabled = !isLeaderAdded || role === 'leaders';
+    const isDisabled = isLeaderAdded && role === 'leaders';
 
     return (
       <div>
@@ -55,7 +64,7 @@ export default class CharacterSelect extends Component {
                   key={index}
                   value={character.name}
                 >
-                {character.name}
+                {character.name + ' ' + character.count}
                 </option>
               );
             })}

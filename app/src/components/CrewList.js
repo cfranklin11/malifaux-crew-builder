@@ -41,12 +41,11 @@ export default class CrewList extends Component {
                   <CrewCharacter
                     key={index}
                     actions={actions}
-                    role="follower"
+                    role="leader"
                     character={leader}
                   />
                 );
               }
-              return '';
             })}
 
             <tr>
@@ -63,7 +62,6 @@ export default class CrewList extends Component {
                   />
                 );
               }
-              return '';
             })}
           </tbody>
         </table>

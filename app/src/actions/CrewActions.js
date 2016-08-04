@@ -8,30 +8,19 @@ export function updateSSLimit(ssLimit) {
   };
 }
 
-export function addLeader(leader) {
+export function toggleLeader(leader, toggle) {
   return {
-    type: types.ADD_LEADER,
-    leader
+    type: types.TOGGLE_LEADER,
+    leader,
+    toggle
   };
 }
 
-export function addFollower(follower) {
+export function toggleFollower(follower, toggle) {
   return {
-    type: types.ADD_FOLLOWER,
-    follower
-  };
-}
-
-export function removeLeader() {
-  return {
-    type: types.REMOVE_LEADER
-  };
-}
-
-export function removeFollower(followerName) {
-  return {
-    type: types.REMOVE_FOLLOWER,
-    followerName
+    type: types.TOGGLE_FOLLOWER,
+    follower,
+    toggle
   };
 }
 

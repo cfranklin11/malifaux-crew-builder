@@ -45,54 +45,12 @@ function selectedFaction(state = initialState.selectedFaction, action) {
   }
 }
 
-// function crew(state = initialState.crew, action) {
-//   switch (action.type) {
-
-//     case types.ADD_LEADER:
-//       return {
-//         ...state,
-//         isLeaderAdded: true,
-//         leader: {...action.leader, count: action.leader.count + 1}
-//       };
-
-//     case types.ADD_FOLLOWER:
-//       return {
-//         ...state,
-//         followers: [
-//           ...state.followers.filter(follower => {
-//             return follower.name !== action.follower.name;
-//           }),
-//           {...action.follower,
-//             count: action.follower.count + 1
-//           }
-//         ]
-//       };
-
-//     case types.REMOVE_LEADER:
-//       return {
-//         ...state,
-//         isLeaderAdded: false,
-//         leader: {}
-//       };
-
-//     case types.REMOVE_FOLLOWER:
-//       return {
-//         ...state,
-//         followers: state.followers.filter(follower => {
-//           return follower.name !== action.followerName;
-//         })
-//       };
-
-//     default:
-//       return state;
-//   }
-// }
-
 function charactersByFaction(
   state = initialState.charactersByFaction,
   action) {
-  switch (action.type) {
+  let faction;
 
+  switch (action.type) {
     case types.RECEIVE_CHARS:
     case types.REQUEST_CHARS:
       return {
@@ -101,67 +59,45 @@ function charactersByFaction(
           characters(state[action.selectedFaction], action)
       };
 
-    case types.ADD_LEADER:
+    case types.TOGGLE_LEADER:
+      faction = action.leader.faction.replace(/\s/g, '-').toLowerCase();
       return {
         ...state,
-        isLeaderAdded: true,
-        characters: {
-          leaders: [
-            ...state.characters.leaders.filter(leader => {
-              return leader.name !== action.leader.name;
-            }),
-            {...action.leader,
-              count: action.leader.count + 1
-            }
-          ],
-          followers: state.characters.followers
+        [faction]: {
+          ...state[faction],
+          isLeaderAdded: action.toggle === 'add',
+          characters: {
+            ...state[faction].characters,
+            leaders: state[faction].characters.leaders.map(leader => {
+              if (leader.name === action.leader.name) {
+                return {...leader,
+                  count: action.toggle === 'add' ?
+                    action.leader.count + 1 : action.leader.count - 1
+                };
+              }
+              return leader;
+            })
+          }
         }
       };
-    case types.ADD_FOLLOWER:
+    case types.TOGGLE_FOLLOWER:
+      faction = action.follower.faction.replace(/\s/g, '-').toLowerCase();
       return {
         ...state,
-        characters: {
-          followers: [
-            ...state.characters.followers.filter(follower => {
-              return follower.name !== action.follower.name;
-            }),
-            {...action.follower,
-              count: action.follower.count + 1
-            }
-          ],
-          leaders: state.characters.leaders
-        }
-      };
-
-    case types.REMOVE_LEADER:
-      return {
-        ...state,
-        isLeaderAdded: false,
-        characters: {
-          leaders: [
-            ...state.characters.leaders.filter(leader => {
-              return leader.name !== action.leader.name;
-            }),
-            {...action.leader,
-              count: action.leader.count - 1
-            }
-          ],
-          followers: state.characters.followers
-        }
-      };
-    case types.REMOVE_FOLLOWER:
-      return {
-        ...state,
-        characters: {
-          followers: [
-            ...state.characters.followers.filter(follower => {
-              return follower.name !== action.follower.name;
-            }),
-            {...action.follower,
-              count: action.follower.count - 1
-            }
-          ],
-          leaders: state.characters.leaders
+        [faction]: {
+          ...state[faction],
+          characters: {
+            ...state[faction].characters,
+            followers: state[faction].characters.followers.map(follower => {
+              if (follower.name === action.follower.name) {
+                return {...follower,
+                  count: action.toggle === 'add' ?
+                    action.follower.count + 1 : action.follower.count - 1
+                };
+              }
+              return follower;
+            })
+          }
         }
       };
 

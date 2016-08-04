@@ -2,12 +2,12 @@ import React, {Component, PropTypes} from 'react';
 
 export default class CrewCharacter extends Component {
   handleRemove(e) {
-    const {role, actions, character: {name: characterToRemove}} = this.props;
+    const {role, actions, character} = this.props;
 
     if (role === 'leader') {
-      actions.removeLeader(characterToRemove);
+      actions.toggleLeader(character, 'remove');
     } else {
-      actions.removeFollower(characterToRemove);
+      actions.toggleFollower(character, 'remove');
     }
   }
 

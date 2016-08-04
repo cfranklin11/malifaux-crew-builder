@@ -31,7 +31,6 @@ export default class CrewFilter extends Component {
   }
 
   render() {
-    console.log(this.props);
     const {
       actions,
       isLeaderAdded,
