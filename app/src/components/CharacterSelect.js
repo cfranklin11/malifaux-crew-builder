@@ -5,13 +5,20 @@ export default class CharacterSelect extends Component {
     super(props);
 
     this.state = {
-      character: undefined
+      character: {
+        name: '',
+        faction: '',
+        limit: 0,
+        count: 0
+      }
     };
   }
 
   handleChange(e) {
     const {characterList} = this.props;
     const characterName = e.target.value;
+
+    // Get character stats from faction object and save in state
     const character = characterList.find(char => {
       return characterName === char.name;
     });
@@ -31,11 +38,15 @@ export default class CharacterSelect extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!this.state.character) {
-      const {characterList: [character]} = nextProps;
-      this.setState({character});
+    const {character} = this.state;
+
+    // If waiting on data, use character info from nextProps
+    if (character.name === '') {
+      const {characterList: [nextCharacter]} = nextProps;
+      this.setState({character: nextCharacter});
+    // Otherwise, refresh state character from incoming props
+    // to update count
     } else {
-      const {character} = this.state;
       const {characterList} = nextProps;
       const nextCharacter = characterList.find(char => {
         return character.name === char.name;
@@ -47,7 +58,10 @@ export default class CharacterSelect extends Component {
 
   render() {
     const {role, characterList, isLeaderAdded} = this.props;
-    const isDisabled = isLeaderAdded && role === 'leaders';
+    const {character: currentCharacter} = this.state;
+    let isLimit = parseFloat(currentCharacter.limit) !== 0 &&
+      currentCharacter.count >= parseFloat(currentCharacter.limit);
+    const isDisabled = isLeaderAdded && role === 'leaders' || isLimit;
 
     return (
       <div>
@@ -59,12 +73,16 @@ export default class CharacterSelect extends Component {
             onChange={this.handleChange.bind(this)}
           >
             {characterList.map((character, index) => {
+              isLimit = parseFloat(character.limit) !== 0 &&
+                character.count >= parseFloat(character.limit);
+
               return (
                 <option
                   key={index}
                   value={character.name}
+                  disabled={isLimit}
                 >
-                {character.name + ' ' + character.count}
+                {character.name}
                 </option>
               );
             })}
