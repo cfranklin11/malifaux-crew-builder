@@ -34,10 +34,7 @@ export default class CrewFilter extends Component {
     const {
       actions,
       isLeaderAdded,
-      characters: {
-        leaders,
-        followers
-      }
+      characters
     } = this.props;
     const {value} = this.state;
 
@@ -75,13 +72,13 @@ export default class CrewFilter extends Component {
 
         <div>
           <CharacterSelect
-            characterList={leaders}
+            characters={characters}
             role="leaders"
             actions={actions}
             isLeaderAdded={isLeaderAdded}
           />
           <CharacterSelect
-            characterList={followers}
+            characters={characters}
             role="followers"
             actions={actions}
             isLeaderAdded={isLeaderAdded}
@@ -95,7 +92,7 @@ export default class CrewFilter extends Component {
 CrewFilter.propTypes = {
   value: PropTypes.number,
   selectedFaction: PropTypes.string.isRequired,
-  characters: PropTypes.object.isRequired,
+  characters: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
   isLeaderAdded: PropTypes.bool.isRequired
 };

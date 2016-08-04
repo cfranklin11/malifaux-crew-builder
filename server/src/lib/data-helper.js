@@ -44,21 +44,23 @@ dataHelper = self = {
         });
 
         req.data = {};
+        req.data.characters = factionRows;
 
-        req.data.leaders = factionRows.filter(row => {
-          const leaderRegExp = /master|henchman/i;
-          return leaderRegExp.test(row.station);
-        });
+        // req.data.leaders = factionRows.filter(row => {
+        //   const leaderRegExp = /master|henchman/i;
+        //   return leaderRegExp.test(row.station);
+        // });
 
-        req.data.followers = factionRows.filter(row => {
-          const masterRegExp = /master/i;
-          return !masterRegExp.test(row.station);
-        });
+        // req.data.followers = factionRows.filter(row => {
+        //   const masterRegExp = /master/i;
+        //   return !masterRegExp.test(row.station);
+        // });
 
         next();
     });
 
-    fs.createReadStream(path.join(__dirname, DATA_PATH) + FILE_NAME).pipe(parser);
+    fs.createReadStream(path.join(__dirname, DATA_PATH) + FILE_NAME)
+      .pipe(parser);
   }
 };
 

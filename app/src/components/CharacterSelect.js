@@ -5,7 +5,7 @@ export default class CharacterSelect extends Component {
     super(props);
 
     this.state = {
-      character: {
+      currentCharacter: {
         name: '',
         faction: '',
         limit: 0,
@@ -15,53 +15,61 @@ export default class CharacterSelect extends Component {
   }
 
   handleChange(e) {
-    const {characterList} = this.props;
+    const {characters} = this.props;
     const characterName = e.target.value;
 
     // Get character stats from faction object and save in state
-    const character = characterList.find(char => {
+    const currentCharacter = characters.find(char => {
       return characterName === char.name;
     });
 
-    this.setState({character});
+    this.setState({currentCharacter});
   }
 
   handleAdd(e) {
     const {actions, role} = this.props;
-    const {character} = this.state;
+    const {currentCharacter} = this.state;
 
     if (role === 'leaders') {
-      actions.toggleLeader(character, 'add');
+      actions.toggleLeader(currentCharacter, 'add');
     } else {
-      actions.toggleFollower(character, 'add');
+      actions.toggleFollower(currentCharacter, 'add');
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    const {character} = this.state;
+    const {currentCharacter} = this.state;
+    const {role} = nextProps;
+    const charRegExp = role === 'leaders' ?
+      /master|henchman/i : /[^(?:master)]/i;
+    let nextCharacter;
 
     // If waiting on data, use character info from nextProps
-    if (character.name === '') {
-      const {characterList: [nextCharacter]} = nextProps;
-      this.setState({character: nextCharacter});
+    if (currentCharacter.name === '') {
+      nextCharacter = nextProps.characters
+        .find(char => charRegExp.test(char.station));
     // Otherwise, refresh state character from incoming props
     // to update count
     } else {
-      const {characterList} = nextProps;
-      const nextCharacter = characterList.find(char => {
-        return character.name === char.name;
+      const {characters} = nextProps;
+      nextCharacter = characters.find(char => {
+        return currentCharacter.name === char.name;
       });
-
-      this.setState({character: nextCharacter});
     }
+    this.setState({currentCharacter: nextCharacter});
   }
 
   render() {
-    const {role, characterList, isLeaderAdded} = this.props;
-    const {character: currentCharacter} = this.state;
+    const {role, characters, isLeaderAdded} = this.props;
+    const {currentCharacter} = this.state;
+    const charRegExp = role === 'leaders' ?
+      /master|henchman/i : /[^(?:master)]/i;
+    // Disable options if they've reached their rare limit
     let isLimit = parseFloat(currentCharacter.limit) !== 0 &&
       currentCharacter.count >= parseFloat(currentCharacter.limit);
     const isDisabled = isLeaderAdded && role === 'leaders' || isLimit;
+
+    console.log(currentCharacter);
 
     return (
       <div>
@@ -72,19 +80,21 @@ export default class CharacterSelect extends Component {
             id="character-select"
             onChange={this.handleChange.bind(this)}
           >
-            {characterList.map((character, index) => {
+            {characters.map((character, index) => {
               isLimit = parseFloat(character.limit) !== 0 &&
                 character.count >= parseFloat(character.limit);
 
-              return (
-                <option
-                  key={index}
-                  value={character.name}
-                  disabled={isLimit}
-                >
-                {character.name}
-                </option>
-              );
+              if (charRegExp.test(character.station)) {
+                return (
+                  <option
+                    key={index}
+                    value={character.name}
+                    disabled={isLimit}
+                  >
+                  {character.name}
+                  </option>
+                );
+              }
             })}
           </select>
         </div>
@@ -102,7 +112,7 @@ export default class CharacterSelect extends Component {
 }
 
 CharacterSelect.propTypes = {
-  characterList: PropTypes.array.isRequired,
+  characters: PropTypes.array.isRequired,
   role: PropTypes.string.isRequired,
   actions: PropTypes.object.isRequired,
   character: PropTypes.object,

@@ -20,9 +20,16 @@ export default class CrewBuilder extends Component {
   }
 
   render() {
-    const {ssLimit, ssCostSum, ssCache} = this.props.soulstones;
-    const {actions, selectedFaction} = this.props;
-    const {characters, isLeaderAdded} = this.props;
+    const {actions,
+      selectedFaction,
+      characters,
+      isLeaderAdded,
+      soulstones: {
+        ssLimit,
+        ssCostSum,
+        ssCache
+      }
+    } = this.props;
 
     return (
       <div className="container">
@@ -50,7 +57,7 @@ export default class CrewBuilder extends Component {
 CrewBuilder.propTypes = {
   soulstones: PropTypes.object.isRequired,
   selectedFaction: PropTypes.string.isRequired,
-  characters: PropTypes.object.isRequired,
+  characters: PropTypes.array.isRequired,
   isLeaderAdded: PropTypes.bool.isRequired,
   isFetching: PropTypes.bool.isRequired,
   actions: PropTypes.object.isRequired
@@ -66,7 +73,7 @@ function mapStateToProps(state) {
   {
     isFetching: true,
     isLeaderAdded: false,
-    characters: {}
+    characters: []
   };
 
   return {

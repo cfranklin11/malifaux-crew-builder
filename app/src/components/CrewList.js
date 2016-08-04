@@ -3,19 +3,8 @@ import {CrewCharacter} from '../components';
 
 export default class CrewList extends Component {
   render() {
-    const {actions, characters: {leaders, followers}} = this.props;
-    const leader = leaders.find(leader => {
-      return leader.count === 1;
-    }) ||
-    {
-      count: '-',
-      name: '-',
-      station: 'Leader',
-      limit: '-',
-      characteristics: '-',
-      sscost: '-',
-      sscache: '-'
-    };
+    const {actions, characters} = this.props;
+
     return (
       <div>
         <table className="table">
@@ -35,14 +24,14 @@ export default class CrewList extends Component {
             <tr>
               <th>Leader</th>
             </tr>
-            {leaders.map((leader, index) => {
-              if (leader.count > 0) {
+            {characters.map((character, index) => {
+              if (character.count > 0 && character.isLeader) {
                 return (
                   <CrewCharacter
                     key={index}
                     actions={actions}
                     role="leader"
-                    character={leader}
+                    character={character}
                   />
                 );
               }
@@ -51,14 +40,14 @@ export default class CrewList extends Component {
             <tr>
               <th>Followers</th>
             </tr>
-            {followers.map((follower, index) => {
-              if (follower.count > 0) {
+            {characters.map((character, index) => {
+              if (character.count > 0 && !character.isLeader) {
                 return (
                   <CrewCharacter
                     key={index}
                     actions={actions}
                     role="follower"
-                    character={follower}
+                    character={character}
                   />
                 );
               }
@@ -71,6 +60,6 @@ export default class CrewList extends Component {
 }
 
 CrewList.propTypes = {
-  characters: PropTypes.object.isRequired,
+  characters: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired
 };

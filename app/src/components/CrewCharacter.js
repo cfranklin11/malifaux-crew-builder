@@ -12,7 +12,9 @@ export default class CrewCharacter extends Component {
   }
 
   render() {
-    const {character:
+    const {
+      role,
+      character:
       {
         count,
         name,
@@ -30,8 +32,8 @@ export default class CrewCharacter extends Component {
           <td>{station}</td>
           <td>{limit}</td>
           <td>{characteristics}</td>
-          <td>{sscost}</td>
-          <td>{sscache}</td>
+          <td>{role === 'leader' ? '-' : sscost}</td>
+          <td>{role === 'leader' ? sscache : '-'}</td>
           <td>
             <button
               type="submit"

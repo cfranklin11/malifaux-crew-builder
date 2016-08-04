@@ -8,18 +8,18 @@ export function updateSSLimit(ssLimit) {
   };
 }
 
-export function toggleLeader(leader, toggle) {
+export function toggleLeader(character, toggle) {
   return {
     type: types.TOGGLE_LEADER,
-    leader,
+    character,
     toggle
   };
 }
 
-export function toggleFollower(follower, toggle) {
+export function toggleFollower(character, toggle) {
   return {
     type: types.TOGGLE_FOLLOWER,
-    follower,
+    character,
     toggle
   };
 }
@@ -41,8 +41,7 @@ function requestCharacters(selectedFaction) {
 function receiveCharacters(selectedFaction, json) {
   return {
     type: types.RECEIVE_CHARS,
-    leaders: json.leaders,
-    followers: json.followers,
+    characters: json.characters,
     selectedFaction
   };
 }
@@ -60,12 +59,11 @@ function fetchCharacters(selectedFaction) {
 }
 
 function shouldFetchCharacters(state, selectedFaction) {
-  const {characters} = state.charactersByFaction[selectedFaction];
-  console.log(characters);
-  if (characters.leaders.length === 0 || characters.followers.length === 0) {
+  const {characters, isFetching} = state.charactersByFaction[selectedFaction];
+  if (characters.length === 0) {
     return true;
   }
-  if (characters.isFetching) {
+  if (isFetching) {
     return false;
   }
   return true;

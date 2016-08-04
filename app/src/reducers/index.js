@@ -12,10 +12,7 @@ const initialState = {
     guild: {
       isFetching: true,
       isLeaderAdded: false,
-      characters: {
-        leaders: [],
-        followers: []
-      }
+      characters: []
     }
   }
 };
@@ -60,44 +57,40 @@ function charactersByFaction(
       };
 
     case types.TOGGLE_LEADER:
-      faction = action.leader.faction.replace(/\s/g, '-').toLowerCase();
+      faction = action.character.faction.replace(/\s/g, '-').toLowerCase();
       return {
         ...state,
         [faction]: {
           ...state[faction],
           isLeaderAdded: action.toggle === 'add',
-          characters: {
-            ...state[faction].characters,
-            leaders: state[faction].characters.leaders.map(leader => {
-              if (leader.name === action.leader.name) {
-                return {...leader,
-                  count: action.toggle === 'add' ?
-                    action.leader.count + 1 : action.leader.count - 1
-                };
-              }
-              return leader;
-            })
-          }
+          characters: state[faction].characters.map(character => {
+            if (character.name === action.character.name) {
+              return {...character,
+                count: action.toggle === 'add' ?
+                  action.character.count + 1 : action.character.count - 1,
+                isLeader: action.toggle === 'add'
+              };
+            }
+            return character;
+          })
         }
       };
+
     case types.TOGGLE_FOLLOWER:
-      faction = action.follower.faction.replace(/\s/g, '-').toLowerCase();
+      faction = action.character.faction.replace(/\s/g, '-').toLowerCase();
       return {
         ...state,
         [faction]: {
           ...state[faction],
-          characters: {
-            ...state[faction].characters,
-            followers: state[faction].characters.followers.map(follower => {
-              if (follower.name === action.follower.name) {
-                return {...follower,
-                  count: action.toggle === 'add' ?
-                    action.follower.count + 1 : action.follower.count - 1
-                };
-              }
-              return follower;
-            })
-          }
+          characters: state[faction].characters.map(character => {
+            if (character.name === action.character.name) {
+              return {...character,
+                count: action.toggle === 'add' ?
+                  action.character.count + 1 : action.character.count - 1
+              };
+            }
+            return character;
+          })
         }
       };
 
@@ -109,10 +102,7 @@ function charactersByFaction(
 function characters(state = {
   isFetching: false,
   isLeaderAdded: false,
-  characters: {
-    leaders: [],
-    followers: []
-  }
+  characters: []
 }, action) {
   switch (action.type) {
 
@@ -126,14 +116,9 @@ function characters(state = {
       return {
         ...state,
         isFetching: false,
-        characters: {
-          leaders: action.leaders.map(leader => {
-            return {...leader, count: 0};
-          }),
-          followers: action.followers.map(follower => {
-            return {...follower, count: 0};
-          })
-        }
+        characters: action.characters.map(character => {
+          return {...character, count: 0};
+        })
       };
 
     default:
