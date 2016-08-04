@@ -3,7 +3,19 @@ import {CrewCharacter} from '../components';
 
 export default class CrewList extends Component {
   render() {
-    const {actions, crew: {leader, followers}} = this.props;
+    const {actions, characters: {leaders, followers}} = this.props;
+    const leader = leaders.find(leader => {
+      return leader.count === 1;
+    }) ||
+    {
+      count: '-',
+      name: '-',
+      station: 'Leader',
+      limit: '-',
+      characteristics: '-',
+      sscost: '-',
+      sscache: '-'
+    };
     return (
       <div>
         <table className="table">
@@ -43,6 +55,6 @@ export default class CrewList extends Component {
 }
 
 CrewList.propTypes = {
-  crew: PropTypes.object,
+  characters: PropTypes.object.isRequired,
   actions: PropTypes.object.isRequired
 };

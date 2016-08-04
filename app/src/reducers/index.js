@@ -5,20 +5,17 @@ const initialState = {
   soulstones: {
     ssLimit: 0,
     ssCache: 0,
-    ssCostSum: 0,
-    test: [1, 2, 3, 4, 5]
+    ssCostSum: 0
   },
   selectedFaction: 'guild',
-  crew: {
-    isLeaderAdded: false,
-    leader: {},
-    followers: []
-  },
   charactersByFaction: {
     guild: {
       isFetching: true,
-      leaders: [],
-      followers: []
+      isLeaderAdded: false,
+      characters: {
+        leaders: [],
+        followers: []
+      }
     }
   }
 };
@@ -48,48 +45,48 @@ function selectedFaction(state = initialState.selectedFaction, action) {
   }
 }
 
-function crew(state = initialState.crew, action) {
-  switch (action.type) {
+// function crew(state = initialState.crew, action) {
+//   switch (action.type) {
 
-    case types.ADD_LEADER:
-      return {
-        ...state,
-        isLeaderAdded: true,
-        leader: {...action.leader, count: action.leader.count + 1}
-      };
+//     case types.ADD_LEADER:
+//       return {
+//         ...state,
+//         isLeaderAdded: true,
+//         leader: {...action.leader, count: action.leader.count + 1}
+//       };
 
-    case types.ADD_FOLLOWER:
-      return {
-        ...state,
-        followers: [
-          ...state.followers.filter(follower => {
-            return follower.name !== action.follower.name;
-          }),
-          {...action.follower,
-            count: action.follower.count + 1
-          }
-        ]
-      };
+//     case types.ADD_FOLLOWER:
+//       return {
+//         ...state,
+//         followers: [
+//           ...state.followers.filter(follower => {
+//             return follower.name !== action.follower.name;
+//           }),
+//           {...action.follower,
+//             count: action.follower.count + 1
+//           }
+//         ]
+//       };
 
-    case types.REMOVE_LEADER:
-      return {
-        ...state,
-        isLeaderAdded: false,
-        leader: {}
-      };
+//     case types.REMOVE_LEADER:
+//       return {
+//         ...state,
+//         isLeaderAdded: false,
+//         leader: {}
+//       };
 
-    case types.REMOVE_FOLLOWER:
-      return {
-        ...state,
-        followers: state.followers.filter(follower => {
-          return follower.name !== action.followerName;
-        })
-      };
+//     case types.REMOVE_FOLLOWER:
+//       return {
+//         ...state,
+//         followers: state.followers.filter(follower => {
+//           return follower.name !== action.followerName;
+//         })
+//       };
 
-    default:
-      return state;
-  }
-}
+//     default:
+//       return state;
+//   }
+// }
 
 function charactersByFaction(state = {}, action) {
   switch (action.type) {
@@ -102,6 +99,70 @@ function charactersByFaction(state = {}, action) {
           characters(state[action.selectedFaction], action)
       };
 
+    case types.ADD_LEADER:
+      return {
+        ...state,
+        isLeaderAdded: true,
+        characters: {
+          leaders: [
+            ...state.characters.leaders.filter(leader => {
+              return leader.name !== action.leader.name;
+            }),
+            {...action.leader,
+              count: action.leader.count + 1
+            }
+          ],
+          followers: state.characters.followers
+        }
+      };
+    case types.ADD_FOLLOWER:
+      return {
+        ...state,
+        characters: {
+          followers: [
+            ...state.characters.followers.filter(follower => {
+              return follower.name !== action.follower.name;
+            }),
+            {...action.follower,
+              count: action.follower.count + 1
+            }
+          ],
+          leaders: state.characters.leaders
+        }
+      };
+
+    case types.REMOVE_LEADER:
+      return {
+        ...state,
+        isLeaderAdded: false,
+        characters: {
+          leaders: [
+            ...state.characters.leaders.filter(leader => {
+              return leader.name !== action.leader.name;
+            }),
+            {...action.leader,
+              count: action.leader.count - 1
+            }
+          ],
+          followers: state.characters.followers
+        }
+      };
+    case types.REMOVE_FOLLOWER:
+      return {
+        ...state,
+        characters: {
+          followers: [
+            ...state.characters.followers.filter(follower => {
+              return follower.name !== action.follower.name;
+            }),
+            {...action.follower,
+              count: action.follower.count - 1
+            }
+          ],
+          leaders: state.characters.leaders
+        }
+      };
+
     default:
       return state;
   }
@@ -109,8 +170,10 @@ function charactersByFaction(state = {}, action) {
 
 function characters(state = {
   isFetching: false,
-  leaders: [],
-  followers: []
+  characters: {
+    leaders: [],
+    followers: []
+  }
 }, action) {
   switch (action.type) {
 
@@ -124,8 +187,14 @@ function characters(state = {
       return {
         ...state,
         isFetching: false,
-        leaders: action.leaders,
-        followers: action.followers
+        characters: {
+          leaders: action.leaders.map(leader => {
+            return {...leader, count: 0};
+          }),
+          followers: action.followers.map(follower => {
+            return {...follower, count: 0};
+          })
+        }
       };
 
     default:
@@ -136,8 +205,7 @@ function characters(state = {
 const rootReducer = combineReducers({
   charactersByFaction,
   soulstones,
-  selectedFaction,
-  crew
+  selectedFaction
 });
 
 export default rootReducer;

@@ -10,26 +10,22 @@ export default class CharacterSelect extends Component {
   }
 
   handleChange(e) {
+    const {characters} = this.props;
     const characterName = e.target.value;
-    const character = this.props.characters.find(char => {
+    const character = characters.find(char => {
       return characterName === char.name;
     });
     this.setState({character});
   }
 
   handleAdd(e) {
-    const {actions, role, crew} = this.props;
+    const {actions, role} = this.props;
     const {character} = this.state;
-    const crewCharacter = crew.find(char => {
-      return char.name === character.name;
-    }) || {count: 0};
-    const {count} = crewCharacter;
-    const characterToAdd = {...character, count};
 
     if (role === 'leaders') {
-      actions.addLeader(characterToAdd);
+      actions.addLeader(character);
     } else {
-      actions.addFollower(characterToAdd);
+      actions.addFollower(character);
     }
   }
 
@@ -42,8 +38,7 @@ export default class CharacterSelect extends Component {
 
   render() {
     const {role, characters, isLeaderAdded} = this.props;
-
-    console.log(this.props);
+    const isDisabled = !isLeaderAdded || role === 'leaders';
 
     return (
       <div>
@@ -72,7 +67,7 @@ export default class CharacterSelect extends Component {
           type="submit"
           value="Add to Crew"
           onClick={this.handleAdd.bind(this)}
-          disabled={isLeaderAdded}
+          disabled={isDisabled}
         />
       </div>
     );
@@ -82,7 +77,6 @@ export default class CharacterSelect extends Component {
 CharacterSelect.propTypes = {
   characters: PropTypes.array.isRequired,
   role: PropTypes.string.isRequired,
-  crew: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
   character: PropTypes.object,
   isLeaderAdded: PropTypes.bool.isRequired

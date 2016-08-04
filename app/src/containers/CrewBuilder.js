@@ -21,16 +21,14 @@ export default class CrewBuilder extends Component {
 
   render() {
     const {ssLimit, ssCostSum, ssCache} = this.props.soulstones;
-    const {actions, selectedFaction, leaders, followers, crew} = this.props;
+    const {actions, selectedFaction, characters} = this.props;
     return (
       <div className="container">
         <h1>Malifaux Crew Builder</h1>
         <CrewFilter
           actions={actions}
           selectedFaction={selectedFaction}
-          leaders={leaders}
-          followers={followers}
-          crew={crew}
+          characters={characters}
         />
         <SSDisplay
           ssLimit={ssLimit}
@@ -39,7 +37,7 @@ export default class CrewBuilder extends Component {
         />
         <CrewList
           actions={actions}
-          crew={crew}
+          characters={characters}
         />
       </div>
     );
@@ -49,33 +47,31 @@ export default class CrewBuilder extends Component {
 CrewBuilder.propTypes = {
   soulstones: PropTypes.object.isRequired,
   selectedFaction: PropTypes.string.isRequired,
-  leaders: PropTypes.array.isRequired,
-  followers: PropTypes.array.isRequired,
+  characters: PropTypes.object.isRequired,
   crew: PropTypes.object,
   isFetching: PropTypes.bool.isRequired,
   actions: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
-  const {soulstones, selectedFaction, charactersByFaction, crew} = state;
+  const {soulstones, selectedFaction, charactersByFaction} = state;
   const {
     isFetching,
-    leaders,
-    followers
+    isLeaderAdded,
+    characters
   } = charactersByFaction[selectedFaction] ||
   {
     isFetching: true,
-    leaders: [],
-    followers: []
+    isLeaderAdded: false,
+    characters: {}
   };
 
   return {
     soulstones,
     selectedFaction,
-    crew,
     isFetching,
-    leaders,
-    followers
+    characters,
+    isLeaderAdded
   };
 }
 

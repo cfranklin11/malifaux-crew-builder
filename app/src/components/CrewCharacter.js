@@ -5,7 +5,7 @@ export default class CrewCharacter extends Component {
     const {role, actions, character: {name: characterToRemove}} = this.props;
 
     if (role === 'leader') {
-      actions.removeLeader();
+      actions.removeLeader(characterToRemove);
     } else {
       actions.removeFollower(characterToRemove);
     }
@@ -14,13 +14,13 @@ export default class CrewCharacter extends Component {
   render() {
     const {character:
       {
-        count = '-',
-        name = '-',
-        station = 'Leader',
-        limit = '-',
-        characteristics = '-',
-        sscost = '-',
-        sscache = '-'
+        count,
+        name,
+        station,
+        limit,
+        characteristics,
+        sscost,
+        sscache
       }
     } = this.props;
     return (
