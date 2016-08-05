@@ -8,30 +8,21 @@ export function updateSSLimit(ssLimit) {
   };
 }
 
-export function addLeader(leader) {
+export function toggleLeader(character, selectedFaction, toggle) {
   return {
-    type: types.ADD_LEADER,
-    leader
+    type: types.TOGGLE_LEADER,
+    character,
+    selectedFaction,
+    toggle
   };
 }
 
-export function addFollower(follower) {
+export function toggleFollower(character, selectedFaction, toggle) {
   return {
-    type: types.ADD_FOLLOWER,
-    follower
-  };
-}
-
-export function removeLeader() {
-  return {
-    type: types.REMOVE_LEADER
-  };
-}
-
-export function removeFollower(followerName) {
-  return {
-    type: types.REMOVE_FOLLOWER,
-    followerName
+    type: types.TOGGLE_FOLLOWER,
+    character,
+    selectedFaction,
+    toggle
   };
 }
 
@@ -52,8 +43,7 @@ function requestCharacters(selectedFaction) {
 function receiveCharacters(selectedFaction, json) {
   return {
     type: types.RECEIVE_CHARS,
-    leaders: json.leaders,
-    followers: json.followers,
+    characters: json.characters,
     selectedFaction
   };
 }
@@ -71,11 +61,11 @@ function fetchCharacters(selectedFaction) {
 }
 
 function shouldFetchCharacters(state, selectedFaction) {
-  const characters = state.charactersByFaction[selectedFaction];
-  if (!characters) {
+  const {characters, isFetching} = state.charactersByFaction[selectedFaction];
+  if (characters.length === 0) {
     return true;
   }
-  if (characters.isFetching) {
+  if (isFetching) {
     return false;
   }
   return true;

@@ -68,7 +68,7 @@ gulp.task('browser-sync', ['nodemon'], function() {
   });
 });
 
-gulp.task('nodemon', function() {
+gulp.task('nodemon', ['server-babel'], function() {
   var stream = nodemon({
     script: './server/build/bin/www',
     ignore: [

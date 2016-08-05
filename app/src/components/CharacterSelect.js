@@ -4,68 +4,125 @@ export default class CharacterSelect extends Component {
   constructor(props) {
     super(props);
 
-    const {crew, role} = this.props;
-    const isLeaderAdded = role === 'leaders' && crew[0].name || false;
-
     this.state = {
-      character: undefined,
-      isLeaderAdded
+      currentCharacter: {
+        name: '',
+        faction: '',
+        limit: 0,
+        count: 0
+      }
     };
   }
 
   handleChange(e) {
+    const {characters} = this.props;
     const characterName = e.target.value;
-    const [character] = this.props.characters.filter(char => {
+
+    // Get character stats from faction object and save in state
+    const currentCharacter = characters.find(char => {
       return characterName === char.name;
     });
-    this.setState({character});
+
+    this.setState({currentCharacter});
   }
 
   handleAdd(e) {
-    const {actions, role} = this.props;
-    const {character} = this.state;
+    const {actions, role, selectedFaction} = this.props;
+    const {currentCharacter} = this.state;
+
     if (role === 'leaders') {
-      this.setState({isLeaderAdded: true});
-      actions.addLeader(character);
+      actions.toggleLeader(currentCharacter, selectedFaction, 'add');
     } else {
-      actions.addFollower(character);
+      actions.toggleFollower(currentCharacter, selectedFaction, 'add');
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    const {role, crew} = nextProps;
-    const isLeaderAdded = role === 'leaders' && crew[0].name || false;
+    const {currentCharacter} = this.state;
+    const {role, ssLimit, characters} = nextProps;
+    // RegExp to separate characters into leaders & followers;
+    // valid leaders depend on crew size
+    const charRegExp = role === 'leaders' ? /master|henchman/i :
+      /[^(?:master)]/i;
+    const leadRegExp = ssLimit <= 25 ? /henchman/i :
+      ssLimit > 40 ? /master/i :
+      /master|henchman/i;
+    const nextCharacter = characters.find(
+      characterTest(currentCharacter.name, role)
+    );
 
-    if (!this.state.character) {
-      const {characters: [character]} = nextProps;
-      this.setState({character});
+    this.setState({currentCharacter: nextCharacter});
+
+    function characterTest(currentName, role) {
+      // If waiting on data, use character info from nextProps
+      if (currentName === '') {
+        if (role === 'leaders') {
+          return char => leadRegExp.test(char.station);
+        }
+        return char => charRegExp.test(char.station);
+      }
+      // Otherwise, refresh state character from incoming props
+      // to update count
+      return char => currentName === char.name;
     }
-    this.setState({isLeaderAdded});
   }
 
   render() {
-    const {role, characters} = this.props;
-    const {isLeaderAdded} = this.state;
+    const {role, characters, isLeaderAdded, ssLimit, selectedFaction} =
+      this.props;
+    const {currentCharacter} = this.state;
+    // RegExp to separate characters into leaders & followers;
+    // valid leaders depend on crew size
+    const charRegExp = role === 'leaders' ? /master|henchman/i :
+      /[^(?:master)]/i;
+    const leadRegExp = ssLimit <= 25 ? /henchman/i :
+      ssLimit > 40 ? /master/i :
+      /master|henchman/i;
+    // Disable options if they've reached their rare limit,
+    // or invalid leader station
+    let isNotValid = parseFloat(currentCharacter.limit) !== 0 &&
+      currentCharacter.count >= parseFloat(currentCharacter.limit) ||
+      role === 'leaders' &&
+      !leadRegExp.test(currentCharacter.station);
+    const isDisabled = isLeaderAdded &&
+      role === 'leaders' ||
+      isNotValid;
 
     return (
-      <div>
+      <div className="col-sm-6">
         <div className="form-group">
-          <label htmlFor="character-select">{role} Select</label>
+          <label htmlFor="character-select">{`Select ${role}`}</label>
           <select
             className="form-control"
             id="character-select"
             onChange={this.handleChange.bind(this)}
           >
-            {characters.map((character, index) => {
-              return (
-                <option
-                  key={index}
-                  value={character.name}
-                >
-                {character.name}
-                </option>
-              );
-            })}
+            {characters
+              .filter(character => {
+                // Leaders must be same faction and Master or Henchman
+                if (role === 'leaders') {
+                  return character.faction.toLowerCase().replace(/\s/g, '-') ===
+                    selectedFaction && charRegExp.test(character.station);
+                }
+                return charRegExp.test(character.station);
+              })
+              .map((character, index) => {
+                isNotValid = parseFloat(character.limit) !== 0 &&
+                  character.count >= parseFloat(character.limit) ||
+                  role === 'leaders' &&
+                  !leadRegExp.test(character.station);
+
+                return (
+                  <option
+                    key={index}
+                    value={character.name}
+                    disabled={isNotValid}
+                  >
+                  {character.name}
+                  </option>
+                );
+              })
+            }
           </select>
         </div>
 
@@ -74,7 +131,7 @@ export default class CharacterSelect extends Component {
           type="submit"
           value="Add to Crew"
           onClick={this.handleAdd.bind(this)}
-          disabled={isLeaderAdded}
+          disabled={isDisabled}
         />
       </div>
     );
@@ -84,8 +141,9 @@ export default class CharacterSelect extends Component {
 CharacterSelect.propTypes = {
   characters: PropTypes.array.isRequired,
   role: PropTypes.string.isRequired,
-  crew: PropTypes.array,
   actions: PropTypes.object.isRequired,
-  isLeaderAdded: PropTypes.bool,
-  character: PropTypes.object
+  character: PropTypes.object,
+  isLeaderAdded: PropTypes.bool.isRequired,
+  ssLimit: PropTypes.number.isRequired,
+  selectedFaction: PropTypes.string.isRequired
 };

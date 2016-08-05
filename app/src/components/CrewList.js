@@ -3,14 +3,17 @@ import {CrewCharacter} from '../components';
 
 export default class CrewList extends Component {
   render() {
-    const {actions, crew: {leader, followers}} = this.props;
+    const {actions, characters, selectedFaction} = this.props;
+
     return (
       <div>
         <table className="table">
           <thead>
             <tr>
+              <th></th>
               <th>Count</th>
               <th>Name</th>
+              <th>Faction</th>
               <th>Station</th>
               <th>Limit</th>
               <th>Characteristics</th>
@@ -20,21 +23,43 @@ export default class CrewList extends Component {
             </tr>
           </thead>
           <tbody>
-            <CrewCharacter
-              actions={actions}
-              role="leader"
-              character={leader}
-            />
-            {followers.map((follower, index) => {
-              return (
-                <CrewCharacter
-                  key={index}
-                  actions={actions}
-                  role="follower"
-                  character={follower}
-                />
-              );
-            })}
+            <tr>
+              <th>Leader</th>
+              <th colSpan="9"></th>
+            </tr>
+            {characters
+              .filter(character => character.count > 0 && character.isLeader)
+              .map((character, index) => {
+                return (
+                  <CrewCharacter
+                    key={index}
+                    actions={actions}
+                    role="leader"
+                    character={character}
+                    selectedFaction={selectedFaction}
+                  />
+                );
+              })
+            }
+
+            <tr>
+              <th>Followers</th>
+              <th colSpan="9"></th>
+            </tr>
+            {characters
+              .filter(character => character.count > 0 && !character.isLeader)
+              .map((character, index) => {
+                return (
+                  <CrewCharacter
+                    key={index}
+                    actions={actions}
+                    role="follower"
+                    character={character}
+                    selectedFaction={selectedFaction}
+                  />
+                );
+              })
+            }
           </tbody>
         </table>
       </div>
@@ -43,6 +68,7 @@ export default class CrewList extends Component {
 }
 
 CrewList.propTypes = {
-  crew: PropTypes.object,
-  actions: PropTypes.object.isRequired
+  characters: PropTypes.array.isRequired,
+  actions: PropTypes.object.isRequired,
+  selectedFaction: PropTypes.string.isRequired
 };

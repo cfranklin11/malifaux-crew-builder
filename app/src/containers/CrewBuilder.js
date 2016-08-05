@@ -3,7 +3,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 
 import * as CrewActions from '../actions/CrewActions';
-import {CrewFilter, SSDisplay, CrewList} from '../components';
+import {CharacterForm, SSDisplay, CrewList} from '../components';
 
 export default class CrewBuilder extends Component {
 
@@ -20,26 +20,37 @@ export default class CrewBuilder extends Component {
   }
 
   render() {
-    const {ssLimit, ssCostSum, ssCache} = this.props.soulstones;
-    const {actions, selectedFaction, leaders, followers, crew} = this.props;
+    const {actions,
+      selectedFaction,
+      characters,
+      isLeaderAdded,
+      soulstones: {
+        ssLimit,
+        ssCostSum,
+        ssCache
+      }
+    } = this.props;
+
     return (
-      <div className="container">
+      <div className="container text-center">
         <h1>Malifaux Crew Builder</h1>
-        <CrewFilter
+        <CharacterForm
           actions={actions}
           selectedFaction={selectedFaction}
-          leaders={leaders}
-          followers={followers}
-          crew={crew}
+          characters={characters}
+          isLeaderAdded={isLeaderAdded}
+          ssLimit={ssLimit}
         />
         <SSDisplay
           ssLimit={ssLimit}
           ssCostSum={ssCostSum}
           ssCache={ssCache}
+          characters={characters}
         />
         <CrewList
           actions={actions}
-          crew={crew}
+          characters={characters}
+          selectedFaction={selectedFaction}
         />
       </div>
     );
@@ -49,33 +60,31 @@ export default class CrewBuilder extends Component {
 CrewBuilder.propTypes = {
   soulstones: PropTypes.object.isRequired,
   selectedFaction: PropTypes.string.isRequired,
-  leaders: PropTypes.array.isRequired,
-  followers: PropTypes.array.isRequired,
-  crew: PropTypes.object,
+  characters: PropTypes.array.isRequired,
+  isLeaderAdded: PropTypes.bool.isRequired,
   isFetching: PropTypes.bool.isRequired,
   actions: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
-  const {soulstones, selectedFaction, charactersByFaction, crew} = state;
+  const {soulstones, selectedFaction, charactersByFaction} = state;
   const {
     isFetching,
-    leaders,
-    followers
+    isLeaderAdded,
+    characters
   } = charactersByFaction[selectedFaction] ||
   {
     isFetching: true,
-    leaders: [],
-    followers: []
+    isLeaderAdded: false,
+    characters: []
   };
 
   return {
     soulstones,
     selectedFaction,
-    crew,
     isFetching,
-    leaders,
-    followers
+    characters,
+    isLeaderAdded
   };
 }
 

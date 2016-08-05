@@ -5,19 +5,14 @@ const initialState = {
   soulstones: {
     ssLimit: 0,
     ssCache: 0,
-    ssCostSum: 0,
-    test: [1, 2, 3, 4, 5]
+    ssCostSum: 0
   },
   selectedFaction: 'guild',
-  crew: {
-    leader: {},
-    followers: []
-  },
   charactersByFaction: {
     guild: {
       isFetching: true,
-      leaders: [],
-      followers: []
+      isLeaderAdded: false,
+      characters: []
     }
   }
 };
@@ -29,6 +24,21 @@ function soulstones(state = initialState.soulstones, action) {
       return {
         ...state,
         ssLimit: action.ssLimit
+      };
+
+    case types.TOGGLE_LEADER:
+      return {
+        ...state,
+        ssCache: action.toggle === 'add' ?
+          parseFloat(action.character.sscache) : 0
+      };
+
+    case types.TOGGLE_FOLLOWER:
+      return {
+        ...state,
+        ssCostSum: action.toggle === 'add' ?
+          state.ssCostSum + parseFloat(action.character.sscost) :
+          state.ssCostSum - parseFloat(action.character.sscost)
       };
 
     default:
@@ -47,49 +57,58 @@ function selectedFaction(state = initialState.selectedFaction, action) {
   }
 }
 
-function crew(state = initialState.crew, action) {
+function charactersByFaction(
+  state = initialState.charactersByFaction,
+  action) {
+  let faction;
+
   switch (action.type) {
-
-    case types.ADD_LEADER:
-      return {
-        ...state,
-        leader: action.leader
-      };
-
-    case types.ADD_FOLLOWER:
-      return {
-        ...state,
-        followers: [...state.followers, action.follower]
-      };
-
-    case types.REMOVE_LEADER:
-      return {
-        ...state,
-        leader: {}
-      };
-
-    case types.REMOVE_FOLLOWER:
-      return {
-        ...state,
-        followers: state.followers.filter(follower => {
-          return follower.name !== action.followerName;
-        })
-      };
-
-    default:
-      return state;
-  }
-}
-
-function charactersByFaction(state = {}, action) {
-  switch (action.type) {
-
     case types.RECEIVE_CHARS:
     case types.REQUEST_CHARS:
       return {
         ...state,
         [action.selectedFaction]:
           characters(state[action.selectedFaction], action)
+      };
+
+    case types.TOGGLE_LEADER:
+      return {
+        ...state,
+        [action.selectedFaction]: {
+          ...state[action.selectedFaction],
+          isLeaderAdded: action.toggle === 'add',
+          characters: state[action.selectedFaction].characters
+            .map(character => {
+              if (character.name === action.character.name) {
+                return {...character,
+                  count: action.toggle === 'add' ?
+                    action.character.count + 1 : action.character.count - 1,
+                  isLeader: action.toggle === 'add'
+                };
+              }
+              return character;
+            }
+          )
+        }
+      };
+
+    case types.TOGGLE_FOLLOWER:
+      return {
+        ...state,
+        [action.selectedFaction]: {
+          ...state[action.selectedFaction],
+          characters: state[action.selectedFaction].characters
+            .map(character => {
+              if (character.name === action.character.name) {
+                return {...character,
+                  count: action.toggle === 'add' ?
+                    action.character.count + 1 : action.character.count - 1
+                };
+              }
+              return character;
+            }
+          )
+        }
       };
 
     default:
@@ -99,8 +118,8 @@ function charactersByFaction(state = {}, action) {
 
 function characters(state = {
   isFetching: false,
-  leaders: [],
-  followers: []
+  isLeaderAdded: false,
+  characters: []
 }, action) {
   switch (action.type) {
 
@@ -114,8 +133,9 @@ function characters(state = {
       return {
         ...state,
         isFetching: false,
-        leaders: action.leaders,
-        followers: action.followers
+        characters: action.characters.map(character => {
+          return {...character, count: 0};
+        })
       };
 
     default:
@@ -126,8 +146,7 @@ function characters(state = {
 const rootReducer = combineReducers({
   charactersByFaction,
   soulstones,
-  selectedFaction,
-  crew
+  selectedFaction
 });
 
 export default rootReducer;
