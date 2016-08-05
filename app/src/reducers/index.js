@@ -72,40 +72,42 @@ function charactersByFaction(
       };
 
     case types.TOGGLE_LEADER:
-      faction = action.character.faction.replace(/\s/g, '-').toLowerCase();
       return {
         ...state,
-        [faction]: {
-          ...state[faction],
+        [action.selectedFaction]: {
+          ...state[action.selectedFaction],
           isLeaderAdded: action.toggle === 'add',
-          characters: state[faction].characters.map(character => {
-            if (character.name === action.character.name) {
-              return {...character,
-                count: action.toggle === 'add' ?
-                  action.character.count + 1 : action.character.count - 1,
-                isLeader: action.toggle === 'add'
-              };
+          characters: state[action.selectedFaction].characters
+            .map(character => {
+              if (character.name === action.character.name) {
+                return {...character,
+                  count: action.toggle === 'add' ?
+                    action.character.count + 1 : action.character.count - 1,
+                  isLeader: action.toggle === 'add'
+                };
+              }
+              return character;
             }
-            return character;
-          })
+          )
         }
       };
 
     case types.TOGGLE_FOLLOWER:
-      faction = action.character.faction.replace(/\s/g, '-').toLowerCase();
       return {
         ...state,
-        [faction]: {
-          ...state[faction],
-          characters: state[faction].characters.map(character => {
-            if (character.name === action.character.name) {
-              return {...character,
-                count: action.toggle === 'add' ?
-                  action.character.count + 1 : action.character.count - 1
-              };
+        [action.selectedFaction]: {
+          ...state[action.selectedFaction],
+          characters: state[action.selectedFaction].characters
+            .map(character => {
+              if (character.name === action.character.name) {
+                return {...character,
+                  count: action.toggle === 'add' ?
+                    action.character.count + 1 : action.character.count - 1
+                };
+              }
+              return character;
             }
-            return character;
-          })
+          )
         }
       };
 

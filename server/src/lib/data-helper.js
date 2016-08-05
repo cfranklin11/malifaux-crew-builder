@@ -11,37 +11,43 @@ var FILE_NAME = '/character-db.csv';
 dataHelper = self = {
   getData: function(req, res, next) {
     var parser;
+    const MercRegExp = /mercenary/i;
 
     // Parse CSV to get data
     parser = parse({delimiter: ',', columns: true}, function(err, data) {
-      // Rows array has a lot of extra data, so filter to get
-      // only URL and status code
-      let characterRows = data.map((character, index) => {
-        let {
-          name,
-          faction,
-          station,
-          characteristics,
-          limit,
-          ss_cost: sscost,
-          ss_cache: sscache
-        } = character;
+      const callFaction = req.faction.toLowerCase().replace(/\s/g, '-');
+      let factionRows = data
+        .filter(row => {
+          const thisFaction = row.faction.toLowerCase().replace(/\s/g, '-');
 
-        return {
-          name,
-          faction,
-          station,
-          characteristics,
-          limit,
-          sscost,
-          sscache
-        };
-      });
+          // Filter for characters of the called faction or mercenaries
+          return callFaction === thisFaction ||
+            MercRegExp.test(row.characteristics);
+        })
+        .map(character => {
+          let {
+            name,
+            faction,
+            station,
+            characteristics,
+            limit,
+            ss_cost: sscost,
+            ss_cache: sscache
+          } = character;
 
-      let factionRows = characterRows.filter(row => {
-        return req.faction.toLowerCase().replace(/\s/g, '-') ===
-          row.faction.toLowerCase().replace(/\s/g, '-');
-      });
+          // If the character is a non-faction mercenary, increase cost by 1
+          sscost = callFaction === faction ? sscost : parseFloat(sscost) + 1;
+
+          return {
+            name,
+            faction,
+            station,
+            characteristics,
+            limit,
+            sscost,
+            sscache
+          };
+        });
 
       req.data = {};
       req.data.characters = factionRows;

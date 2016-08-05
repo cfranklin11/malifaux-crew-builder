@@ -24,6 +24,12 @@ export default class CrewFilter extends Component {
     }
   }
 
+  handleBlur(e) {
+    const {actions} = this.props;
+    const value = Math.ceil(e.target.value);
+    actions.updateSSLimit(value);
+  }
+
   handleFactionChange(e) {
     const {actions} = this.props;
     const selectedFaction = e.target.value;
@@ -35,7 +41,8 @@ export default class CrewFilter extends Component {
       actions,
       isLeaderAdded,
       characters,
-      ssLimit
+      ssLimit,
+      selectedFaction
     } = this.props;
     const {value} = this.state;
 
@@ -51,6 +58,7 @@ export default class CrewFilter extends Component {
             value={value}
             onChange={this.handleLimitChange.bind(this)}
             onKeyDown={this.handleSubmit.bind(this)}
+            onBlur={this.handleBlur.bind(this)}
           />
         </div>
 
@@ -78,6 +86,7 @@ export default class CrewFilter extends Component {
             actions={actions}
             isLeaderAdded={isLeaderAdded}
             ssLimit={ssLimit}
+            selectedFaction={selectedFaction}
           />
           <CharacterSelect
             characters={characters}
@@ -85,6 +94,7 @@ export default class CrewFilter extends Component {
             actions={actions}
             isLeaderAdded={isLeaderAdded}
             ssLimit={ssLimit}
+            selectedFaction={selectedFaction}
           />
         </div>
       </div>

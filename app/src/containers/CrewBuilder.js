@@ -50,6 +50,7 @@ export default class CrewBuilder extends Component {
         <CrewList
           actions={actions}
           characters={characters}
+          selectedFaction={selectedFaction}
         />
       </div>
     );

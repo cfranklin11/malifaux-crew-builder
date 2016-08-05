@@ -2,12 +2,12 @@ import React, {Component, PropTypes} from 'react';
 
 export default class CrewCharacter extends Component {
   handleRemove(e) {
-    const {role, actions, character} = this.props;
+    const {role, actions, character, selectedFaction} = this.props;
 
     if (role === 'leader') {
-      actions.toggleLeader(character, 'remove');
+      actions.toggleLeader(character, selectedFaction, 'remove');
     } else {
-      actions.toggleFollower(character, 'remove');
+      actions.toggleFollower(character, selectedFaction, 'remove');
     }
   }
 
@@ -18,6 +18,7 @@ export default class CrewCharacter extends Component {
       {
         count,
         name,
+        faction,
         station,
         limit,
         characteristics,
@@ -31,6 +32,7 @@ export default class CrewCharacter extends Component {
           <td></td>
           <td>{count}</td>
           <td>{name}</td>
+          <td>{faction}</td>
           <td>{station}</td>
           <td>{limit}</td>
           <td>{characteristics}</td>
@@ -54,5 +56,6 @@ export default class CrewCharacter extends Component {
 CrewCharacter.propTypes = {
   character: PropTypes.object.isRequired,
   role: PropTypes.string.isRequired,
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
+  selectedFaction: PropTypes.string.isRequired
 };

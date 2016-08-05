@@ -27,13 +27,13 @@ export default class CharacterSelect extends Component {
   }
 
   handleAdd(e) {
-    const {actions, role} = this.props;
+    const {actions, role, selectedFaction} = this.props;
     const {currentCharacter} = this.state;
 
     if (role === 'leaders') {
-      actions.toggleLeader(currentCharacter, 'add');
+      actions.toggleLeader(currentCharacter, selectedFaction, 'add');
     } else {
-      actions.toggleFollower(currentCharacter, 'add');
+      actions.toggleFollower(currentCharacter, selectedFaction, 'add');
     }
   }
 
@@ -68,7 +68,8 @@ export default class CharacterSelect extends Component {
   }
 
   render() {
-    const {role, characters, isLeaderAdded, ssLimit} = this.props;
+    const {role, characters, isLeaderAdded, ssLimit, selectedFaction} =
+      this.props;
     const {currentCharacter} = this.state;
     // RegExp to separate characters into leaders & followers;
     // valid leaders depend on crew size
@@ -97,7 +98,14 @@ export default class CharacterSelect extends Component {
             onChange={this.handleChange.bind(this)}
           >
             {characters
-              .filter(character => charRegExp.test(character.station))
+              .filter(character => {
+                // Leaders must be same faction and Master or Henchman
+                if (role === 'leaders') {
+                  return character.faction.toLowerCase().replace(/\s/g, '-') ===
+                    selectedFaction && charRegExp.test(character.station);
+                }
+                return charRegExp.test(character.station);
+              })
               .map((character, index) => {
                 isNotValid = parseFloat(character.limit) !== 0 &&
                   character.count >= parseFloat(character.limit) ||
@@ -136,5 +144,6 @@ CharacterSelect.propTypes = {
   actions: PropTypes.object.isRequired,
   character: PropTypes.object,
   isLeaderAdded: PropTypes.bool.isRequired,
-  ssLimit: PropTypes.number.isRequired
+  ssLimit: PropTypes.number.isRequired,
+  selectedFaction: PropTypes.string.isRequired
 };

@@ -8,18 +8,20 @@ export function updateSSLimit(ssLimit) {
   };
 }
 
-export function toggleLeader(character, toggle) {
+export function toggleLeader(character, selectedFaction, toggle) {
   return {
     type: types.TOGGLE_LEADER,
     character,
+    selectedFaction,
     toggle
   };
 }
 
-export function toggleFollower(character, toggle) {
+export function toggleFollower(character, selectedFaction, toggle) {
   return {
     type: types.TOGGLE_FOLLOWER,
     character,
+    selectedFaction,
     toggle
   };
 }

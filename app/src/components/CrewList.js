@@ -3,7 +3,7 @@ import {CrewCharacter} from '../components';
 
 export default class CrewList extends Component {
   render() {
-    const {actions, characters} = this.props;
+    const {actions, characters, selectedFaction} = this.props;
 
     return (
       <div>
@@ -13,6 +13,7 @@ export default class CrewList extends Component {
               <th></th>
               <th>Count</th>
               <th>Name</th>
+              <th>Faction</th>
               <th>Station</th>
               <th>Limit</th>
               <th>Characteristics</th>
@@ -24,7 +25,7 @@ export default class CrewList extends Component {
           <tbody>
             <tr>
               <th>Leader</th>
-              <th colSpan="8"></th>
+              <th colSpan="9"></th>
             </tr>
             {characters
               .filter(character => character.count > 0 && character.isLeader)
@@ -35,6 +36,7 @@ export default class CrewList extends Component {
                     actions={actions}
                     role="leader"
                     character={character}
+                    selectedFaction={selectedFaction}
                   />
                 );
               })
@@ -42,7 +44,7 @@ export default class CrewList extends Component {
 
             <tr>
               <th>Followers</th>
-              <th colSpan="8"></th>
+              <th colSpan="9"></th>
             </tr>
             {characters
               .filter(character => character.count > 0 && !character.isLeader)
@@ -53,6 +55,7 @@ export default class CrewList extends Component {
                     actions={actions}
                     role="follower"
                     character={character}
+                    selectedFaction={selectedFaction}
                   />
                 );
               })
@@ -66,5 +69,6 @@ export default class CrewList extends Component {
 
 CrewList.propTypes = {
   characters: PropTypes.array.isRequired,
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
+  selectedFaction: PropTypes.string.isRequired
 };
