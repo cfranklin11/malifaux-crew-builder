@@ -39,41 +39,58 @@ export default class CharacterSelect extends Component {
 
   componentWillReceiveProps(nextProps) {
     const {currentCharacter} = this.state;
-    const {role} = nextProps;
-    const charRegExp = role === 'leaders' ?
-      /master|henchman/i : /[^(?:master)]/i;
-    let nextCharacter;
-
-    // If waiting on data, use character info from nextProps
-    if (currentCharacter.name === '') {
-      nextCharacter =
-        nextProps.characters.find(char => charRegExp.test(char.station));
-    // Otherwise, refresh state character from incoming props
-    // to update count
-    } else {
-      const {characters} = nextProps;
-      nextCharacter = characters.find(char => {
-        return currentCharacter.name === char.name;
-      });
-    }
+    const {role, ssLimit, characters} = nextProps;
+    // RegExp to separate characters into leaders & followers;
+    // valid leaders depend on crew size
+    const charRegExp = role === 'leaders' ? /master|henchman/i :
+      /[^(?:master)]/i;
+    const leadRegExp = ssLimit <= 25 ? /henchman/i :
+      ssLimit > 40 ? /master/i :
+      /master|henchman/i;
+    const nextCharacter = characters.find(
+      characterTest(currentCharacter.name, role)
+    );
 
     this.setState({currentCharacter: nextCharacter});
+
+    function characterTest(currentName, role) {
+      // If waiting on data, use character info from nextProps
+      if (currentName === '') {
+        if (role === 'leaders') {
+          return char => leadRegExp.test(char.station);
+        }
+        return char => charRegExp.test(char.station);
+      }
+      // Otherwise, refresh state character from incoming props
+      // to update count
+      return char => currentName === char.name;
+    }
   }
 
   render() {
-    const {role, characters, isLeaderAdded} = this.props;
+    const {role, characters, isLeaderAdded, ssLimit} = this.props;
     const {currentCharacter} = this.state;
-    const charRegExp = role === 'leaders' ?
-      /master|henchman/i : /[^(?:master)]/i;
-    // Disable options if they've reached their rare limit
-    let isLimit = parseFloat(currentCharacter.limit) !== 0 &&
-      currentCharacter.count >= parseFloat(currentCharacter.limit);
-    const isDisabled = isLeaderAdded && role === 'leaders' || isLimit;
+    // RegExp to separate characters into leaders & followers;
+    // valid leaders depend on crew size
+    const charRegExp = role === 'leaders' ? /master|henchman/i :
+      /[^(?:master)]/i;
+    const leadRegExp = ssLimit <= 25 ? /henchman/i :
+      ssLimit > 40 ? /master/i :
+      /master|henchman/i;
+    // Disable options if they've reached their rare limit,
+    // or invalid leader station
+    let isNotValid = parseFloat(currentCharacter.limit) !== 0 &&
+      currentCharacter.count >= parseFloat(currentCharacter.limit) ||
+      role === 'leaders' &&
+      !leadRegExp.test(currentCharacter.station);
+    const isDisabled = isLeaderAdded &&
+      role === 'leaders' ||
+      isNotValid;
 
     return (
-      <div>
+      <div className="col-sm-6">
         <div className="form-group">
-          <label htmlFor="character-select">{role} Select</label>
+          <label htmlFor="character-select">{`Select ${role}`}</label>
           <select
             className="form-control"
             id="character-select"
@@ -82,14 +99,16 @@ export default class CharacterSelect extends Component {
             {characters
               .filter(character => charRegExp.test(character.station))
               .map((character, index) => {
-                isLimit = parseFloat(character.limit) !== 0 &&
-                  character.count >= parseFloat(character.limit);
+                isNotValid = parseFloat(character.limit) !== 0 &&
+                  character.count >= parseFloat(character.limit) ||
+                  role === 'leaders' &&
+                  !leadRegExp.test(character.station);
 
                 return (
                   <option
                     key={index}
                     value={character.name}
-                    disabled={isLimit}
+                    disabled={isNotValid}
                   >
                   {character.name}
                   </option>
@@ -116,5 +135,6 @@ CharacterSelect.propTypes = {
   role: PropTypes.string.isRequired,
   actions: PropTypes.object.isRequired,
   character: PropTypes.object,
-  isLeaderAdded: PropTypes.bool.isRequired
+  isLeaderAdded: PropTypes.bool.isRequired,
+  ssLimit: PropTypes.number.isRequired
 };

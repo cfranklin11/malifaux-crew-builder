@@ -34,13 +34,14 @@ export default class CrewFilter extends Component {
     const {
       actions,
       isLeaderAdded,
-      characters
+      characters,
+      ssLimit
     } = this.props;
     const {value} = this.state;
 
     return (
       <div className="col-sm-6 col-sm-offset-3">
-        <div className="form-group">
+        <div className="form-group col-sm-6">
           <label htmlFor="ss-limit-input">Soulstone Limit</label>
           <input
             className="form-control"
@@ -53,7 +54,7 @@ export default class CrewFilter extends Component {
           />
         </div>
 
-        <div className="form-group">
+        <div className="form-group col-sm-6">
           <label htmlFor="faction-select">Faction</label>
           <select
             className="form-control"
@@ -76,12 +77,14 @@ export default class CrewFilter extends Component {
             role="leaders"
             actions={actions}
             isLeaderAdded={isLeaderAdded}
+            ssLimit={ssLimit}
           />
           <CharacterSelect
             characters={characters}
             role="followers"
             actions={actions}
             isLeaderAdded={isLeaderAdded}
+            ssLimit={ssLimit}
           />
         </div>
       </div>
@@ -94,5 +97,6 @@ CrewFilter.propTypes = {
   selectedFaction: PropTypes.string.isRequired,
   characters: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
-  isLeaderAdded: PropTypes.bool.isRequired
+  isLeaderAdded: PropTypes.bool.isRequired,
+  ssLimit: PropTypes.number.isRequired
 };

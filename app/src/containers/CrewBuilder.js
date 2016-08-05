@@ -3,7 +3,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 
 import * as CrewActions from '../actions/CrewActions';
-import {CrewFilter, SSDisplay, CrewList} from '../components';
+import {CharacterForm, SSDisplay, CrewList} from '../components';
 
 export default class CrewBuilder extends Component {
 
@@ -32,13 +32,14 @@ export default class CrewBuilder extends Component {
     } = this.props;
 
     return (
-      <div className="container">
+      <div className="container text-center">
         <h1>Malifaux Crew Builder</h1>
-        <CrewFilter
+        <CharacterForm
           actions={actions}
           selectedFaction={selectedFaction}
           characters={characters}
           isLeaderAdded={isLeaderAdded}
+          ssLimit={ssLimit}
         />
         <SSDisplay
           ssLimit={ssLimit}
