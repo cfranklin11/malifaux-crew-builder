@@ -27,8 +27,8 @@ export default class CrewCharacter extends Component {
         sscache
       }
     } = this.props;
-    const invalid = selectedFaction ===
-      faction.toLowerCase().replace(/\s/g, '-') ||
+    const factionRegExp = new RegExp(selectedFaction, 'i');
+    const invalid = factionRegExp.test(faction.replace(/\s/g, '-')) ||
       /mercenary/i.test(characteristics) ? '' : 'invalid';
 
     return (

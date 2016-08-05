@@ -52,10 +52,6 @@ export default class CharacterSelect extends Component {
       // Use empty name to reset list on faction change
     ) || {name: '', faction: '', limit: 0, count: 0};
 
-    console.log(nextProps);
-    console.log(this.state);
-    console.log(nextCharacter);
-
     this.setState({currentCharacter: nextCharacter});
 
     function characterTest(currentName, role) {
@@ -83,6 +79,7 @@ export default class CharacterSelect extends Component {
     const leadRegExp = ssLimit <= 25 ? /henchman/i :
       ssLimit > 40 ? /master/i :
       /master|henchman/i;
+    const factionRegExp = new RegExp(selectedFaction, 'i');
     // Disable options if they've reached their rare limit,
     // or invalid leader station
     let isNotValid = parseFloat(currentCharacter.limit) !== 0 &&
@@ -106,8 +103,9 @@ export default class CharacterSelect extends Component {
               .filter(character => {
                 // Leaders must be same faction and Master or Henchman
                 if (role === 'leaders') {
-                  return character.faction.toLowerCase().replace(/\s/g, '-') ===
-                    selectedFaction && charRegExp.test(character.station);
+                  return factionRegExp.test(
+                    character.faction.replace(/\s/g, '-')
+                    ) && charRegExp.test(character.station);
                 }
                 return charRegExp.test(character.station);
               })
