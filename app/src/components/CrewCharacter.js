@@ -14,6 +14,7 @@ export default class CrewCharacter extends Component {
   render() {
     const {
       role,
+      selectedFaction,
       character:
       {
         count,
@@ -26,9 +27,12 @@ export default class CrewCharacter extends Component {
         sscache
       }
     } = this.props;
+    const invalid = selectedFaction ===
+      faction.toLowerCase().replace(/\s/g, '-') ||
+      /mercenary/i.test(characteristics) ? '' : 'invalid';
 
     return (
-        <tr>
+        <tr className={invalid}>
           <td></td>
           <td>{count}</td>
           <td>{name}</td>

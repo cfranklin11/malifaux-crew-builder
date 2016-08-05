@@ -1,3 +1,7 @@
 label {
   text-transform: capitalize;
 }
+
+.invalid {
+  text-decoration: line-through;
+}

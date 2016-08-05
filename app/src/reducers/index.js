@@ -57,11 +57,8 @@ function selectedFaction(state = initialState.selectedFaction, action) {
   }
 }
 
-function charactersByFaction(
-  state = initialState.charactersByFaction,
+function charactersByFaction(state = initialState.charactersByFaction,
   action) {
-  let faction;
-
   switch (action.type) {
     case types.RECEIVE_CHARS:
     case types.REQUEST_CHARS:

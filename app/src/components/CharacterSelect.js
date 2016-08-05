@@ -49,7 +49,12 @@ export default class CharacterSelect extends Component {
       /master|henchman/i;
     const nextCharacter = characters.find(
       characterTest(currentCharacter.name, role)
-    );
+      // Use empty name to reset list on faction change
+    ) || {name: '', faction: '', limit: 0, count: 0};
+
+    console.log(nextProps);
+    console.log(this.state);
+    console.log(nextCharacter);
 
     this.setState({currentCharacter: nextCharacter});
 
