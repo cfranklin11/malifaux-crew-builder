@@ -12,6 +12,7 @@ const initialState = {
     guild: {
       isFetching: true,
       isLeaderAdded: false,
+      leaderName: '',
       characters: []
     }
   }
@@ -74,6 +75,7 @@ function charactersByFaction(state = initialState.charactersByFaction,
         [action.selectedFaction]: {
           ...state[action.selectedFaction],
           isLeaderAdded: action.toggle === 'add',
+          leaderName: action.toggle === 'add' ? action.character.name : '',
           characters: state[action.selectedFaction].characters
             .map(character => {
               if (character.name === action.character.name) {

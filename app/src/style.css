@@ -2,6 +2,18 @@ label {
   text-transform: capitalize;
 }
 
+.app-section {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.ss-box {
+  border-top: #ddd solid 1px;
+  border-bottom: #ddd solid 1px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
 .invalid {
   text-decoration: line-through;
 }
