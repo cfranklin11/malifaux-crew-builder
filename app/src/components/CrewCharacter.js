@@ -14,6 +14,8 @@ export default class CrewCharacter extends Component {
   render() {
     const {
       role,
+      selectedFaction,
+      leaderName,
       character:
       {
         count,
@@ -26,9 +28,20 @@ export default class CrewCharacter extends Component {
         sscache
       }
     } = this.props;
+    const specificTotemRegExp = /totem\s\(((?:\w*\s?)+)\)/i;
+    const totemMaster = specificTotemRegExp.exec(characteristics) ?
+      specificTotemRegExp.exec(characteristics)[1] : '';
+    const totemMasterRegExp =
+      new RegExp(totemMaster, 'i');
+    const factionRegExp = new RegExp(selectedFaction, 'i');
+    const invalid = factionRegExp.test(faction.replace(/\s/g, '-')) ||
+      /mercenary/i.test(characteristics) ?
+        totemMaster ?
+          totemMasterRegExp.test(leaderName) ? '' : 'invalid' :
+      '' : 'invalid';
 
     return (
-        <tr>
+        <tr className={invalid}>
           <td></td>
           <td>{count}</td>
           <td>{name}</td>
@@ -57,5 +70,6 @@ CrewCharacter.propTypes = {
   character: PropTypes.object.isRequired,
   role: PropTypes.string.isRequired,
   actions: PropTypes.object.isRequired,
-  selectedFaction: PropTypes.string.isRequired
+  selectedFaction: PropTypes.string.isRequired,
+  leaderName: PropTypes.string.isRequired
 };

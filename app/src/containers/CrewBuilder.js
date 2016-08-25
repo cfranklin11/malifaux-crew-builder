@@ -24,6 +24,7 @@ export default class CrewBuilder extends Component {
       selectedFaction,
       characters,
       isLeaderAdded,
+      leaderName,
       soulstones: {
         ssLimit,
         ssCostSum,
@@ -39,6 +40,7 @@ export default class CrewBuilder extends Component {
           selectedFaction={selectedFaction}
           characters={characters}
           isLeaderAdded={isLeaderAdded}
+          leaderName={leaderName}
           ssLimit={ssLimit}
         />
         <SSDisplay
@@ -51,6 +53,7 @@ export default class CrewBuilder extends Component {
           actions={actions}
           characters={characters}
           selectedFaction={selectedFaction}
+          leaderName={leaderName}
         />
       </div>
     );
@@ -62,6 +65,7 @@ CrewBuilder.propTypes = {
   selectedFaction: PropTypes.string.isRequired,
   characters: PropTypes.array.isRequired,
   isLeaderAdded: PropTypes.bool.isRequired,
+  leaderName: PropTypes.string.isRequired,
   isFetching: PropTypes.bool.isRequired,
   actions: PropTypes.object.isRequired
 };
@@ -71,11 +75,13 @@ function mapStateToProps(state) {
   const {
     isFetching,
     isLeaderAdded,
+    leaderName,
     characters
   } = charactersByFaction[selectedFaction] ||
   {
     isFetching: true,
     isLeaderAdded: false,
+    leaderName: '',
     characters: []
   };
 
@@ -84,7 +90,8 @@ function mapStateToProps(state) {
     selectedFaction,
     isFetching,
     characters,
-    isLeaderAdded
+    isLeaderAdded,
+    leaderName
   };
 }
 

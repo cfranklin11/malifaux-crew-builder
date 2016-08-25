@@ -3,10 +3,10 @@ import {CrewCharacter} from '../components';
 
 export default class CrewList extends Component {
   render() {
-    const {actions, characters, selectedFaction} = this.props;
+    const {actions, characters, selectedFaction, leaderName} = this.props;
 
     return (
-      <div>
+      <div className="app-section">
         <table className="table">
           <thead>
             <tr>
@@ -37,6 +37,7 @@ export default class CrewList extends Component {
                     role="leader"
                     character={character}
                     selectedFaction={selectedFaction}
+                    leaderName={leaderName}
                   />
                 );
               })
@@ -56,6 +57,7 @@ export default class CrewList extends Component {
                     role="follower"
                     character={character}
                     selectedFaction={selectedFaction}
+                    leaderName={leaderName}
                   />
                 );
               })
@@ -70,5 +72,6 @@ export default class CrewList extends Component {
 CrewList.propTypes = {
   characters: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
-  selectedFaction: PropTypes.string.isRequired
+  selectedFaction: PropTypes.string.isRequired,
+  leaderName: PropTypes.string.isRequired
 };

@@ -6,17 +6,17 @@ export default class SSDisplay extends Component {
     const CACHE_LIMIT = 7;
 
     return (
-      <div className="text-center">
-        <div className="col-sm-4">
-          <h4>Crew Size (Soulstones)</h4>
+      <div className="text-center row app-section">
+        <div className="col-xs-4 ss-box" id="left-box">
+          <h4><strong>Crew Size (Soulstones)</strong></h4>
           <h4>{ssLimit}</h4>
         </div>
-        <div className="col-sm-4">
-          <h4>Soulstones Remaining</h4>
+        <div className="col-xs-4 ss-box">
+          <h4><strong>Soulstones Remaining</strong></h4>
           <h4>{ssLimit - ssCostSum}</h4>
         </div>
-        <div className="col-sm-4">
-          <h4>Soulstone Cache</h4>
+        <div className="col-xs-4 ss-box" id="right-box">
+          <h4><strong>Soulstone Cache</strong></h4>
           <h4>{Math.min(ssLimit - ssCostSum + ssCache, CACHE_LIMIT)}</h4>
         </div>
       </div>

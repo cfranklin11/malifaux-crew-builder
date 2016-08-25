@@ -15,13 +15,13 @@ dataHelper = self = {
 
     // Parse CSV to get data
     parser = parse({delimiter: ',', columns: true}, function(err, data) {
-      const callFaction = req.faction.toLowerCase().replace(/\s/g, '-');
+      const factionRegExp = new RegExp(req.faction.replace(/\s/g, '-'), 'i');
       let factionRows = data
         .filter(row => {
-          const thisFaction = row.faction.toLowerCase().replace(/\s/g, '-');
+          const thisFaction = row.faction.replace(/\s/g, '-');
 
           // Filter for characters of the called faction or mercenaries
-          return callFaction === thisFaction ||
+          return factionRegExp.test(thisFaction) ||
             MercRegExp.test(row.characteristics);
         })
         .map(character => {
@@ -36,7 +36,8 @@ dataHelper = self = {
           } = character;
 
           // If the character is a non-faction mercenary, increase cost by 1
-          sscost = callFaction === faction ? sscost : parseFloat(sscost) + 1;
+          sscost = factionRegExp.test(faction.replace(/\s/g, '-')) ?
+            sscost : parseFloat(sscost) + 1;
 
           return {
             name,

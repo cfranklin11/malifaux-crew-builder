@@ -12,6 +12,7 @@ const initialState = {
     guild: {
       isFetching: true,
       isLeaderAdded: false,
+      leaderName: '',
       characters: []
     }
   }
@@ -57,11 +58,8 @@ function selectedFaction(state = initialState.selectedFaction, action) {
   }
 }
 
-function charactersByFaction(
-  state = initialState.charactersByFaction,
+function charactersByFaction(state = initialState.charactersByFaction,
   action) {
-  let faction;
-
   switch (action.type) {
     case types.RECEIVE_CHARS:
     case types.REQUEST_CHARS:
@@ -77,6 +75,7 @@ function charactersByFaction(
         [action.selectedFaction]: {
           ...state[action.selectedFaction],
           isLeaderAdded: action.toggle === 'add',
+          leaderName: action.toggle === 'add' ? action.character.name : '',
           characters: state[action.selectedFaction].characters
             .map(character => {
               if (character.name === action.character.name) {
