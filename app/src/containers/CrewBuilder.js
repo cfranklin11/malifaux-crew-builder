@@ -20,11 +20,13 @@ export default class CrewBuilder extends Component {
   }
 
   render() {
-    const {actions,
+    const {
+      actions,
       selectedFaction,
       characters,
       isLeaderAdded,
       leaderName,
+      upgrades,
       soulstones: {
         ssLimit,
         ssCostSum,
@@ -41,20 +43,18 @@ export default class CrewBuilder extends Component {
           characters={characters}
           isLeaderAdded={isLeaderAdded}
           leaderName={leaderName}
-          ssLimit={ssLimit}
-        />
+          ssLimit={ssLimit}/>
         <SSDisplay
           ssLimit={ssLimit}
           ssCostSum={ssCostSum}
           ssCache={ssCache}
-          characters={characters}
-        />
+          characters={characters}/>
         <CrewList
           actions={actions}
           characters={characters}
           selectedFaction={selectedFaction}
           leaderName={leaderName}
-        />
+          upgrades={upgrades}/>
       </div>
     );
   }
@@ -67,11 +67,12 @@ CrewBuilder.propTypes = {
   isLeaderAdded: PropTypes.bool.isRequired,
   leaderName: PropTypes.string.isRequired,
   isFetching: PropTypes.bool.isRequired,
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
+  upgrades: PropTypes.array.isRequired
 };
 
 function mapStateToProps(state) {
-  const {soulstones, selectedFaction, charactersByFaction} = state;
+  const {soulstones, selectedFaction, charactersByFaction, upgrades} = state;
   const {
     isFetching,
     isLeaderAdded,
@@ -90,6 +91,7 @@ function mapStateToProps(state) {
     selectedFaction,
     isFetching,
     characters,
+    upgrades,
     isLeaderAdded,
     leaderName
   };

@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from 'react';
+import {UpgradeSelect} from '../components';
 
 export default class CrewCharacter extends Component {
   handleRemove(e) {
@@ -13,9 +14,11 @@ export default class CrewCharacter extends Component {
 
   render() {
     const {
+      actions,
       role,
       selectedFaction,
       leaderName,
+      upgrades,
       character:
       {
         count,
@@ -52,11 +55,13 @@ export default class CrewCharacter extends Component {
           <td>{role === 'leader' ? '-' : sscost}</td>
           <td>{role === 'leader' ? sscache : '-'}</td>
           <td>
+            <UpgradeSelect upgrades={upgrades} actions={actions} />
+          </td>
+          <td>
             <button
               type="submit"
               className="btn btn-default"
-              onClick={this.handleRemove.bind(this)}
-            >
+              onClick={this.handleRemove.bind(this)}>
               <span className="glyphicon glyphicon-remove" aria-hidden="true">
               </span>
             </button>
@@ -71,5 +76,6 @@ CrewCharacter.propTypes = {
   role: PropTypes.string.isRequired,
   actions: PropTypes.object.isRequired,
   selectedFaction: PropTypes.string.isRequired,
-  leaderName: PropTypes.string.isRequired
+  leaderName: PropTypes.string.isRequired,
+  upgrades: PropTypes.array.isRequired
 };

@@ -61,8 +61,7 @@ export default class CrewFilter extends Component {
                 value={value}
                 onChange={this.handleLimitChange.bind(this)}
                 onKeyDown={this.handleSubmit.bind(this)}
-                onBlur={this.handleBlur.bind(this)}
-              />
+                onBlur={this.handleBlur.bind(this)}/>
             </div>
 
             <div className="form-group col-xs-6 col-xs-offset-3">
@@ -70,8 +69,7 @@ export default class CrewFilter extends Component {
               <select
                 className="form-control"
                 id="faction-select"
-                onChange={this.handleFactionChange.bind(this)}
-              >
+                onChange={this.handleFactionChange.bind(this)}>
                 <option value="guild">The Guild</option>
                 <option value="resurrectionists">Resurrectionists</option>
                 <option value="neverborn">Neverborn</option>
@@ -92,8 +90,7 @@ export default class CrewFilter extends Component {
             isLeaderAdded={isLeaderAdded}
             leaderName={leaderName}
             ssLimit={ssLimit}
-            selectedFaction={selectedFaction}
-          />
+            selectedFaction={selectedFaction}/>
           <CharacterSelect
             characters={characters}
             role="followers"
@@ -101,8 +98,7 @@ export default class CrewFilter extends Component {
             isLeaderAdded={isLeaderAdded}
             leaderName={leaderName}
             ssLimit={ssLimit}
-            selectedFaction={selectedFaction}
-          />
+            selectedFaction={selectedFaction}/>
         </div>
       </div>
     );

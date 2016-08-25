@@ -106,14 +106,12 @@ export default class CharacterSelect extends Component {
     return (
       <div className="form-group
         col-xs-6 col-xs-offset-3
-        col-md-4 col-md-offset-4"
-      >
+        col-md-4 col-md-offset-4">
         <label htmlFor="character-select">{`Select ${roleLabel}`}</label>
         <select
           className="form-control"
           id="character-select"
-          onChange={this.handleChange.bind(this)}
-        >
+          onChange={this.handleChange.bind(this)}>
           {characters.filter(character => {
             // Leaders must be same faction and Master or Henchman
             if (role === 'leaders') {
@@ -138,8 +136,7 @@ export default class CharacterSelect extends Component {
               <option
                 key={index}
                 value={character.name}
-                disabled={isNotValid}
-              >
+                disabled={isNotValid}>
               {character.name}
               </option>
             );
@@ -151,8 +148,7 @@ export default class CharacterSelect extends Component {
           type="submit"
           value="Add to Crew"
           onClick={this.handleAdd.bind(this)}
-          disabled={isDisabled}
-        />
+          disabled={isDisabled}/>
       </div>
     );
   }
