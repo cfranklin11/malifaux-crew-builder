@@ -58,46 +58,48 @@ let sheetsHelper = {
           return next();
         }
 
-        // Rows array has a lot of extra data, so filter to get
-        // only URL and status code
-        let characterRows = rows.map((character, index) => {
-          let {
-            name,
-            faction,
-            station,
-            characteristics,
-            limit,
-            sscost,
-            sscache
-          } = character;
+        const factionRegExp = new RegExp(req.faction.replace(/\s/g, '-'), 'i');
+        const MercRegExp = /mercenary/i;
 
-          return {
-            name,
-            faction,
-            station,
-            characteristics,
-            limit,
-            sscost,
-            sscache,
-            id: index
-          };
-        });
+        let factionRows = rows
+          .filter(row => {
+            const thisFaction = row.faction.replace(/\s/g, '-');
 
-        let factionRows = characterRows.filter(row => {
-          return req.faction.toLowerCase() === row.faction.toLowerCase();
-        });
+            // Filter for characters of the called faction or mercenaries
+            return factionRegExp.test(thisFaction) ||
+              MercRegExp.test(row.characteristics);
+          })
+          // Rows array has a lot of extra data, so map to get
+          // only relevant characteristics
+          .map(character => {
+            let {
+              name,
+              faction,
+              station,
+              characteristics,
+              limit,
+              sscost,
+              sscache
+            } = character;
+
+            // If the character is a non-faction mercenary, increase cost by 1
+            sscost = factionRegExp.test(faction.replace(/\s/g, '-')) ?
+              sscost : parseFloat(sscost) + 1;
+
+            return {
+              name,
+              faction,
+              station,
+              characteristics,
+              limit,
+              sscost,
+              sscache
+            };
+          }
+        );
 
         req.data = {};
-
-        req.data.leaders = factionRows.filter(row => {
-          const leaderRegExp = /master|henchman/i;
-          return leaderRegExp.test(row.station);
-        });
-
-        req.data.followers = factionRows.filter(row => {
-          const masterRegExp = /master/i;
-          return !masterRegExp.test(row.station);
-        });
+        req.data.characters = factionRows;
 
         next();
 

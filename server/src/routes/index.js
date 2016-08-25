@@ -12,8 +12,8 @@ router.get('/', (req, res) => {
 });
 router.get(
   '/api/:faction/characters',
-  dataHelper.getData,
-  // sheetsHelper.getSpreadsheet,
+  // dataHelper.getData,
+  sheetsHelper.getSpreadsheet,
   (req, res) => {
     res.json(req.data);
   }
