@@ -55,7 +55,12 @@ export default class CrewCharacter extends Component {
           <td>{role === 'leader' ? '-' : sscost}</td>
           <td>{role === 'leader' ? sscache : '-'}</td>
           <td>
-            <UpgradeSelect upgrades={upgrades} actions={actions} />
+            <UpgradeSelect
+              upgrades={upgrades}
+              character={this.props.character}
+              leaderName={leaderName}
+              selectedFaction={selectedFaction}
+              actions={actions} />
           </td>
           <td>
             <button

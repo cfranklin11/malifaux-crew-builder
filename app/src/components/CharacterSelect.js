@@ -119,6 +119,7 @@ export default class CharacterSelect extends Component {
                 character.faction.replace(/\s/g, '-')
                 ) && charRegExp.test(character.station);
             }
+
             return charRegExp.test(character.station);
           })
           .map((character, index) => {
