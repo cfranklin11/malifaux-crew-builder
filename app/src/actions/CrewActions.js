@@ -44,6 +44,7 @@ function receiveCharacters(selectedFaction, json) {
   return {
     type: types.RECEIVE_CHARS,
     characters: json.characters,
+    upgrades: json.upgrades,
     selectedFaction
   };
 }

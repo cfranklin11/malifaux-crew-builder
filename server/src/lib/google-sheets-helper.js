@@ -3,21 +3,29 @@
 import GoogleSpreadsheet from 'google-spreadsheet';
 import auth from '../config/auth.js';
 
-let sheetsHelper = {
+// const factionRegExp = new RegExp(req.faction.replace(/\s/g, '-'), 'i');
+const mercRegExp = /mercenary/i;
+
+const sheetsHelper = {
+  createFactionRegExp: faction => {
+    const factionRegExp = new RegExp(faction.replace(/\s/g, '-'), 'i');
+    return factionRegExp;
+  },
+
   // Start by getting the sheet by ID
   getSpreadsheet: (req, res, next) => {
     // First option is to use ID entered into the form, then any environment
     // variables
-    let doc = new GoogleSpreadsheet(auth.docID);
+    const doc = new GoogleSpreadsheet(auth.docID);
     sheetsHelper.setAuth(req, res, next, doc);
   },
 
   // Get auth credentials to make changes to sheet
   setAuth: (req, res, next, doc) => {
-    let {client_email, private_key} = auth;
+    const {client_email, private_key} = auth;
 
     // Credentials obtained via environment variables imported to auth.js
-    let credsJson = {
+    const credsJson = {
       client_email,
       private_key
     };
@@ -49,7 +57,8 @@ let sheetsHelper = {
   },
 
   getCharacters: (req, res, next, spreadsheet) => {
-    let characterSheet = spreadsheet.worksheets[0];
+    const factionRegExp = sheetsHelper.createFactionRegExp(req.faction);
+    const characterSheet = spreadsheet.worksheets[0];
 
     characterSheet.getRows({offset: 1, orderby: 'col2'},
       (err, rows) => {
@@ -58,16 +67,13 @@ let sheetsHelper = {
           return next();
         }
 
-        const factionRegExp = new RegExp(req.faction.replace(/\s/g, '-'), 'i');
-        const MercRegExp = /mercenary/i;
-
-        let factionRows = rows
+        const factionRows = rows
           .filter(row => {
             const thisFaction = row.faction.replace(/\s/g, '-');
 
             // Filter for characters of the called faction or mercenaries
             return factionRegExp.test(thisFaction) ||
-              MercRegExp.test(row.characteristics);
+              mercRegExp.test(row.characteristics);
           })
           // Rows array has a lot of extra data, so map to get
           // only relevant characteristics
@@ -101,15 +107,19 @@ let sheetsHelper = {
         req.data = {};
         req.data.characters = factionRows;
 
-        next();
-
-        // sheetsHelper.getUpgrades(req, res, next, spreadsheet);
+        // Only need to get upgrades once,
+        // and Guild is the default faction on load
+        if (req.faction === 'guild') {
+          sheetsHelper.getUpgrades(req, res, next, spreadsheet);
+        } else {
+          next();
+        }
       }
     );
   },
 
   getUpgrades: (req, res, next, spreadsheet) => {
-    let upgradeSheet = spreadsheet.worksheets[1];
+    const upgradeSheet = spreadsheet.worksheets[1];
 
     upgradeSheet.getRows({offset: 1, orderby: 'col2'},
       (err, rows) => {
@@ -118,20 +128,33 @@ let sheetsHelper = {
           return next();
         }
 
-        // Rows array has a lot of extra data, so filter to get
-        // only URL and status code
-        let upgradeRows = rows.map(item => {
-          let {name, faction, cost, limit, namerestrictions,
-            characteristicrestrictions1, characteristicrestrictions2,
-            islimited} = item;
-          return {name, faction, cost, limit, namerestrictions,
-            characteristicrestrictions1, characteristicrestrictions2,
-            islimited};
+        // Rows array has a lot of extra data, so map to get
+        // only relevant characteristics
+        const upgradeRows = rows.map(upgrade => {
+          const {
+            name,
+            faction,
+            cost,
+            limit,
+            namerestrictions,
+            characteristicrestrictions1,
+            characteristicrestrictions2,
+            islimited
+          } = upgrade;
+
+          return {
+            name,
+            faction,
+            cost,
+            limit,
+            namerestrictions,
+            characteristicrestrictions1,
+            characteristicrestrictions2,
+            islimited
+          };
         });
 
-        console.log(upgradeRows);
-
-        req.upgrades = upgradeRows;
+        req.data.upgrades = upgradeRows;
 
         next();
       }

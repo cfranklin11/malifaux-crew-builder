@@ -8,6 +8,7 @@ const initialState = {
     ssCostSum: 0
   },
   selectedFaction: 'guild',
+  upgrades: [],
   charactersByFaction: {
     guild: {
       isFetching: true,
@@ -52,6 +53,17 @@ function selectedFaction(state = initialState.selectedFaction, action) {
 
     case types.SELECT_FACTION:
       return action.selectedFaction;
+
+    default:
+      return state;
+  }
+}
+
+function upgrades(state = initialState.upgrades, action) {
+  switch (action.type) {
+
+    case types.RECEIVE_CHARS:
+      return action.upgrades ? action.upgrades : state.upgrades;
 
     default:
       return state;
@@ -143,6 +155,7 @@ function characters(state = {
 }
 
 const rootReducer = combineReducers({
+  upgrades,
   charactersByFaction,
   soulstones,
   selectedFaction
