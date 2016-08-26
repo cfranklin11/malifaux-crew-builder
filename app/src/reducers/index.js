@@ -91,7 +91,8 @@ function charactersByFaction(state = initialState.charactersByFaction,
           characters: state[action.selectedFaction].characters
             .map(character => {
               if (character.name === action.character.name) {
-                return {...character,
+                return {
+                  ...character,
                   count: action.toggle === 'add' ?
                     action.character.count + 1 : action.character.count - 1,
                   isLeader: action.toggle === 'add'
@@ -111,9 +112,37 @@ function charactersByFaction(state = initialState.charactersByFaction,
           characters: state[action.selectedFaction].characters
             .map(character => {
               if (character.name === action.character.name) {
-                return {...character,
+                return {
+                  ...character,
                   count: action.toggle === 'add' ?
                     action.character.count + 1 : action.character.count - 1
+                };
+              }
+              return character;
+            }
+          )
+        }
+      };
+
+    case types.TOGGLE_UPGRADE:
+      console.log(action.upgrade);
+
+      return {
+        ...state,
+        [action.selectedFaction]: {
+          ...state[action.selectedFaction],
+          characters: state[action.selectedFaction].characters
+            .map(character => {
+              if (character.name === action.character.name) {
+                return {
+                  ...character,
+                  characterUpgrades: action.toggle === 'add' ?
+                    character.characterUpgrades.concat(action.upgrade) :
+                    character.characterUpgrades.findIndex(upgrade => {
+                      return upgrade.name === action.upgrade.name;
+                    }) === 0 ?
+                      character.characterUpgrades[1] :
+                    character.characterUpgrades[0]
                 };
               }
               return character;
@@ -145,7 +174,7 @@ function characters(state = {
         ...state,
         isFetching: false,
         characters: action.characters.map(character => {
-          return {...character, count: 0};
+          return {...character, count: 0, characterUpgrades: []};
         })
       };
 

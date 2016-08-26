@@ -44,34 +44,34 @@ export default class CrewCharacter extends Component {
       '' : 'invalid';
 
     return (
-        <tr className={invalid}>
-          <td></td>
-          <td>{count}</td>
-          <td>{name}</td>
-          <td>{faction}</td>
-          <td>{station}</td>
-          <td>{limit}</td>
-          <td>{characteristics}</td>
-          <td>{role === 'leader' ? '-' : sscost}</td>
-          <td>{role === 'leader' ? sscache : '-'}</td>
-          <td>
-            <UpgradeSelect
-              upgrades={upgrades}
-              character={this.props.character}
-              leaderName={leaderName}
-              selectedFaction={selectedFaction}
-              actions={actions} />
-          </td>
-          <td>
-            <button
-              type="submit"
-              className="btn btn-default"
-              onClick={this.handleRemove.bind(this)}>
-              <span className="glyphicon glyphicon-remove" aria-hidden="true">
-              </span>
-            </button>
-          </td>
-        </tr>
+      <tr className={invalid}>
+        <td></td>
+        <td>{count}</td>
+        <td>{name}</td>
+        <td>{faction}</td>
+        <td>{station}</td>
+        <td>{limit}</td>
+        <td>{characteristics}</td>
+        <td>{role === 'leader' ? '-' : sscost}</td>
+        <td>{role === 'leader' ? sscache : '-'}</td>
+        <td>
+          <UpgradeSelect
+            upgrades={upgrades}
+            character={this.props.character}
+            leaderName={leaderName}
+            selectedFaction={selectedFaction}
+            actions={actions} />
+        </td>
+        <td>
+          <button
+            type="submit"
+            className="btn btn-default"
+            onClick={this.handleRemove.bind(this)}>
+            <span className="glyphicon glyphicon-remove" aria-hidden="true">
+            </span>
+          </button>
+        </td>
+      </tr>
     );
   }
 }
