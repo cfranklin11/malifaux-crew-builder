@@ -26,6 +26,16 @@ export function toggleFollower(character, selectedFaction, toggle) {
   };
 }
 
+export function toggleUpgrade(upgrade, character, selectedFaction, toggle) {
+  return {
+    type: types.TOGGLE_UPGRADE,
+    upgrade,
+    character,
+    selectedFaction,
+    toggle
+  };
+}
+
 export function selectFaction(selectedFaction) {
   return {
     type: types.SELECT_FACTION,
@@ -44,6 +54,7 @@ function receiveCharacters(selectedFaction, json) {
   return {
     type: types.RECEIVE_CHARS,
     characters: json.characters,
+    upgrades: json.upgrades,
     selectedFaction
   };
 }

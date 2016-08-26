@@ -1,6 +1,5 @@
 'use strict';
 
-var dataHelper, self;
 var fs = require('fs');
 var path = require('path');
 var parse = require('csv-parse');
@@ -8,13 +7,18 @@ var parse = require('csv-parse');
 var DATA_PATH = '../../src/lib';
 var FILE_NAME = '/character-db.csv';
 
-dataHelper = self = {
+var dataHelper = {
   getData: function(req, res, next) {
     var parser;
     const MercRegExp = /mercenary/i;
 
     // Parse CSV to get data
     parser = parse({delimiter: ',', columns: true}, function(err, data) {
+      if (err) {
+        console.log(err);
+        return next();
+      }
+
       const factionRegExp = new RegExp(req.faction.replace(/\s/g, '-'), 'i');
       let factionRows = data
         .filter(row => {
@@ -52,16 +56,6 @@ dataHelper = self = {
 
       req.data = {};
       req.data.characters = factionRows;
-
-      // req.data.leaders = factionRows.filter(row => {
-      //   const leaderRegExp = /master|henchman/i;
-      //   return leaderRegExp.test(row.station);
-      // });
-
-      // req.data.followers = factionRows.filter(row => {
-      //   const masterRegExp = /master/i;
-      //   return !masterRegExp.test(row.station);
-      // });
 
       next();
     });
