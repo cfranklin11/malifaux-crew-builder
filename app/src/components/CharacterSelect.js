@@ -46,8 +46,8 @@ export default class CharacterSelect extends Component {
     const {role, ssLimit, selectedFaction, leaderName, characters} = nextProps;
     const stateProps = {role, ssLimit, selectedFaction, leaderName};
     const nextCharacter = characters.find(character => {
+      // Save first valid character in the state
       return isValidCharacter(character, stateProps);
-      // Use empty name to reset list on faction change
     }) || {name: '', faction: '', limit: 0, count: 0};
 
     this.setState({currentCharacter: nextCharacter});
@@ -65,6 +65,7 @@ export default class CharacterSelect extends Component {
     const {currentCharacter} = this.state;
     const roleLabel = role === 'leaders' ? 'leader' : role;
     const stateProps = {role, ssLimit, selectedFaction, leaderName};
+    // Disable leaders if one has been added; disable all invalid characters
     const isDisabled = isLeaderAdded && role === 'leaders' ||
       !isValidCharacter(currentCharacter, stateProps);
 
@@ -77,10 +78,13 @@ export default class CharacterSelect extends Component {
           className="form-control"
           id="character-select"
           onChange={this.handleChange.bind(this)}>
+
           {characters.filter(character => {
+            // Filter for potentially valid characters
             return isPotentialCharacter(character, stateProps);
           })
           .map((character, index) => {
+            // Disable all currently invalid characters
             const isThisDisabled = !isValidCharacter(character, stateProps);
             return (
               <option
@@ -91,6 +95,7 @@ export default class CharacterSelect extends Component {
               </option>
             );
           })}
+
         </select>
 
         <input
