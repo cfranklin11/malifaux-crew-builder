@@ -50,23 +50,23 @@ function requestCharacters(selectedFaction) {
   };
 }
 
-function receiveCharacters(selectedFaction, json) {
+function receiveCharacters(state, selectedFaction, json) {
   return {
     type: types.RECEIVE_CHARS,
     characters: json.characters,
-    upgrades: json.upgrades,
+    upgrades: json.upgrades || state.upgrades,
     selectedFaction
   };
 }
 
-function fetchCharacters(selectedFaction) {
+function fetchCharacters(state, selectedFaction) {
   return dispatch => {
     dispatch(requestCharacters(selectedFaction));
 
     return fetch(`/api/${selectedFaction}/characters`)
       .then(response => response.json())
       .then(json => {
-        dispatch(receiveCharacters(selectedFaction, json));
+        dispatch(receiveCharacters(state, selectedFaction, json));
       });
   };
 }
@@ -89,7 +89,7 @@ function shouldFetchCharacters(state, selectedFaction) {
 export function fetchCharactersIfNeeded(selectedFaction) {
   return (dispatch, getState) => {
     if (shouldFetchCharacters(getState(), selectedFaction)) {
-      return dispatch(fetchCharacters(selectedFaction));
+      return dispatch(fetchCharacters(getState(), selectedFaction));
     }
   };
 }

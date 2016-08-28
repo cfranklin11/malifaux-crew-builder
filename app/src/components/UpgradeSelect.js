@@ -21,7 +21,6 @@ export default class UpgradeSelect extends Component {
   handleChange(e) {
     const {upgrades} = this.props;
     const upgradeName = e.target.value;
-
     // Get upgrade stats from upgrades array and save in state
     const currentUpgrade = upgrades.find(upgrade => {
       return upgradeName === upgrade.name;

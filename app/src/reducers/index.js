@@ -63,7 +63,7 @@ function upgrades(state = initialState.upgrades, action) {
   switch (action.type) {
 
     case types.RECEIVE_CHARS:
-      return action.upgrades ? action.upgrades : state.upgrades;
+      return action.upgrades;
 
     default:
       return state;
@@ -125,8 +125,6 @@ function charactersByFaction(state = initialState.charactersByFaction,
       };
 
     case types.TOGGLE_UPGRADE:
-      console.log(action.upgrade);
-
       return {
         ...state,
         [action.selectedFaction]: {
@@ -134,15 +132,26 @@ function charactersByFaction(state = initialState.charactersByFaction,
           characters: state[action.selectedFaction].characters
             .map(character => {
               if (character.name === action.character.name) {
+                const {characterUpgrades} = character;
+                const upgradeIndex = characterUpgrades.findIndex(upgrade => {
+                  return upgrade.name === action.upgrade;
+                });
+                let updatedUpgrades;
+                if (action.toggle === 'add') {
+                  updatedUpgrades = characterUpgrades.concat(action.upgrade);
+                } else if (characterUpgrades.length === 1) {
+                  updatedUpgrades = [];
+                } else if (upgradeIndex === 0) {
+                  updatedUpgrades = characterUpgrades.slice(1);
+                } else {
+                  updatedUpgrades = characterUpgrades
+                    .slice(0, upgradeIndex)
+                    .concat(characterUpgrades.slice(upgradeIndex + 1));
+                }
+
                 return {
                   ...character,
-                  characterUpgrades: action.toggle === 'add' ?
-                    character.characterUpgrades.concat(action.upgrade) :
-                    character.characterUpgrades.findIndex(upgrade => {
-                      return upgrade.name === action.upgrade.name;
-                    }) === 0 ?
-                      character.characterUpgrades[1] :
-                    character.characterUpgrades[0]
+                  characterUpgrades: updatedUpgrades
                 };
               }
               return character;

@@ -2,30 +2,25 @@ import React, {Component, PropTypes} from 'react';
 
 export default class CrewCharacter extends Component {
   handleRemove(e) {
-    const {actions, character, selectedFaction} = this.props;
-    const removedUpgrade = e.target.id.replace(/-/g, ' ');
-
-    actions.toggleUpgrade(removedUpgrade, character, selectedFaction, 'remove');
+    const {actions, character, selectedFaction, upgrade: {name}} = this.props;
+    actions.toggleUpgrade(name, character, selectedFaction, 'remove');
   }
 
   render() {
-    const {
-      upgrade
-    } = this.props;
+    const {upgrade} = this.props;
 
     return (
-      <tr>
-        <td colSpan="2"></td>
-        <td>{upgrade.name}</td>
-        <td colSpan="2"></td>
-        <td>{upgrade.limit}</td>
+      <tr className="upgrade-row">
+        <td colSpan="5"></td>
+        <td>{upgrade.limit === 0 ? '-' : upgrade.limit}</td>
         <td></td>
         <td>{upgrade.cost}</td>
+        <td></td>
+        <td>{upgrade.name}</td>
         <td>
           <button
             type="submit"
-            className="btn btn-default"
-            id={upgrade.name.replace(/\s/g, '-')}
+            className="btn btn-default btn-sm"
             onClick={this.handleRemove.bind(this)}>
             <span
               className="glyphicon glyphicon-minus-sign"
@@ -33,7 +28,6 @@ export default class CrewCharacter extends Component {
             </span>
           </button>
         </td>
-        <td></td>
       </tr>
     );
   }
