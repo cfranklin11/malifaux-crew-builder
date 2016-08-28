@@ -44,7 +44,7 @@ export default class CrewCharacter extends Component {
         <td>{name}</td>
         <td>{faction}</td>
         <td>{station}</td>
-        <td>{limit}</td>
+        <td>{parseFloat(limit) === 0 ? '-' : limit}</td>
         <td>{characteristics}</td>
         <td>{role === 'leader' ? '-' : sscost}</td>
         <td>{role === 'leader' ? sscache : '-'}</td>

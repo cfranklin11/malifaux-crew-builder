@@ -22,3 +22,9 @@ th {
 .invalid {
   text-decoration: line-through;
 }
+
+.upgrade-row > th, .upgrade-row > td {
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+  border-top: 0px !important;
+}
