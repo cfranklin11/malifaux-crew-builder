@@ -75,7 +75,7 @@ CrewCharacter.propTypes = {
   role: PropTypes.string.isRequired,
   actions: PropTypes.object.isRequired,
   selectedFaction: PropTypes.string.isRequired,
-  leaderName: PropTypes.string.isRequired,
+  leaderName: PropTypes.string,
   upgrades: PropTypes.array.isRequired,
   ssLimit: PropTypes.number.isRequired
 };

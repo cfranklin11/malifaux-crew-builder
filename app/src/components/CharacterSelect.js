@@ -131,7 +131,7 @@ CharacterSelect.propTypes = {
   actions: PropTypes.object.isRequired,
   character: PropTypes.object,
   isLeaderAdded: PropTypes.bool.isRequired,
-  leaderName: PropTypes.string.isRequired,
+  leaderName: PropTypes.string,
   ssLimit: PropTypes.number.isRequired,
   selectedFaction: PropTypes.string.isRequired
 };

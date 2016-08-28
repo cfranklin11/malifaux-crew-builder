@@ -111,6 +111,6 @@ CrewFilter.propTypes = {
   characters: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
   isLeaderAdded: PropTypes.bool.isRequired,
-  leaderName: PropTypes.string.isRequired,
+  leaderName: PropTypes.string,
   ssLimit: PropTypes.number.isRequired
 };

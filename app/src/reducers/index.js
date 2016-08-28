@@ -63,7 +63,7 @@ function upgrades(state = initialState.upgrades, action) {
   switch (action.type) {
 
     case types.RECEIVE_CHARS:
-      return action.upgrades ? action.upgrades : state.upgrades;
+      return action.upgrades;
 
     default:
       return state;
@@ -125,8 +125,6 @@ function charactersByFaction(state = initialState.charactersByFaction,
       };
 
     case types.TOGGLE_UPGRADE:
-      console.log(action.upgrade);
-
       return {
         ...state,
         [action.selectedFaction]: {

@@ -66,7 +66,7 @@ CrewBuilder.propTypes = {
   selectedFaction: PropTypes.string.isRequired,
   characters: PropTypes.array.isRequired,
   isLeaderAdded: PropTypes.bool.isRequired,
-  leaderName: PropTypes.string.isRequired,
+  leaderName: PropTypes.string,
   isFetching: PropTypes.bool.isRequired,
   actions: PropTypes.object.isRequired,
   upgrades: PropTypes.array.isRequired

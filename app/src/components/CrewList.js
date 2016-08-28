@@ -123,7 +123,7 @@ CrewList.propTypes = {
   characters: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
   selectedFaction: PropTypes.string.isRequired,
-  leaderName: PropTypes.string.isRequired,
+  leaderName: PropTypes.string,
   ssLimit: PropTypes.number.isRequired,
   upgrades: PropTypes.array.isRequired
 };
