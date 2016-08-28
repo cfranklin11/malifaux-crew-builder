@@ -15,12 +15,12 @@ export default class CrewCharacter extends Component {
 
     return (
       <tr>
-        <td colSpan="2"></td>
-        <td>{upgrade.name}</td>
-        <td colSpan="2"></td>
+        <td colSpan="5"></td>
         <td>{upgrade.limit}</td>
         <td></td>
         <td>{upgrade.cost}</td>
+        <td></td>
+        <td>{upgrade.name}</td>
         <td>
           <button
             type="submit"
@@ -33,7 +33,6 @@ export default class CrewCharacter extends Component {
             </span>
           </button>
         </td>
-        <td></td>
       </tr>
     );
   }

@@ -76,10 +76,8 @@ export function isPotentialCharacter(character, stateProps) {
 
 // Checks if a character is currently valid, so invalid ones are disabled
 export function isValidCharacter(character, stateProps) {
-  const {station, faction, characteristics} = character;
-  const {role, ssLimit, selectedFaction, leaderName} = stateProps;
-  return isCorrectRole(station, ssLimit, role) &&
-    isCorrectFaction(faction, characteristics, selectedFaction, role) &&
-    isValidTotem(characteristics, leaderName) &&
+  const {station} = character;
+  const {role, ssLimit} = stateProps;
+  return isPotentialCharacter(character, stateProps) &&
     isValidLeader(station, ssLimit, role);
 }

@@ -4,7 +4,7 @@ import {
   isValidCharacter,
   isPotentialCharacter,
   isLessThanLimit
-} from '../utils/RulesValidations';
+} from '../utils/CharacterValidations';
 
 export default class CharacterSelect extends Component {
   constructor(props) {

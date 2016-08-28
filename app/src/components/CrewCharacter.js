@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import {UpgradeSelect} from '../components';
 import {LEADER_REGEXP} from '../constants/RegExps';
-import {isValidCharacter, isLessThanLimit} from '../utils/RulesValidations';
+import {isValidCharacter} from '../utils/CharacterValidations';
 
 export default class CrewCharacter extends Component {
   handleRemove(e) {

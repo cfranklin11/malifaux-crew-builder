@@ -4,6 +4,7 @@ label {
 
 th {
   text-align: center;
+  text-transform: capitalize;
 }
 
 .app-section {
