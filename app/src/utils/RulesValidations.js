@@ -32,10 +32,12 @@ function isCorrectRole(station, ssLimit, role) {
   return isFollower(station);
 }
 
-function isCorrectFaction(faction, characteristics, selectedFaction) {
+// All characters must be from the selected faction or non-leader mercenaries
+function isCorrectFaction(faction, characteristics, selectedFaction, role) {
   const factionRegExp = new RegExp(selectedFaction.replace(/\s/g, '-'), 'i');
   return factionRegExp.test(faction.replace(/\s/g, '-')) ||
-    regExps.MERC_REGEXP.test(characteristics);
+    regExps.MERC_REGEXP.test(characteristics) &&
+    !regExps.LEADER_REGEXP.test(role);
 }
 
 function isTotem(characteristics) {
@@ -64,11 +66,12 @@ export function isLessThanLimit(limit, count) {
 // Checks if a character has the potential to be valid, so it shows up
 // on lists
 export function isPotentialCharacter(character, stateProps) {
-  const {station, faction, characteristics} = character;
+  const {station, faction, characteristics, name} = character;
   const {role, ssLimit, selectedFaction, leaderName} = stateProps;
   return isCorrectRole(station, ssLimit, role) &&
-    isCorrectFaction(faction, characteristics, selectedFaction) &&
-    isValidTotem(characteristics, leaderName);
+    isCorrectFaction(faction, characteristics, selectedFaction, role) &&
+    isValidTotem(characteristics, leaderName) &&
+    name.toLowerCase() !== 'lord chompy bits';
 }
 
 // Checks if a character is currently valid, so invalid ones are disabled
@@ -76,7 +79,7 @@ export function isValidCharacter(character, stateProps) {
   const {station, faction, characteristics} = character;
   const {role, ssLimit, selectedFaction, leaderName} = stateProps;
   return isCorrectRole(station, ssLimit, role) &&
-    isCorrectFaction(faction, characteristics, selectedFaction) &&
+    isCorrectFaction(faction, characteristics, selectedFaction, role) &&
     isValidTotem(characteristics, leaderName) &&
     isValidLeader(station, ssLimit, role);
 }
