@@ -1,11 +1,13 @@
 import React, {Component, PropTypes} from 'react';
 import {UpgradeSelect} from '../components';
+import {LEADER_REGEXP} from '../constants/RegExps';
+import {isValidCharacter, isLessThanLimit} from '../utils/RulesValidations';
 
 export default class CrewCharacter extends Component {
   handleRemove(e) {
     const {role, actions, character, selectedFaction} = this.props;
 
-    if (role === 'leader') {
+    if (LEADER_REGEXP.test(role)) {
       actions.toggleLeader(character, selectedFaction, 'remove');
     } else {
       actions.toggleFollower(character, selectedFaction, 'remove');
@@ -15,33 +17,25 @@ export default class CrewCharacter extends Component {
   render() {
     const {
       actions,
+      ssLimit,
       role,
       selectedFaction,
       leaderName,
       upgrades,
-      character:
-      {
-        count,
-        name,
-        faction,
-        station,
-        limit,
-        characteristics,
-        sscost,
-        sscache
-      }
+      character
     } = this.props;
-    const specificTotemRegExp = /totem\s\(((?:\w*\s?)+)\)/i;
-    const totemMaster = specificTotemRegExp.exec(characteristics) ?
-      specificTotemRegExp.exec(characteristics)[1] : '';
-    const totemMasterRegExp =
-      new RegExp(totemMaster, 'i');
-    const factionRegExp = new RegExp(selectedFaction, 'i');
-    const invalid = factionRegExp.test(faction.replace(/\s/g, '-')) ||
-      /mercenary/i.test(characteristics) ?
-        totemMaster ?
-          totemMasterRegExp.test(leaderName) ? '' : 'invalid' :
-      '' : 'invalid';
+    const {
+      count,
+      name,
+      faction,
+      station,
+      limit,
+      characteristics,
+      sscost,
+      sscache
+      } = character;
+    const stateProps = {role, ssLimit, selectedFaction, leaderName};
+    const invalid = isValidCharacter(character, stateProps) ? '' : 'invalid';
 
     return (
       <tr className={invalid}>
@@ -82,5 +76,6 @@ CrewCharacter.propTypes = {
   actions: PropTypes.object.isRequired,
   selectedFaction: PropTypes.string.isRequired,
   leaderName: PropTypes.string.isRequired,
-  upgrades: PropTypes.array.isRequired
+  upgrades: PropTypes.array.isRequired,
+  ssLimit: PropTypes.number.isRequired
 };

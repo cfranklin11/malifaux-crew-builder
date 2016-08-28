@@ -2,7 +2,8 @@ import React, {Component, PropTypes} from 'react';
 import {LEADER_REGEXP} from '../constants/RegExps';
 import {
   isValidCharacter,
-  isPotentialCharacter
+  isPotentialCharacter,
+  isLessThanLimit
 } from '../utils/RulesValidations';
 
 export default class CharacterSelect extends Component {
@@ -44,11 +45,21 @@ export default class CharacterSelect extends Component {
 
   componentWillReceiveProps(nextProps) {
     const {role, ssLimit, selectedFaction, leaderName, characters} = nextProps;
+    const {currentCharacter} = this.state;
     const stateProps = {role, ssLimit, selectedFaction, leaderName};
-    const nextCharacter = characters.find(character => {
-      // Save first valid character in the state
-      return isValidCharacter(character, stateProps);
-    }) || {name: '', faction: '', limit: 0, count: 0};
+    const nextCharacter =
+      // If state already has a character, refresh currentCharacter data
+      // with any changes
+      characters.find(character => {
+        return currentCharacter.name === character.name;
+      }) ||
+      // Otherwise, set state to first valid character
+      characters.find(character => {
+        return isValidCharacter(character, stateProps) &&
+          isLessThanLimit(character.limit, character.count);
+      }) ||
+      // If no valid characters, return default
+      {name: '', faction: '', limit: 0, count: 0};
 
     this.setState({currentCharacter: nextCharacter});
   }
@@ -63,11 +74,14 @@ export default class CharacterSelect extends Component {
       selectedFaction
     } = this.props;
     const {currentCharacter} = this.state;
-    const roleLabel = role === 'leaders' ? 'leader' : role;
+    const {limit, count} = currentCharacter;
+    const roleLabel = LEADER_REGEXP.test(role) ? 'leader' : role;
     const stateProps = {role, ssLimit, selectedFaction, leaderName};
-    // Disable leaders if one has been added; disable all invalid characters
-    const isDisabled = isLeaderAdded && role === 'leaders' ||
-      !isValidCharacter(currentCharacter, stateProps);
+    // Disable leaders if one has been added; disable all invalid characters;
+    // disable if the max # of this character has been added to the crew
+    const isDisabled = isLeaderAdded && LEADER_REGEXP.test(role) ||
+      !isValidCharacter(currentCharacter, stateProps) ||
+      !isLessThanLimit(limit, count);
 
     return (
       <div className="form-group
@@ -85,7 +99,9 @@ export default class CharacterSelect extends Component {
           })
           .map((character, index) => {
             // Disable all currently invalid characters
-            const isThisDisabled = !isValidCharacter(character, stateProps);
+            const isThisDisabled = isLeaderAdded && LEADER_REGEXP.test(role) ||
+              !isValidCharacter(character, stateProps) ||
+              !isLessThanLimit(character.limit, character.count);
             return (
               <option
                 key={index}

@@ -8,6 +8,7 @@ export default class CrewList extends Component {
       characters,
       selectedFaction,
       leaderName,
+      ssLimit,
       upgrades
     } = this.props;
 
@@ -45,6 +46,7 @@ export default class CrewList extends Component {
                     character={character}
                     selectedFaction={selectedFaction}
                     leaderName={leaderName}
+                    ssLimit={ssLimit}
                     upgrades={upgrades} />
                 );
               })
@@ -80,6 +82,7 @@ export default class CrewList extends Component {
                       character={character}
                       selectedFaction={selectedFaction}
                       leaderName={leaderName}
+                      ssLimit={ssLimit}
                       upgrades={upgrades} />,
 
                     <tr>
@@ -104,6 +107,7 @@ export default class CrewList extends Component {
                     character={character}
                     selectedFaction={selectedFaction}
                     leaderName={leaderName}
+                    ssLimit={ssLimit}
                     upgrades={upgrades} />
                 );
               })
@@ -120,5 +124,6 @@ CrewList.propTypes = {
   actions: PropTypes.object.isRequired,
   selectedFaction: PropTypes.string.isRequired,
   leaderName: PropTypes.string.isRequired,
+  ssLimit: PropTypes.number.isRequired,
   upgrades: PropTypes.array.isRequired
 };

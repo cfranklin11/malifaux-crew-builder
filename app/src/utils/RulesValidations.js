@@ -57,7 +57,7 @@ function isValidTotem(characteristics, leaderName) {
   return true;
 }
 
-function isLessThanLimit(limit, count) {
+export function isLessThanLimit(limit, count) {
   return parseFloat(limit) === 0 || parseFloat(count) < parseFloat(limit);
 }
 
@@ -73,10 +73,10 @@ export function isPotentialCharacter(character, stateProps) {
 
 // Checks if a character is currently valid, so invalid ones are disabled
 export function isValidCharacter(character, stateProps) {
-  const {station, faction, characteristics, limit, count} = character;
+  const {station, faction, characteristics} = character;
   const {role, ssLimit, selectedFaction, leaderName} = stateProps;
   return isCorrectRole(station, ssLimit, role) &&
     isCorrectFaction(faction, characteristics, selectedFaction) &&
     isValidTotem(characteristics, leaderName) &&
-    isLessThanLimit(limit, count) && isValidLeader(station, ssLimit, role);
+    isValidLeader(station, ssLimit, role);
 }

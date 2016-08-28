@@ -54,6 +54,7 @@ export default class CrewBuilder extends Component {
           characters={characters}
           selectedFaction={selectedFaction}
           leaderName={leaderName}
+          ssLimit={ssLimit}
           upgrades={upgrades}/>
       </div>
     );
