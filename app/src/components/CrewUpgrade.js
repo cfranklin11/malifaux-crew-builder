@@ -7,9 +7,7 @@ export default class CrewCharacter extends Component {
   }
 
   render() {
-    const {
-      upgrade
-    } = this.props;
+    const {upgrade} = this.props;
 
     return (
       <tr className="upgrade-row">

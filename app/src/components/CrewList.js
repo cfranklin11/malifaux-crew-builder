@@ -5,8 +5,8 @@ import {LEADER_REGEXP} from '../constants/RegExps';
 export default class CrewList extends Component {
   render() {
     const {
-      actions,
       characters,
+      actions,
       selectedFaction,
       leaderName,
       ssLimit,
@@ -16,9 +16,11 @@ export default class CrewList extends Component {
     let tableRows = [];
     let index = -1;
 
+    // Loop through leader & follower sections of crew list
     for (let i = 0; i < roles.length; i++) {
       const thisRole = roles[i];
 
+      // Add section labels
       tableRows.push(
         <tr key={index++}>
           <th>{thisRole}</th>
@@ -63,7 +65,8 @@ export default class CrewList extends Component {
                 ssLimit={ssLimit}
                 upgrades={upgrades} />
             ].concat(upgradeRows);
-          }));
+          })
+      );
     }
 
     return (
