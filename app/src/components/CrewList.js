@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import {CrewCharacter, CrewUpgrade} from '../components';
 import {LEADER_REGEXP} from '../constants/RegExps';
+import {isUpgradable} from '../utils/UpgradeValidations';
 
 export default class CrewList extends Component {
   render() {
@@ -39,7 +40,7 @@ export default class CrewList extends Component {
             return character.count > 0 && correctRole;
           })
           .map(character => {
-            const {characterUpgrades} = character;
+            const {characterUpgrades, count} = character;
             // Save any character upgrades that have been added
             const upgradeRows = characterUpgrades.map(upgrade => {
               return (
@@ -52,20 +53,27 @@ export default class CrewList extends Component {
                   characterUpgrades={characterUpgrades} />
               );
             });
+            let characterRows = [];
 
             // Return character component with upgrade component(s)
             // concatenated
-            return [
-              <CrewCharacter
-                key={index++}
-                actions={actions}
-                role={thisRole}
-                character={character}
-                selectedFaction={selectedFaction}
-                leaderName={leaderName}
-                ssLimit={ssLimit}
-                upgrades={upgrades} />
-            ].concat(upgradeRows);
+            for (let i = 0; i < count; i++) {
+              characterRows.push(
+                <CrewCharacter
+                  key={index++}
+                  actions={actions}
+                  role={thisRole}
+                  character={character}
+                  selectedFaction={selectedFaction}
+                  leaderName={leaderName}
+                  ssLimit={ssLimit}
+                  upgrades={upgrades} />
+              );
+              if (!isUpgradable) {
+                break;
+              }
+            }
+            return characterRows.concat(upgradeRows);
           })
       );
     }

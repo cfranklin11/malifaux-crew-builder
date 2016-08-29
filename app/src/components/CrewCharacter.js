@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import {UpgradeSelect} from '../components';
 import {LEADER_REGEXP} from '../constants/RegExps';
 import {isValidCharacter} from '../utils/CharacterValidations';
+import {isUpgradable} from '../utils/UpgradeValidations';
 
 export default class CrewCharacter extends Component {
   handleRemove(e) {
@@ -45,18 +46,20 @@ export default class CrewCharacter extends Component {
           selectedFaction={selectedFaction}
           actions={actions} />
       </td> :
-      <td></td>
+      <td>-</td>;
 
     return (
       <tr className={invalid}>
         <td></td>
-        <td>{count}</td>
+        <td>{isUpgradable(station) ? 1 : count}</td>
         <td>{name}</td>
         <td>{faction}</td>
         <td>{station}</td>
         <td>{parseFloat(limit) === 0 ? '-' : limit}</td>
         <td>{characteristics}</td>
-        <td>{role === 'leader' ? '-' : sscost}</td>
+        <td>
+          {role === 'leader' ? '-' : parseFloat(sscost) * parseFloat(count)}
+        </td>
         <td>{role === 'leader' ? sscache : '-'}</td>
         {upgradeSelectElement}
         <td>
