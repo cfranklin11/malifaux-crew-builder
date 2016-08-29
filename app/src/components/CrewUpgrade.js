@@ -2,8 +2,8 @@ import React, {Component, PropTypes} from 'react';
 
 export default class CrewCharacter extends Component {
   handleRemove(e) {
-    const {actions, character, selectedFaction, upgrade: {name}} = this.props;
-    actions.toggleUpgrade(name, character, selectedFaction, 'remove');
+    const {upgrades, actions, character, selectedFaction, upgrade} = this.props;
+    actions.toggleUpgrade(upgrades, upgrade, character, selectedFaction, 'remove');
   }
 
   render() {
@@ -37,5 +37,6 @@ CrewCharacter.propTypes = {
   character: PropTypes.object.isRequired,
   actions: PropTypes.object.isRequired,
   selectedFaction: PropTypes.string.isRequired,
-  upgrade: PropTypes.object.isRequired
+  upgrade: PropTypes.object.isRequired,
+  upgrades: PropTypes.array.isRequired
 };

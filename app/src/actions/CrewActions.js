@@ -26,9 +26,11 @@ export function toggleFollower(character, selectedFaction, toggle) {
   };
 }
 
-export function toggleUpgrade(upgrade, character, selectedFaction, toggle) {
+export function toggleUpgrade(
+  upgrades, upgrade, character, selectedFaction, toggle) {
   return {
     type: types.TOGGLE_UPGRADE,
+    upgrades,
     upgrade,
     character,
     selectedFaction,

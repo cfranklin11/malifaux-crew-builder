@@ -48,6 +48,7 @@ export default class CrewList extends Component {
                   character={character}
                   selectedFaction={selectedFaction}
                   upgrade={upgrade}
+                  upgrades={upgrades}
                   characterUpgrades={characterUpgrades} />
               );
             });

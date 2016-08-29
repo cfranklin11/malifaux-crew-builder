@@ -63,7 +63,24 @@ function upgrades(state = initialState.upgrades, action) {
   switch (action.type) {
 
     case types.RECEIVE_CHARS:
-      return action.upgrades;
+      return action.upgrades.map(upgrade => {
+        return {
+          ...upgrade,
+          count: 0
+        };
+      });
+
+    case types.TOGGLE_UPGRADE:
+      return action.upgrades.map(upgrade => {
+        if (upgrade.name === action.upgrade.name) {
+          return {
+            ...upgrade,
+            count: action.toggle === 'add' ?
+              upgrade.count + 1 : upgrade.count - 1
+          };
+        }
+        return upgrade;
+      });
 
     default:
       return state;
@@ -134,7 +151,7 @@ function charactersByFaction(state = initialState.charactersByFaction,
               if (character.name === action.character.name) {
                 const {characterUpgrades} = character;
                 const upgradeIndex = characterUpgrades.findIndex(upgrade => {
-                  return upgrade.name === action.upgrade;
+                  return upgrade.name === action.upgrade.name;
                 });
                 let updatedUpgrades;
                 if (action.toggle === 'add') {

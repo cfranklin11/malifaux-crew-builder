@@ -43,12 +43,9 @@ function isExcludedCharacter(
 
 function isCorrectLeader(
   restrictions1, restrictions2, characterName, leaderName) {
-  if (regExps.LEADER_REGEXP.test(restrictions1.concat(restrictions2)) &&
-    !regExps.NON_LEADER_REGEXP.test(restrictions1.concat(restrictions2))) {
-    return characterName === leaderName;
-  }
-
-  return true;
+  return regExps.LEADER_REGEXP.test(restrictions1.concat(restrictions2)) &&
+    !regExps.NON_LEADER_REGEXP.test(restrictions1.concat(restrictions2)) ?
+    characterName === leaderName : true;
 }
 
 function meetsRestrictions(

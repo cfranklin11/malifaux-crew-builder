@@ -31,10 +31,16 @@ export default class UpgradeSelect extends Component {
   }
 
   handleAdd(e) {
-    const {actions, character, selectedFaction} = this.props;
+    const {actions, character, selectedFaction, upgrades} = this.props;
     const {currentUpgrade} = this.state;
 
-    actions.toggleUpgrade(currentUpgrade, character, selectedFaction, 'add');
+    actions.toggleUpgrade(
+      upgrades,
+      currentUpgrade,
+      character,
+      selectedFaction,
+      'add'
+    );
   }
 
   componentWillMount() {
