@@ -36,6 +36,16 @@ export default class CrewCharacter extends Component {
       } = character;
     const stateProps = {role, ssLimit, selectedFaction, leaderName};
     const invalid = isValidCharacter(character, stateProps) ? '' : 'invalid';
+    const upgradeSelectElement = isUpgradable(station) ?
+      <td>
+        <UpgradeSelect
+          upgrades={upgrades}
+          character={this.props.character}
+          leaderName={leaderName}
+          selectedFaction={selectedFaction}
+          actions={actions} />
+      </td> :
+      <td></td>
 
     return (
       <tr className={invalid}>
@@ -48,14 +58,7 @@ export default class CrewCharacter extends Component {
         <td>{characteristics}</td>
         <td>{role === 'leader' ? '-' : sscost}</td>
         <td>{role === 'leader' ? sscache : '-'}</td>
-        <td>
-          <UpgradeSelect
-            upgrades={upgrades}
-            character={this.props.character}
-            leaderName={leaderName}
-            selectedFaction={selectedFaction}
-            actions={actions} />
-        </td>
+        {upgradeSelectElement}
         <td>
           <button
             type="submit"

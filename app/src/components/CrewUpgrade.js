@@ -3,7 +3,13 @@ import React, {Component, PropTypes} from 'react';
 export default class CrewCharacter extends Component {
   handleRemove(e) {
     const {upgrades, actions, character, selectedFaction, upgrade} = this.props;
-    actions.toggleUpgrade(upgrades, upgrade, character, selectedFaction, 'remove');
+    actions.toggleUpgrade(
+      upgrades,
+      upgrade,
+      character,
+      selectedFaction,
+      'remove'
+    );
   }
 
   render() {

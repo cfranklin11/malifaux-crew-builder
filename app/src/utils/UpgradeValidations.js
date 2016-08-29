@@ -1,9 +1,5 @@
 import * as regExps from '../constants/RegExps';
 
-function isUpgradable(station) {
-  return regExps.UPGRADABLE_REGEXP.test(station);
-}
-
 function isCorrectFaction(faction, selectedFaction) {
   const factionRegExp = new RegExp(selectedFaction.replace(/\s/g, '-'), 'i');
 
@@ -20,7 +16,11 @@ function isCorrectName(nameRestrictions, characterName) {
 }
 
 function isExcludedCharacter(
-  restrictions1, restrictions2, character, leaderName) {
+  restrictions1,
+  restrictions2,
+  character,
+  leaderName
+) {
   const nonRestrictionCapture1 =
     regExps.NON_CAPTURE_REGEXP.exec(restrictions1) || ['', ''];
   const nonRestrictionCapture2 =
@@ -42,14 +42,22 @@ function isExcludedCharacter(
 }
 
 function isCorrectLeader(
-  restrictions1, restrictions2, characterName, leaderName) {
+  restrictions1,
+  restrictions2,
+  characterName,
+  leaderName
+) {
   return regExps.LEADER_REGEXP.test(restrictions1.concat(restrictions2)) &&
     !regExps.NON_LEADER_REGEXP.test(restrictions1.concat(restrictions2)) ?
     characterName === leaderName : true;
 }
 
 function meetsRestrictions(
-  restrictions1, restrictions2, station, characteristics) {
+  restrictions1,
+  restrictions2,
+  station,
+  characteristics
+) {
   const restrictions1RegExp =
     new RegExp(restrictions1
       .replace(/,\s/g, '|')
@@ -63,6 +71,20 @@ function meetsRestrictions(
 
   return restrictions1RegExp.test(station.concat(characteristics)) &&
     restrictions2RegExp.test(station.concat(characteristics));
+}
+
+function isLessThanLimit(limit, count) {
+  return parseFloat(limit) === 0 || parseFloat(count) < parseFloat(limit);
+}
+
+function isAdded(upgradeName, characterUpgrades) {
+  return characterUpgrades.findIndex(characterUpgrade => {
+    return characterUpgrade.name === upgradeName;
+  }) !== -1;
+}
+
+export function isUpgradable(station) {
+  return regExps.UPGRADABLE_REGEXP.test(station);
 }
 
 export function isPotentialUpgrade(upgrade, character, stateProps) {
@@ -80,4 +102,11 @@ export function isPotentialUpgrade(upgrade, character, stateProps) {
     !isExcludedCharacter(restrictions1, restrictions2, character, leaderName) &&
     isCorrectLeader(restrictions1, restrictions2, name, leaderName) &&
     meetsRestrictions(restrictions1, restrictions2, station, characteristics);
+}
+
+export function isValidUpgrade(upgrade, character, stateProps) {
+  const {limit, count, name} = upgrade;
+  const {characterUpgrades} = character;
+  return isPotentialUpgrade(upgrade, character, stateProps) &&
+    isLessThanLimit(limit, count) && !isAdded(name, characterUpgrades);
 }

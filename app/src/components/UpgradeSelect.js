@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {isPotentialUpgrade} from '../utils/UpgradeValidations';
+import {isPotentialUpgrade, isValidUpgrade} from '../utils/UpgradeValidations';
 
 export default class UpgradeSelect extends Component {
   constructor(props) {
@@ -11,6 +11,7 @@ export default class UpgradeSelect extends Component {
         faction: '',
         cost: 0,
         limit: 0,
+        count: 0,
         namerestrictions: '',
         characteristicrestrictions1: '',
         characteristicrestrictions2: '',
@@ -65,6 +66,19 @@ export default class UpgradeSelect extends Component {
     this.setState({currentUpgrade: firstUpgrade});
   }
 
+  // Refresh currently selected upgrade with new count number on change
+  componentWillReceiveProps(nextProps) {
+    const {character: {characterUpgrades}} = this.props;
+    const {currentUpgrade: {name}} = this.state;
+    const nextUpgrade = characterUpgrades.find(characterUpgrade => {
+      return characterUpgrade.name === name;
+    });
+
+    if (nextUpgrade) {
+      this.setState({currentUpgrade: nextUpgrade});
+    }
+  }
+
   render() {
     const {
       upgrades,
@@ -72,18 +86,23 @@ export default class UpgradeSelect extends Component {
       leaderName,
       character
     } = this.props;
+    const {currentUpgrade} = this.state;
+    const stateProps = {selectedFaction, leaderName};
+    const isDisabled = !isValidUpgrade(currentUpgrade, character, stateProps);
 
     return (
       <div>
         <select
           onChange={this.handleChange.bind(this)}>
           {upgrades.filter(upgrade => {
-            const stateProps = {selectedFaction, leaderName};
             return isPotentialUpgrade(upgrade, character, stateProps);
           })
           .map((upgrade, index) => {
+            const isThisDisabled =
+              !isValidUpgrade(upgrade, character, stateProps);
             return (
               <option
+                disabled={isThisDisabled}
                 key={index}
                 value={upgrade.name}>
                 {upgrade.name}
@@ -93,6 +112,7 @@ export default class UpgradeSelect extends Component {
         </select>
 
         <button
+          disabled={isDisabled}
           type="submit"
           className="btn btn-default btn-xs"
           onClick={this.handleAdd.bind(this)}>
