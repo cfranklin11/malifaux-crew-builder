@@ -15,6 +15,7 @@ export default class CrewList extends Component {
     } = this.props;
     const roles = ['leader', 'follower'];
     let tableRows = [];
+    let characterRows = [];
     let index = -1;
 
     // Loop through leader & follower sections of crew list
@@ -42,22 +43,24 @@ export default class CrewList extends Component {
           .map(character => {
             const {characterUpgrades, count} = character;
             // Save any character upgrades that have been added
-            const upgradeRows = characterUpgrades.map(upgrade => {
-              return (
-                <CrewUpgrade
-                  actions={actions}
-                  character={character}
-                  selectedFaction={selectedFaction}
-                  upgrade={upgrade}
-                  upgrades={upgrades}
-                  characterUpgrades={characterUpgrades} />
-              );
-            });
-            let characterRows = [];
+            // const upgradeRows = characterUpgrades.map(upgrade => {
+            //   if (count > 1 && upgrade.count !== count) {
+
+            //   return (
+            //     <CrewUpgrade
+            //       actions={actions}
+            //       character={character}
+            //       selectedFaction={selectedFaction}
+            //       upgrade={upgrade}
+            //       upgrades={upgrades}
+            //       characterUpgrades={characterUpgrades} />
+            //   );
+            // });
+            // let characterRows = [];
 
             // Return character component with upgrade component(s)
             // concatenated
-            for (let i = 0; i < count; i++) {
+            for (let j = 0; j < count; j++) {
               characterRows.push(
                 <CrewCharacter
                   key={index++}
@@ -67,13 +70,37 @@ export default class CrewList extends Component {
                   selectedFaction={selectedFaction}
                   leaderName={leaderName}
                   ssLimit={ssLimit}
+                  version={j}
                   upgrades={upgrades} />
               );
+
               if (!isUpgradable) {
                 break;
               }
+
+              for (let k = 0; k < characterUpgrades.length; k++) {
+                const thisUpgrade = characterUpgrades[k];
+                const {versions} = thisUpgrade;
+
+                for (let l = 0; l < versions.length; l++) {
+                  const thisVersion = versions[l];
+
+                  if (parseFloat(thisVersion) === j) {
+                    characterRows.push(
+                      <CrewUpgrade
+                        actions={actions}
+                        character={character}
+                        selectedFaction={selectedFaction}
+                        upgrade={thisUpgrade}
+                        upgrades={upgrades}
+                        characterUpgrades={characterUpgrades} />
+                    );
+                    break;
+                  }
+                }
+              }
             }
-            return characterRows.concat(upgradeRows);
+            return characterRows;
           })
       );
     }

@@ -26,7 +26,7 @@ export default class CrewCharacter extends Component {
         <td>
           <button
             type="submit"
-            className="btn btn-default btn-sm"
+            className="btn btn-default btn-xs"
             onClick={this.handleRemove.bind(this)}>
             <span
               className="glyphicon glyphicon-minus-sign"

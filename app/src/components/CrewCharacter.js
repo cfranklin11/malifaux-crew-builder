@@ -23,6 +23,7 @@ export default class CrewCharacter extends Component {
       selectedFaction,
       leaderName,
       upgrades,
+      version,
       character
     } = this.props;
     const {
@@ -44,9 +45,18 @@ export default class CrewCharacter extends Component {
           character={this.props.character}
           leaderName={leaderName}
           selectedFaction={selectedFaction}
+          version={version}
           actions={actions} />
       </td> :
       <td>-</td>;
+    let costDisplay;
+
+    if (LEADER_REGEXP.test(role)) {
+      costDisplay = '-';
+    } else {
+      costDisplay = isUpgradable(station) ?
+      sscost : parseFloat(sscost) * parseFloat(count);
+    }
 
     return (
       <tr className={invalid}>
@@ -57,9 +67,7 @@ export default class CrewCharacter extends Component {
         <td>{station}</td>
         <td>{parseFloat(limit) === 0 ? '-' : limit}</td>
         <td>{characteristics}</td>
-        <td>
-          {role === 'leader' ? '-' : parseFloat(sscost) * parseFloat(count)}
-        </td>
+        <td>{costDisplay}</td>
         <td>{role === 'leader' ? sscache : '-'}</td>
         {upgradeSelectElement}
         <td>
@@ -83,5 +91,6 @@ CrewCharacter.propTypes = {
   selectedFaction: PropTypes.string.isRequired,
   leaderName: PropTypes.string,
   upgrades: PropTypes.array.isRequired,
+  version: PropTypes.number.isRequired,
   ssLimit: PropTypes.number.isRequired
 };

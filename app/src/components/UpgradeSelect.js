@@ -32,7 +32,7 @@ export default class UpgradeSelect extends Component {
   }
 
   handleAdd(e) {
-    const {actions, character, selectedFaction, upgrades} = this.props;
+    const {actions, character, selectedFaction, upgrades, version} = this.props;
     const {currentUpgrade} = this.state;
 
     actions.toggleUpgrade(
@@ -40,6 +40,7 @@ export default class UpgradeSelect extends Component {
       currentUpgrade,
       character,
       selectedFaction,
+      version,
       'add'
     );
   }
@@ -84,11 +85,13 @@ export default class UpgradeSelect extends Component {
       upgrades,
       selectedFaction,
       leaderName,
+      version,
       character
     } = this.props;
     const {currentUpgrade} = this.state;
     const stateProps = {selectedFaction, leaderName};
-    const isDisabled = !isValidUpgrade(currentUpgrade, character, stateProps);
+    const isDisabled =
+      !isValidUpgrade(currentUpgrade, character, stateProps, version);
 
     return (
       <div>
@@ -99,7 +102,7 @@ export default class UpgradeSelect extends Component {
           })
           .map((upgrade, index) => {
             const isThisDisabled =
-              !isValidUpgrade(upgrade, character, stateProps);
+              !isValidUpgrade(upgrade, character, stateProps, version);
             return (
               <option
                 disabled={isThisDisabled}
@@ -129,5 +132,6 @@ UpgradeSelect.propTypes = {
   actions: PropTypes.object.isRequired,
   character: PropTypes.object.isRequired,
   selectedFaction: PropTypes.string.isRequired,
+  version: PropTypes.number.isRequired,
   leaderName: PropTypes.string
 };

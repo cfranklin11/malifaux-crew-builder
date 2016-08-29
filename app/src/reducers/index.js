@@ -154,16 +154,55 @@ function charactersByFaction(state = initialState.charactersByFaction,
                   return upgrade.name === action.upgrade.name;
                 });
                 let updatedUpgrades;
+
                 if (action.toggle === 'add') {
-                  updatedUpgrades = characterUpgrades.concat(action.upgrade);
-                } else if (characterUpgrades.length === 1) {
-                  updatedUpgrades = [];
-                } else if (upgradeIndex === 0) {
-                  updatedUpgrades = characterUpgrades.slice(1);
+                  updatedUpgrades = upgradeIndex === -1 ?
+                  characterUpgrades.concat({
+                    ...action.upgrade,
+                    count: 0,
+                    versions: [action.version]
+                  }) :
+                  characterUpgrades.map(upgrade => {
+                    return upgrade.name === action.upgrade.name ?
+                      {
+                        ...upgrade,
+                        count: upgrade.count + 1,
+                        versions: upgrade.versions.concat(action.version)
+                      } : upgrade;
+                  });
+                } else if (action.upgrade.count === 1) {
+                  if (characterUpgrades.length === 1) {
+                    updatedUpgrades = [];
+                  } else if (upgradeIndex === 0) {
+                    updatedUpgrades = characterUpgrades.slice(1);
+                  } else {
+                    updatedUpgrades = characterUpgrades
+                      .slice(0, upgradeIndex)
+                      .concat(characterUpgrades.slice(upgradeIndex + 1));
+                  }
                 } else {
-                  updatedUpgrades = characterUpgrades
-                    .slice(0, upgradeIndex)
-                    .concat(characterUpgrades.slice(upgradeIndex + 1));
+                  updatedUpgrades = characterUpgrades.map(upgrade => {
+                    if (upgrade.name === action.upgrade.name) {
+                      const {versions} = upgrade;
+                      const versionsIndex = versions.indexOf(action.version);
+                      let updatedVersions;
+
+                      if (versionsIndex === 0) {
+                        updatedVersions = versions.slice(1);
+                      } else {
+                        updatedVersions = versions
+                          .slice(0, versionsIndex)
+                          .concat(versions.slice(versionsIndex + 1));
+                      }
+
+                      return {
+                        ...upgrade,
+                        count: upgrade.count - 1,
+                        versions: updatedVersions
+                      };
+                    }
+                    return upgrade;
+                  });
                 }
 
                 return {
@@ -182,11 +221,13 @@ function charactersByFaction(state = initialState.charactersByFaction,
   }
 }
 
-function characters(state = {
-  isFetching: false,
-  isLeaderAdded: false,
-  characters: []
-}, action) {
+function characters(
+  state = {
+    isFetching: false,
+    isLeaderAdded: false,
+    characters: []
+  },
+  action) {
   switch (action.type) {
 
     case types.REQUEST_CHARS:

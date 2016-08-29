@@ -19,8 +19,7 @@ function isExcludedCharacter(
   restrictions1,
   restrictions2,
   character,
-  leaderName
-) {
+  leaderName) {
   const nonRestrictionCapture1 =
     regExps.NON_CAPTURE_REGEXP.exec(restrictions1) || ['', ''];
   const nonRestrictionCapture2 =
@@ -45,8 +44,7 @@ function isCorrectLeader(
   restrictions1,
   restrictions2,
   characterName,
-  leaderName
-) {
+  leaderName) {
   return regExps.LEADER_REGEXP.test(restrictions1.concat(restrictions2)) &&
     !regExps.NON_LEADER_REGEXP.test(restrictions1.concat(restrictions2)) ?
     characterName === leaderName : true;
@@ -56,8 +54,7 @@ function meetsRestrictions(
   restrictions1,
   restrictions2,
   station,
-  characteristics
-) {
+  characteristics) {
   const restrictions1RegExp =
     new RegExp(restrictions1
       .replace(/,\s/g, '|')
@@ -77,10 +74,13 @@ function isLessThanLimit(limit, count) {
   return parseFloat(limit) === 0 || parseFloat(count) < parseFloat(limit);
 }
 
-function isAdded(upgradeName, characterUpgrades) {
-  return characterUpgrades.findIndex(characterUpgrade => {
+function isAdded(upgradeName, characterUpgrades, characterVersion) {
+  const upgradeIndex = characterUpgrades.findIndex(characterUpgrade => {
     return characterUpgrade.name === upgradeName;
-  }) !== -1;
+  });
+
+  return upgradeIndex === -1 ? false :
+    characterUpgrades[upgradeIndex].versions.indexOf(characterVersion) !== -1;
 }
 
 export function isUpgradable(station) {
@@ -104,9 +104,14 @@ export function isPotentialUpgrade(upgrade, character, stateProps) {
     meetsRestrictions(restrictions1, restrictions2, station, characteristics);
 }
 
-export function isValidUpgrade(upgrade, character, stateProps) {
+export function isValidUpgrade(
+  upgrade,
+  character,
+  stateProps,
+  characterVersion) {
   const {limit, count, name} = upgrade;
   const {characterUpgrades} = character;
   return isPotentialUpgrade(upgrade, character, stateProps) &&
-    isLessThanLimit(limit, count) && !isAdded(name, characterUpgrades);
+    isLessThanLimit(limit, count) &&
+    !isAdded(name, characterUpgrades, characterVersion);
 }
