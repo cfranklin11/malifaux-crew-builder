@@ -15,7 +15,6 @@ export default class CrewList extends Component {
     } = this.props;
     const roles = ['leader', 'follower'];
     let tableRows = [];
-    let characterRows = [];
     let index = -1;
 
     // Loop through leader & follower sections of crew list
@@ -42,21 +41,7 @@ export default class CrewList extends Component {
           })
           .map(character => {
             const {characterUpgrades, count} = character;
-            // Save any character upgrades that have been added
-            // const upgradeRows = characterUpgrades.map(upgrade => {
-            //   if (count > 1 && upgrade.count !== count) {
-
-            //   return (
-            //     <CrewUpgrade
-            //       actions={actions}
-            //       character={character}
-            //       selectedFaction={selectedFaction}
-            //       upgrade={upgrade}
-            //       upgrades={upgrades}
-            //       characterUpgrades={characterUpgrades} />
-            //   );
-            // });
-            // let characterRows = [];
+            let characterRows = [];
 
             // Return character component with upgrade component(s)
             // concatenated
