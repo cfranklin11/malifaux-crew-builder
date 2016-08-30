@@ -3,7 +3,8 @@ import {LEADER_REGEXP} from '../constants/RegExps';
 import {
   isValidCharacter,
   isPotentialCharacter,
-  isLessThanLimit
+  isLessThanLimit,
+  isLessThanMercLimit
 } from '../utils/CharacterValidations';
 
 export default class CharacterSelect extends Component {
@@ -55,8 +56,14 @@ export default class CharacterSelect extends Component {
       }) ||
       // Otherwise, set state to first valid character
       characters.find(character => {
+        const {limit, count, faction, characteristics} = character;
         return isValidCharacter(character, stateProps) &&
-          isLessThanLimit(character.limit, character.count);
+          isLessThanLimit(limit, count) &&
+          isLessThanMercLimit(
+            characters,
+            selectedFaction,
+            faction,
+            characteristics);
       }) ||
       // If no valid characters, return default
       {name: '', faction: '', limit: 0, count: 0};
@@ -74,14 +81,19 @@ export default class CharacterSelect extends Component {
       selectedFaction
     } = this.props;
     const {currentCharacter} = this.state;
-    const {limit, count} = currentCharacter;
+    const {limit, count, faction, characteristics} = currentCharacter;
     const roleLabel = LEADER_REGEXP.test(role) ? 'leader' : role;
     const stateProps = {role, ssLimit, selectedFaction, leaderName};
     // Disable leaders if one has been added; disable all invalid characters;
     // disable if the max # of this character has been added to the crew
     const isDisabled = isLeaderAdded && LEADER_REGEXP.test(role) ||
       !isValidCharacter(currentCharacter, stateProps) ||
-      !isLessThanLimit(limit, count);
+      !isLessThanLimit(limit, count) ||
+      !isLessThanMercLimit(
+        characters,
+        selectedFaction,
+        faction,
+        characteristics);
 
     return (
       <div className="form-group
@@ -98,10 +110,16 @@ export default class CharacterSelect extends Component {
             return isPotentialCharacter(character, stateProps);
           })
           .map((character, index) => {
+            const {limit, count, faction, characteristics} = character;
             // Disable all currently invalid characters
             const isThisDisabled = isLeaderAdded && LEADER_REGEXP.test(role) ||
               !isValidCharacter(character, stateProps) ||
-              !isLessThanLimit(character.limit, character.count);
+              !isLessThanLimit(limit, count) ||
+              !isLessThanMercLimit(
+                characters,
+                selectedFaction,
+                faction,
+                characteristics);
             return (
               <option
                 key={index}

@@ -37,7 +37,8 @@ export default class CrewCharacter extends Component {
       sscache
       } = character;
     const stateProps = {role, ssLimit, selectedFaction, leaderName};
-    const invalid = isValidCharacter(character, stateProps) ? '' : 'invalid';
+    const invalid = isValidCharacter(character, stateProps) ?
+      '' : 'invalid';
     const upgradeSelectElement = isUpgradable(station) ?
       <td>
         <UpgradeSelect

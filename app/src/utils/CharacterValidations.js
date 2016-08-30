@@ -1,8 +1,18 @@
 import * as regExps from '../constants/RegExps';
 
+function factionRegExp(selectedFaction) {
+  return new RegExp(selectedFaction.replace(/\s/g, '-'), 'i');
+}
+
 // All henchman and masters can be leaders
-function isPotentialLeader(station, ssLimit) {
-  return regExps.MASTER_HENCHMAN_REGEXP.test(station);
+function isPotentialLeader(
+  station,
+  ssLimit,
+  faction,
+  characteristics,
+  selectedFaction) {
+  return regExps.MASTER_HENCHMAN_REGEXP.test(station) &&
+    !isNonFactionMercenary(faction, characteristics, selectedFaction);
 }
 
 // Check current soulstone limit for which stations are valid leaders
@@ -25,19 +35,28 @@ function isFollower(station) {
   return regExps.NOT_MASTER_REGEXP.test(station);
 }
 
-function isCorrectRole(station, ssLimit, role) {
+function isCorrectRole(character, ssLimit, selectedFaction, role) {
+  const {station, faction, characteristics} = character;
   if (regExps.LEADER_REGEXP.test(role)) {
-    return isPotentialLeader(station, ssLimit);
+    return isPotentialLeader(
+      station,
+      ssLimit,
+      faction,
+      characteristics,
+      selectedFaction);
   }
   return isFollower(station);
 }
 
+function isNonFactionMercenary(faction, characteristics, selectedFaction) {
+  return !factionRegExp(selectedFaction).test(faction.replace(/\s/g, '-')) &&
+    regExps.MERC_REGEXP.test(characteristics);
+}
+
 // All characters must be from the selected faction or non-leader mercenaries
-function isCorrectFaction(faction, characteristics, selectedFaction, role) {
-  const factionRegExp = new RegExp(selectedFaction.replace(/\s/g, '-'), 'i');
-  return factionRegExp.test(faction.replace(/\s/g, '-')) ||
-    regExps.MERC_REGEXP.test(characteristics) &&
-    !regExps.LEADER_REGEXP.test(role);
+function isCorrectFaction(faction, characteristics, selectedFaction) {
+  return factionRegExp(selectedFaction).test(faction.replace(/\s/g, '-')) ||
+    isNonFactionMercenary(faction, characteristics, selectedFaction);
 }
 
 function isTotem(characteristics) {
@@ -59,6 +78,24 @@ function isValidTotem(characteristics, leaderName) {
   return true;
 }
 
+export function isLessThanMercLimit(
+  characters,
+  selectedFaction,
+  faction,
+  characteristics) {
+  let mercCount = 0;
+  for (let i = 0; i < characters.length; i++) {
+    const thisCharacter = characters[i];
+    const {faction, characteristics} = thisCharacter;
+    if (thisCharacter.count > 0 &&
+      isNonFactionMercenary(faction, characteristics, selectedFaction)) {
+      mercCount++;
+    }
+  }
+  return mercCount < 2 ||
+    !isNonFactionMercenary(faction, characteristics, selectedFaction);
+}
+
 export function isLessThanLimit(limit, count) {
   return parseFloat(limit) === 0 || parseFloat(count) < parseFloat(limit);
 }
@@ -66,10 +103,10 @@ export function isLessThanLimit(limit, count) {
 // Checks if a character has the potential to be valid, so it shows up
 // on lists
 export function isPotentialCharacter(character, stateProps) {
-  const {station, faction, characteristics, name} = character;
+  const {faction, characteristics, name} = character;
   const {role, ssLimit, selectedFaction, leaderName} = stateProps;
-  return isCorrectRole(station, ssLimit, role) &&
-    isCorrectFaction(faction, characteristics, selectedFaction, role) &&
+  return isCorrectRole(character, ssLimit, selectedFaction, role) &&
+    isCorrectFaction(faction, characteristics, selectedFaction) &&
     isValidTotem(characteristics, leaderName) &&
     name.toLowerCase() !== 'lord chompy bits';
 }

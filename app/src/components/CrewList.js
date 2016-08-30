@@ -52,6 +52,7 @@ export default class CrewList extends Component {
                   actions={actions}
                   role={thisRole}
                   character={character}
+                  characters={characters}
                   selectedFaction={selectedFaction}
                   leaderName={leaderName}
                   ssLimit={ssLimit}
