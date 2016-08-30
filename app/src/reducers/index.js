@@ -156,20 +156,22 @@ function charactersByFaction(state = initialState.charactersByFaction,
                 let updatedUpgrades;
 
                 if (action.toggle === 'add') {
-                  updatedUpgrades = upgradeIndex === -1 ?
-                  characterUpgrades.concat({
-                    ...action.upgrade,
-                    count: 0,
-                    versions: [action.version]
-                  }) :
-                  characterUpgrades.map(upgrade => {
-                    return upgrade.name === action.upgrade.name ?
-                      {
-                        ...upgrade,
-                        count: upgrade.count + 1,
-                        versions: upgrade.versions.concat(action.version)
-                      } : upgrade;
-                  });
+                  if (upgradeIndex === -1) {
+                    updatedUpgrades = characterUpgrades.concat({
+                      ...action.upgrade,
+                      count: 1,
+                      versions: [action.version]
+                    });
+                  } else {
+                    characterUpgrades.map(upgrade => {
+                      return upgrade.name === action.upgrade.name ?
+                        {
+                          ...upgrade,
+                          count: upgrade.count + 1,
+                          versions: upgrade.versions.concat(action.version)
+                        } : upgrade;
+                    });
+                  }
                 } else if (action.upgrade.count === 1) {
                   if (characterUpgrades.length === 1) {
                     updatedUpgrades = [];
