@@ -78,7 +78,21 @@ function isValidTotem(characteristics, leaderName) {
   return true;
 }
 
-export function isLessThanMercLimit(
+function isLessThanTotemLimit(characters, characteristics) {
+  let totemCount = 0;
+  for (let i = 0; i < characters.length; i++) {
+    const thisCharacter = characters[i];
+    const {characteristics} = thisCharacter;
+    if (thisCharacter.count > 0 &&
+      isTotem(characteristics)) {
+      totemCount++;
+    }
+  }
+  return totemCount < 1 ||
+    !isTotem(characteristics);
+}
+
+function isLessThanMercLimit(
   characters,
   selectedFaction,
   faction,
@@ -96,8 +110,15 @@ export function isLessThanMercLimit(
     !isNonFactionMercenary(faction, characteristics, selectedFaction);
 }
 
-export function isLessThanLimit(limit, count) {
-  return parseFloat(limit) === 0 || parseFloat(count) < parseFloat(limit);
+function isLessThanRareLimit(limit, count) {
+  return (parseFloat(limit) === 0 || parseFloat(count) < parseFloat(limit));
+}
+
+export function isLessThanLimits(characters, character, selectedFaction) {
+  const {faction, characteristics, limit, count} = character;
+  return isLessThanRareLimit(limit, count) &&
+    isLessThanTotemLimit(characters, characteristics) &&
+    isLessThanMercLimit(characters, selectedFaction, faction, characteristics);
 }
 
 // Checks if a character has the potential to be valid, so it shows up
