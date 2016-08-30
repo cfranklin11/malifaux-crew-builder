@@ -128,14 +128,14 @@ export function isPotentialCharacter(character, stateProps) {
   const {role, ssLimit, selectedFaction, leaderName} = stateProps;
   return isCorrectRole(character, ssLimit, selectedFaction, role) &&
     isCorrectFaction(faction, characteristics, selectedFaction) &&
-    isValidTotem(characteristics, leaderName) &&
     name.toLowerCase() !== 'lord chompy bits';
 }
 
 // Checks if a character is currently valid, so invalid ones are disabled
 export function isValidCharacter(character, stateProps) {
-  const {station} = character;
-  const {role, ssLimit} = stateProps;
+  const {station, characteristics} = character;
+  const {role, ssLimit, leaderName} = stateProps;
   return isPotentialCharacter(character, stateProps) &&
+    isValidTotem(characteristics, leaderName) &&
     isValidLeader(station, ssLimit, role);
 }
