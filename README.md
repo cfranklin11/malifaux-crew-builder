@@ -2,9 +2,9 @@
 
 ## Setup
 
-* Run $npm install to install the packages.
-* Run $bower install to install the bootstrap library.
-* Run $gulp to compile the app & server code.
+* Run ```$npm install``` to install the packages.
+* Run ```$bower install``` to install the bootstrap library.
+* Run ```$gulp``` to compile the app & server code.
 
 ## Known Issues
 
