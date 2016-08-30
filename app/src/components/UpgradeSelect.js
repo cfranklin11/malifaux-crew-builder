@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from 'react';
+import {isPotentialUpgrade, isValidUpgrade} from '../utils/UpgradeValidations';
 
 export default class UpgradeSelect extends Component {
   constructor(props) {
@@ -10,6 +11,7 @@ export default class UpgradeSelect extends Component {
         faction: '',
         cost: 0,
         limit: 0,
+        count: 0,
         namerestrictions: '',
         characteristicrestrictions1: '',
         characteristicrestrictions2: '',
@@ -30,10 +32,17 @@ export default class UpgradeSelect extends Component {
   }
 
   handleAdd(e) {
-    const {actions, character, selectedFaction} = this.props;
+    const {actions, character, selectedFaction, upgrades, version} = this.props;
     const {currentUpgrade} = this.state;
 
-    actions.toggleUpgrade(currentUpgrade, character, selectedFaction, 'add');
+    actions.toggleUpgrade(
+      upgrades,
+      currentUpgrade,
+      character,
+      selectedFaction,
+      version,
+      'add'
+    );
   }
 
   componentWillMount() {
@@ -41,100 +50,34 @@ export default class UpgradeSelect extends Component {
       upgrades,
       selectedFaction,
       leaderName,
-      character: {
-        name,
-        characteristics,
-        station
-      }
+      character
     } = this.props;
-    const factionRegExp = new RegExp(selectedFaction.replace(/\s/g, '-'), 'i');
     let firstUpgrade;
 
     for (let i = 0; i < upgrades.length; i++) {
+      const stateProps = {selectedFaction, leaderName};
       const thisUpgrade = upgrades[i];
-      const {
-        namerestrictions: nameRestrictions,
-        characteristicrestrictions1: restrictions1,
-        characteristicrestrictions2: restrictions2,
-        faction
-      } = thisUpgrade;
 
-      if (factionRegExp.test(faction)) {
-        if (nameRestrictions) {
-          const nameRegExp =
-            new RegExp(nameRestrictions.replace(/,\s/g, '|'), 'i');
-          if (nameRegExp.test(name)) {
-            firstUpgrade = thisUpgrade;
-            break;
-          }
-        }
-
-        if (restrictions1) {
-          let nonRestriction1 =
-            /non-(\w+)/i.exec(restrictions1) || ['', ''];
-          nonRestriction1 = nonRestriction1[1];
-          const restriction1RegExp =
-            new RegExp(restrictions1
-              .replace(/,\s/g, '|')
-              .replace(/non-\w+/gi, `[^(${nonRestriction1})]`), 'i');
-
-          if (/leader/i.test(restrictions1)) {
-            if (restrictions2) {
-              let nonRestriction2 =
-                /non-(\w+)/i.exec(restrictions2) || ['', ''];
-              nonRestriction2 = nonRestriction2[1];
-              const restriction2RegExp = new RegExp(restrictions2
-                  .replace(/,\s/g, '|')
-                  .replace(/non-\w+/gi, `[^(${nonRestriction2})]`), 'i');
-
-              if (leaderName === name) {
-                if (restriction2RegExp.test(characteristics) ||
-                  restriction2RegExp.test(station)) {
-                  firstUpgrade = thisUpgrade;
-                  break;
-                }
-              }
-            }
-
-            if (leaderName === name) {
-              firstUpgrade = thisUpgrade;
-              break;
-            }
-          }
-
-          if (restrictions2) {
-            let nonRestriction2 =
-              /non-(\w+)/i.exec(restrictions2) || ['', ''];
-            nonRestriction2 = nonRestriction2[1];
-            const restriction2RegExp =
-              new RegExp(restrictions2
-                .replace(/,\s/g, '|')
-                .replace(/non-\w+/gi, `[^(${nonRestriction2})]`), 'i');
-
-            if (restriction1RegExp.test(characteristics) ||
-              restriction1RegExp.test(station) &&
-              restriction2RegExp.test(characteristics) ||
-              restriction2RegExp.test(station)) {
-              firstUpgrade = thisUpgrade;
-              break;
-            }
-          }
-
-          if (restriction1RegExp.test(characteristics) ||
-            restriction1RegExp.test(station)) {
-            firstUpgrade = thisUpgrade;
-            break;
-          }
-        }
-
-        if (factionRegExp.test(faction)) {
-          firstUpgrade = thisUpgrade;
-          break;
-        }
+      if (isPotentialUpgrade(thisUpgrade, character, stateProps)) {
+        firstUpgrade = thisUpgrade;
+        break;
       }
     }
 
     this.setState({currentUpgrade: firstUpgrade});
+  }
+
+  // Refresh currently selected upgrade with new count number on change
+  componentWillReceiveProps(nextProps) {
+    const {character: {characterUpgrades}} = this.props;
+    const {currentUpgrade: {name}} = this.state;
+    const nextUpgrade = characterUpgrades.find(characterUpgrade => {
+      return characterUpgrade.name === name;
+    });
+
+    if (nextUpgrade) {
+      this.setState({currentUpgrade: nextUpgrade});
+    }
   }
 
   render() {
@@ -142,84 +85,27 @@ export default class UpgradeSelect extends Component {
       upgrades,
       selectedFaction,
       leaderName,
+      version,
       character
     } = this.props;
-    const {characteristics, station} = character;
-    const factionRegExp = new RegExp(selectedFaction.replace(/\s/g, '-'), 'i');
+    const {currentUpgrade} = this.state;
+    const stateProps = {selectedFaction, leaderName};
+    const isDisabled =
+      !isValidUpgrade(currentUpgrade, character, stateProps, version);
 
     return (
       <div>
         <select
           onChange={this.handleChange.bind(this)}>
           {upgrades.filter(upgrade => {
-            const {
-              namerestrictions: nameRestrictions,
-              characteristicrestrictions1: restrictions1,
-              characteristicrestrictions2: restrictions2,
-              faction
-            } = upgrade;
-
-            if (factionRegExp.test(faction)) {
-              if (nameRestrictions) {
-                const nameRegExp =
-                  new RegExp(nameRestrictions.replace(/,\s/g, '|'), 'i');
-                return nameRegExp.test(character.name);
-              }
-
-              if (restrictions1) {
-                let nonRestriction1 =
-                  /non-(\w+)/i.exec(restrictions1) || ['', ''];
-                nonRestriction1 = nonRestriction1[1];
-                const restriction1RegExp =
-                  new RegExp(restrictions1
-                    .replace(/,\s/g, '|')
-                    .replace(/non-\w+/gi, `[^(${nonRestriction1})]`), 'i');
-
-                if (/leader/i.test(restrictions1)) {
-                  if (restrictions2) {
-                    let nonRestriction2 =
-                      /non-(\w+)/i.exec(restrictions2) || ['', ''];
-                    nonRestriction2 = nonRestriction2[1];
-                    const restriction2RegExp = new RegExp(restrictions2
-                        .replace(/,\s/g, '|')
-                        .replace(/non-\w+/gi, `[^(${nonRestriction2})]`), 'i');
-
-                    if (leaderName === character.name) {
-                      return restriction2RegExp.test(characteristics) ||
-                        restriction2RegExp.test(station);
-                    }
-                  }
-
-                  return leaderName === character.name;
-                }
-
-                if (restrictions2) {
-                  let nonRestriction2 =
-                    /non-(\w+)/i.exec(restrictions2) || ['', ''];
-                  nonRestriction2 = nonRestriction2[1];
-                  const restriction2RegExp =
-                    new RegExp(restrictions2
-                      .replace(/,\s/g, '|')
-                      .replace(/non-\w+/gi, `[^(${nonRestriction2})]`), 'i');
-
-                  return restriction1RegExp.test(characteristics) ||
-                    restriction1RegExp.test(station) &&
-                    restriction2RegExp.test(characteristics) ||
-                    restriction2RegExp.test(station);
-                }
-
-                return restriction1RegExp.test(characteristics) ||
-                  restriction1RegExp.test(station);
-              }
-
-              return factionRegExp.test(faction);
-            }
-
-            return factionRegExp.test(faction);
+            return isPotentialUpgrade(upgrade, character, stateProps);
           })
           .map((upgrade, index) => {
+            const isThisDisabled =
+              !isValidUpgrade(upgrade, character, stateProps, version);
             return (
               <option
+                disabled={isThisDisabled}
                 key={index}
                 value={upgrade.name}>
                 {upgrade.name}
@@ -229,6 +115,7 @@ export default class UpgradeSelect extends Component {
         </select>
 
         <button
+          disabled={isDisabled}
           type="submit"
           className="btn btn-default btn-xs"
           onClick={this.handleAdd.bind(this)}>
@@ -245,5 +132,6 @@ UpgradeSelect.propTypes = {
   actions: PropTypes.object.isRequired,
   character: PropTypes.object.isRequired,
   selectedFaction: PropTypes.string.isRequired,
+  version: PropTypes.number.isRequired,
   leaderName: PropTypes.string
 };

@@ -2,8 +2,14 @@ import React, {Component, PropTypes} from 'react';
 
 export default class CrewCharacter extends Component {
   handleRemove(e) {
-    const {actions, character, selectedFaction, upgrade: {name}} = this.props;
-    actions.toggleUpgrade(name, character, selectedFaction, 'remove');
+    const {upgrades, actions, character, selectedFaction, upgrade} = this.props;
+    actions.toggleUpgrade(
+      upgrades,
+      upgrade,
+      character,
+      selectedFaction,
+      'remove'
+    );
   }
 
   render() {
@@ -20,7 +26,7 @@ export default class CrewCharacter extends Component {
         <td>
           <button
             type="submit"
-            className="btn btn-default btn-sm"
+            className="btn btn-default btn-xs"
             onClick={this.handleRemove.bind(this)}>
             <span
               className="glyphicon glyphicon-minus-sign"
@@ -37,5 +43,6 @@ CrewCharacter.propTypes = {
   character: PropTypes.object.isRequired,
   actions: PropTypes.object.isRequired,
   selectedFaction: PropTypes.string.isRequired,
-  upgrade: PropTypes.object.isRequired
+  upgrade: PropTypes.object.isRequired,
+  upgrades: PropTypes.array.isRequired
 };

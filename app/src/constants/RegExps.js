@@ -1,8 +1,13 @@
 export const HENCHMAN_REGEXP = /henchman/i;
 export const MASTER_REGEXP = /master/i;
+export const ENFORCER_REGEXP = /enforcer/i;
 export const MASTER_HENCHMAN_REGEXP = /master|henchman/i;
 export const NOT_MASTER_REGEXP = /[^(?:master)]/i;
 export const RESTRICTED_TOTEM_REGEXP = /totem\s\(((?:\w*\s?)+)\)/i;
 export const TOTEM_REGEXP = /totem/i;
-export const LEADER_REGEXP = /^leaders?$/i;
+export const LEADER_REGEXP = /leaders?/i;
+export const NON_LEADER_REGEXP = /non-leaders?/i;
 export const MERC_REGEXP = /mercenary/i;
+export const NON_CAPTURE_REGEXP = /non-(\w+)/i;
+export const NON_REGEXP = /non-(\w+)/i;
+export const UPGRADABLE_REGEXP = /master|henchman|enforcer/i;

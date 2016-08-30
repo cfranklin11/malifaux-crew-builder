@@ -3,7 +3,7 @@ import {LEADER_REGEXP} from '../constants/RegExps';
 import {
   isValidCharacter,
   isPotentialCharacter,
-  isLessThanLimit
+  isLessThanLimits
 } from '../utils/CharacterValidations';
 
 export default class CharacterSelect extends Component {
@@ -56,7 +56,7 @@ export default class CharacterSelect extends Component {
       // Otherwise, set state to first valid character
       characters.find(character => {
         return isValidCharacter(character, stateProps) &&
-          isLessThanLimit(character.limit, character.count);
+          isLessThanLimits(characters, character, selectedFaction);
       }) ||
       // If no valid characters, return default
       {name: '', faction: '', limit: 0, count: 0};
@@ -74,14 +74,14 @@ export default class CharacterSelect extends Component {
       selectedFaction
     } = this.props;
     const {currentCharacter} = this.state;
-    const {limit, count} = currentCharacter;
     const roleLabel = LEADER_REGEXP.test(role) ? 'leader' : role;
     const stateProps = {role, ssLimit, selectedFaction, leaderName};
-    // Disable leaders if one has been added; disable all invalid characters;
-    // disable if the max # of this character has been added to the crew
+    // Disable leaders if one has been added
     const isDisabled = isLeaderAdded && LEADER_REGEXP.test(role) ||
+      // Disable all invalid characters;
       !isValidCharacter(currentCharacter, stateProps) ||
-      !isLessThanLimit(limit, count);
+      // Disable if this character exceeds any crew limits
+      !isLessThanLimits(characters, currentCharacter, selectedFaction);
 
     return (
       <div className="form-group
@@ -101,7 +101,7 @@ export default class CharacterSelect extends Component {
             // Disable all currently invalid characters
             const isThisDisabled = isLeaderAdded && LEADER_REGEXP.test(role) ||
               !isValidCharacter(character, stateProps) ||
-              !isLessThanLimit(character.limit, character.count);
+              !isLessThanLimits(characters, character, selectedFaction);
             return (
               <option
                 key={index}

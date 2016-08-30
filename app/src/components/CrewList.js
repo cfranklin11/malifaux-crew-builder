@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import {CrewCharacter, CrewUpgrade} from '../components';
 import {LEADER_REGEXP} from '../constants/RegExps';
+import {isUpgradable} from '../utils/UpgradeValidations';
 
 export default class CrewList extends Component {
   render() {
@@ -39,32 +40,60 @@ export default class CrewList extends Component {
             return character.count > 0 && correctRole;
           })
           .map(character => {
-            const {characterUpgrades} = character;
-            // Save any character upgrades that have been added
-            const upgradeRows = characterUpgrades.map(upgrade => {
-              return (
-                <CrewUpgrade
-                  actions={actions}
-                  character={character}
-                  selectedFaction={selectedFaction}
-                  upgrade={upgrade}
-                  characterUpgrades={characterUpgrades} />
-              );
-            });
+            const {characterUpgrades, count} = character;
+            let characterRows = [];
 
-            // Return character component with upgrade component(s)
-            // concatenated
-            return [
-              <CrewCharacter
-                key={index++}
-                actions={actions}
-                role={thisRole}
-                character={character}
-                selectedFaction={selectedFaction}
-                leaderName={leaderName}
-                ssLimit={ssLimit}
-                upgrades={upgrades} />
-            ].concat(upgradeRows);
+            // Return character components
+            for (let j = 0; j < count; j++) {
+              characterRows.push(
+                <CrewCharacter
+                  key={index++}
+                  actions={actions}
+                  role={thisRole}
+                  character={character}
+                  characters={characters}
+                  selectedFaction={selectedFaction}
+                  leaderName={leaderName}
+                  ssLimit={ssLimit}
+                  version={j}
+                  upgrades={upgrades} />
+              );
+
+              // If character is upgradable, separate individuals
+              // into different components;
+              // otherwise, roll them up into one row
+              if (!isUpgradable) {
+                break;
+              }
+
+              // Add upgrade row(s) below associated character
+              for (let k = 0; k < characterUpgrades.length; k++) {
+                const thisUpgrade = characterUpgrades[k];
+                const {versions} = thisUpgrade;
+
+                // The 'versions' array associates upgrades with
+                // specific instances of upgradable characters
+                for (let l = 0; l < versions.length; l++) {
+                  const thisVersion = versions[l];
+
+                  // Check if this upgrade is associated with
+                  // this character version
+                  if (parseFloat(thisVersion) === j) {
+                    characterRows.push(
+                      <CrewUpgrade
+                        actions={actions}
+                        character={character}
+                        selectedFaction={selectedFaction}
+                        upgrade={thisUpgrade}
+                        upgrades={upgrades}
+                        characterUpgrades={characterUpgrades} />
+                    );
+                    break;
+                  }
+                }
+              }
+            }
+            return characterRows;
           })
       );
     }

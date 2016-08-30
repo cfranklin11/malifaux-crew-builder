@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import {UpgradeSelect} from '../components';
 import {LEADER_REGEXP} from '../constants/RegExps';
 import {isValidCharacter} from '../utils/CharacterValidations';
+import {isUpgradable} from '../utils/UpgradeValidations';
 
 export default class CrewCharacter extends Component {
   handleRemove(e) {
@@ -22,6 +23,7 @@ export default class CrewCharacter extends Component {
       selectedFaction,
       leaderName,
       upgrades,
+      version,
       character
     } = this.props;
     const {
@@ -35,27 +37,40 @@ export default class CrewCharacter extends Component {
       sscache
       } = character;
     const stateProps = {role, ssLimit, selectedFaction, leaderName};
-    const invalid = isValidCharacter(character, stateProps) ? '' : 'invalid';
+    const invalid = isValidCharacter(character, stateProps) ?
+      '' : 'invalid';
+    const upgradeSelectElement = isUpgradable(station) ?
+      <td>
+        <UpgradeSelect
+          upgrades={upgrades}
+          character={this.props.character}
+          leaderName={leaderName}
+          selectedFaction={selectedFaction}
+          version={version}
+          actions={actions} />
+      </td> :
+      <td>-</td>;
+    let costDisplay;
+
+    if (LEADER_REGEXP.test(role)) {
+      costDisplay = '-';
+    } else {
+      costDisplay = isUpgradable(station) ?
+      sscost : parseFloat(sscost) * parseFloat(count);
+    }
 
     return (
       <tr className={invalid}>
         <td></td>
-        <td>{count}</td>
+        <td>{isUpgradable(station) ? 1 : count}</td>
         <td>{name}</td>
         <td>{faction}</td>
         <td>{station}</td>
         <td>{parseFloat(limit) === 0 ? '-' : limit}</td>
         <td>{characteristics}</td>
-        <td>{role === 'leader' ? '-' : sscost}</td>
+        <td>{costDisplay}</td>
         <td>{role === 'leader' ? sscache : '-'}</td>
-        <td>
-          <UpgradeSelect
-            upgrades={upgrades}
-            character={this.props.character}
-            leaderName={leaderName}
-            selectedFaction={selectedFaction}
-            actions={actions} />
-        </td>
+        {upgradeSelectElement}
         <td>
           <button
             type="submit"
@@ -77,5 +92,6 @@ CrewCharacter.propTypes = {
   selectedFaction: PropTypes.string.isRequired,
   leaderName: PropTypes.string,
   upgrades: PropTypes.array.isRequired,
+  version: PropTypes.number.isRequired,
   ssLimit: PropTypes.number.isRequired
 };
