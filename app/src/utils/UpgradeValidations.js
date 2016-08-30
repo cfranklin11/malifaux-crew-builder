@@ -83,6 +83,20 @@ function isAdded(upgradeName, characterUpgrades, characterVersion) {
     characterUpgrades[upgradeIndex].versions.indexOf(characterVersion) !== -1;
 }
 
+function isLessThanStationLimit(station, characterUpgrades) {
+  const upgradeCount = characterUpgrades.length;
+  return regExps.MASTER_REGEXP.test(station) && upgradeCount <= 3 ||
+    regExps.HENCHMAN_REGEXP.test(station) && upgradeCount <= 2 ||
+    regExps.ENFORCER_REGEXP.test(station) && upgradeCount <= 1;
+}
+
+function isDuplicateLimited(isLimited, characterUpgrades) {
+  const limitedIndex = characterUpgrades.findIndex(upgrade => {
+    return /true/i.test(isLimited);
+  });
+  return limitedIndex !== -1;
+}
+
 export function isUpgradable(station) {
   return regExps.UPGRADABLE_REGEXP.test(station);
 }
@@ -109,9 +123,11 @@ export function isValidUpgrade(
   character,
   stateProps,
   characterVersion) {
-  const {limit, count, name} = upgrade;
-  const {characterUpgrades} = character;
+  const {limit, count, name, islimited} = upgrade;
+  const {characterUpgrades, station} = character;
   return isPotentialUpgrade(upgrade, character, stateProps) &&
     isLessThanLimit(limit, count) &&
-    !isAdded(name, characterUpgrades, characterVersion);
+    !isAdded(name, characterUpgrades, characterVersion) &&
+    isLessThanStationLimit(station, characterUpgrades) &&
+    !isDuplicateLimited(islimited, characterUpgrades);
 }

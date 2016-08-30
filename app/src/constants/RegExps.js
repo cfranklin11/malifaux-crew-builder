@@ -1,5 +1,6 @@
 export const HENCHMAN_REGEXP = /henchman/i;
 export const MASTER_REGEXP = /master/i;
+export const ENFORCER_REGEXP = /enforcer/i;
 export const MASTER_HENCHMAN_REGEXP = /master|henchman/i;
 export const NOT_MASTER_REGEXP = /[^(?:master)]/i;
 export const RESTRICTED_TOTEM_REGEXP = /totem\s\(((?:\w*\s?)+)\)/i;
