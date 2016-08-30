@@ -43,6 +43,14 @@ function soulstones(state = initialState.soulstones, action) {
           state.ssCostSum - parseFloat(action.character.sscost)
       };
 
+    case types.TOGGLE_UPGRADE:
+      return {
+        ...state,
+        ssCostSum: action.toggle === 'add' ?
+          state.ssCostSum + parseFloat(action.upgrade.cost) :
+          state.ssCostSum - parseFloat(action.upgrade.cost)
+      };
+
     default:
       return state;
   }
