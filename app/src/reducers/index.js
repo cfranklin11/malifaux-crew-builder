@@ -165,12 +165,16 @@ function charactersByFaction(state = initialState.charactersByFaction,
 
                 if (action.toggle === 'add') {
                   if (upgradeIndex === -1) {
+                    // If new, add upgrade to character's list
+                    // of attached upgrades
                     updatedUpgrades = characterUpgrades.concat({
                       ...action.upgrade,
                       count: 1,
                       versions: [action.version]
                     });
                   } else {
+                    // Otherwise, increase count of existing upgrade,
+                    // and add to upgrade's associated character version #
                     characterUpgrades.map(upgrade => {
                       return upgrade.name === action.upgrade.name ?
                         {
@@ -180,6 +184,8 @@ function charactersByFaction(state = initialState.charactersByFaction,
                         } : upgrade;
                     });
                   }
+                // If removing upgrade, check for various edge cases
+                // for removing it from the array
                 } else if (action.upgrade.count === 1) {
                   if (characterUpgrades.length === 1) {
                     updatedUpgrades = [];
@@ -190,6 +196,9 @@ function charactersByFaction(state = initialState.charactersByFaction,
                       .slice(0, upgradeIndex)
                       .concat(characterUpgrades.slice(upgradeIndex + 1));
                   }
+                // If character has more than one of this upgrade
+                // due to multiples of the character, reduce its count,
+                // and remove the associated character's version #
                 } else {
                   updatedUpgrades = characterUpgrades.map(upgrade => {
                     if (upgrade.name === action.upgrade.name) {
@@ -231,6 +240,8 @@ function charactersByFaction(state = initialState.charactersByFaction,
   }
 }
 
+// Called by 'charactersByFaction' when requestion characters;
+// updates state once characters are received
 function characters(
   state = {
     isFetching: false,

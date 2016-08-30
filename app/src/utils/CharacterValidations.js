@@ -4,7 +4,7 @@ function factionRegExp(selectedFaction) {
   return new RegExp(selectedFaction.replace(/\s/g, '-'), 'i');
 }
 
-// All henchman and masters can be leaders
+// All henchman and masters that aren't non-faction mercenaries can be leaders
 function isPotentialLeader(
   station,
   ssLimit,
@@ -78,6 +78,7 @@ function isValidTotem(characteristics, leaderName) {
   return true;
 }
 
+// Crews are limited to 1 totem
 function isLessThanTotemLimit(characters, characteristics) {
   let totemCount = 0;
   for (let i = 0; i < characters.length; i++) {
@@ -92,6 +93,7 @@ function isLessThanTotemLimit(characters, characteristics) {
     !isTotem(characteristics);
 }
 
+// Crews are limited to 2 non-faction mercenaries
 function isLessThanMercLimit(
   characters,
   selectedFaction,
@@ -110,10 +112,13 @@ function isLessThanMercLimit(
     !isNonFactionMercenary(faction, characteristics, selectedFaction);
 }
 
+// Some characters have a max number that can be in a crew
 function isLessThanRareLimit(limit, count) {
   return (parseFloat(limit) === 0 || parseFloat(count) < parseFloat(limit));
 }
 
+// Check all max character limits to disable adding characters
+// that exceed limits
 export function isLessThanLimits(characters, character, selectedFaction) {
   const {faction, characteristics, limit, count} = character;
   return isLessThanRareLimit(limit, count) &&

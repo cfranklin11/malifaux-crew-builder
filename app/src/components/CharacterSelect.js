@@ -76,10 +76,11 @@ export default class CharacterSelect extends Component {
     const {currentCharacter} = this.state;
     const roleLabel = LEADER_REGEXP.test(role) ? 'leader' : role;
     const stateProps = {role, ssLimit, selectedFaction, leaderName};
-    // Disable leaders if one has been added; disable all invalid characters;
-    // disable if the max # of this character has been added to the crew
+    // Disable leaders if one has been added
     const isDisabled = isLeaderAdded && LEADER_REGEXP.test(role) ||
+      // Disable all invalid characters;
       !isValidCharacter(currentCharacter, stateProps) ||
+      // Disable if this character exceeds any crew limits
       !isLessThanLimits(characters, currentCharacter, selectedFaction);
 
     return (

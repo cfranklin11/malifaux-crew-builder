@@ -43,8 +43,7 @@ export default class CrewList extends Component {
             const {characterUpgrades, count} = character;
             let characterRows = [];
 
-            // Return character component with upgrade component(s)
-            // concatenated
+            // Return character components
             for (let j = 0; j < count; j++) {
               characterRows.push(
                 <CrewCharacter
@@ -60,17 +59,25 @@ export default class CrewList extends Component {
                   upgrades={upgrades} />
               );
 
+              // If character is upgradable, separate individuals
+              // into different components;
+              // otherwise, roll them up into one row
               if (!isUpgradable) {
                 break;
               }
 
+              // Add upgrade row(s) below associated character
               for (let k = 0; k < characterUpgrades.length; k++) {
                 const thisUpgrade = characterUpgrades[k];
                 const {versions} = thisUpgrade;
 
+                // The 'versions' array associates upgrades with
+                // specific instances of upgradable characters
                 for (let l = 0; l < versions.length; l++) {
                   const thisVersion = versions[l];
 
+                  // Check if this upgrade is associated with
+                  // this character version
                   if (parseFloat(thisVersion) === j) {
                     characterRows.push(
                       <CrewUpgrade
